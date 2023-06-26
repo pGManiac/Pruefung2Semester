@@ -6,6 +6,13 @@ public class Song {
     private int genre;
     private String artist;
 
+    public Song(String name, String album, int genre, String artist) {
+        this.name = name;
+        this.album = album;
+        this.genre = genre;
+        this.artist = artist;
+    }
+
     public String getName() {
         return name;
     }
