@@ -1,7 +1,13 @@
 package musikverwaltung;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+
 
 public class SongHash {
     private Map<String, Song> songMap;
@@ -29,5 +35,41 @@ public class SongHash {
 
     public int size() {
         return songMap.size();
+    }
+
+    public List<Song> sortAToZ() {
+        List<Song> sortedSongs = new ArrayList<>(songMap.values());
+        Collections.sort(sortedSongs, new Comparator<Song>() {
+            public int compare(Song song1, Song song2) {
+                return song1.getName().compareTo(song2.getName());
+            }
+        });
+        return sortedSongs;
+    }
+
+    public List<Song> sortZToA() {
+        List<Song> sortedSongs = new ArrayList<>(songMap.values());
+        Collections.sort(sortedSongs, new Comparator<Song>() {
+            public int compare(Song song1, Song song2) {
+                return song2.getName().compareTo(song1.getName());
+            }
+        });
+
+        return sortedSongs;
+    }
+
+    public List<Song> sortAToZByGenre(int genre) {
+        List<Song> songsByGenre = new ArrayList<>();
+        for (Song song : songMap.values()) {
+            if (song.getGenre() == genre) {
+                songsByGenre.add(song);
+            }
+        }
+        Collections.sort(songsByGenre, new Comparator<Song>() {
+            public int compare(Song song1, Song song2) {
+                return song1.getName().compareTo(song2.getName());
+            }
+        });
+        return songsByGenre;
     }
 }

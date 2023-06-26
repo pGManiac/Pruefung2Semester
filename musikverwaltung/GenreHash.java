@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 public class GenreHash {
-    private Map<String, Song> genreMap;
+    private Map<Integer, Song> genreMap;
 
     public GenreHash() {
         genreMap = new HashMap<>();
     }
 
     public void addSong(Song song) {
-        String key = song.getArtist();
+        int key = song.getGenre();
         genreMap.put(key, song);
     }
 
