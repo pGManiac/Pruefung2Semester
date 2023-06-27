@@ -12,7 +12,7 @@ javafx {
     modules = [ 'javafx.controls' ]
 }
 
-mainClassName = 'musikverwaltung.JavaFX'
+mainClassName = 'musikverwaltung.Main'
 
 dependencies {
     implementation 'junit:junit:4.13.1'

@@ -20,7 +20,7 @@ public class JavaFX extends Application {
         stage.show();
     }
 
-    public static void launch() {
+    public static void initiate() {
         launch();
     }
 
