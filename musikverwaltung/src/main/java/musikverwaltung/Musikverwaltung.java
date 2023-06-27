@@ -1,4 +1,4 @@
-package Pruefung2Semester.musikverwaltung;
+package musikverwaltung;
 
 public class Musikverwaltung {
     private MusikverwaltungGUI view;

@@ -1,11 +1,8 @@
-package Pruefung2Semester.musikverwaltung;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Frame;
-import java.awt.event.KeyEvent;
+package musikverwaltung;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class MusikverwaltungGUI extends JFrame {
     //ein Attribut das Objekte der Songklasse enthält, um darauf zugreifen zu können?
