@@ -1,4 +1,4 @@
-package musikverwaltung;
+package backend;
 
 import java.util.*;
 

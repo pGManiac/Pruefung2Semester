@@ -1,4 +1,4 @@
-package musikverwaltung;
+package backend;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,8 +17,8 @@ public class GenreHash {
         genreMap.put(key, song);
     }
 
-    public boolean containsArtist(String name) {
-        return genreMap.containsKey(name);
+    public boolean containsGenre(int genre) {
+        return genreMap.containsKey(genre);
     }
 
     public List<Song> getSongsFromGenre(String genre) {

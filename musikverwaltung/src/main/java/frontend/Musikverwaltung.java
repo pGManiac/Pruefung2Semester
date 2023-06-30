@@ -1,4 +1,4 @@
-package musikverwaltung;
+package frontend;
 
 public class Musikverwaltung {
     private MusikverwaltungGUI view;
@@ -8,7 +8,7 @@ public class Musikverwaltung {
     }
 
     public static void main(String[] args) {
-        Musikverwaltung musikverw = new Musikverwaltung();
-        musikverw.view.setVisible(true);
+        Musikverwaltung musikverwaltung = new Musikverwaltung();
+        musikverwaltung.view.setVisible(true);
     }
 }

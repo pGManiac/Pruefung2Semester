@@ -1,4 +1,4 @@
-package musikverwaltung;
+package frontend;
 
 import javax.swing.*;
 import java.awt.*;

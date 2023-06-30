@@ -1,4 +1,4 @@
-package musikverwaltung;
+package backend;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +25,6 @@ public class AlbumHash {
                 songsFromAlbum.add(song);
             }
         }
-
         return songsFromAlbum;
     }
 

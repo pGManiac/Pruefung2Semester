@@ -1,5 +1,6 @@
-package musikverwaltung;
+package frontend;
 
+import backend.Song;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

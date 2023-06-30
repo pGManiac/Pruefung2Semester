@@ -1,4 +1,4 @@
-package musikverwaltung;
+package backend;
 
 public class Song {
     private String name;
