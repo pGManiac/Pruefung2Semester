@@ -1,6 +1,6 @@
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.9'
+    id 'org.openjfx.javafxplugin' version '0.0.14'
 }
 
 repositories {
@@ -12,7 +12,7 @@ javafx {
     modules = [ 'javafx.controls' ]
 }
 
-mainClassName = 'musikverwaltung.Main'
+mainClassName = 'frontend.Main'
 
 dependencies {
     implementation 'junit:junit:4.13.1'
