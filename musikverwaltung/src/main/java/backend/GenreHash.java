@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GenreHash {
-    private Map<Integer, Song> genreMap;
+    private Map<Integer, List<Song>> genreMap;
 
     public GenreHash() {
         genreMap = new HashMap<>();
@@ -14,23 +14,24 @@ public class GenreHash {
 
     public void addSong(Song song) {
         int key = song.getGenre();
-        genreMap.put(key, song);
+
+        // Check if the genre already exists in the map
+        if (genreMap.containsKey(key)) {
+            List<Song> songsList = genreMap.get(key);
+            songsList.add(song);
+        } else {
+            List<Song> songsList = new ArrayList<>();
+            songsList.add(song);
+            genreMap.put(key, songsList);
+        }
+    }
+
+    public List<Song> getSongsFromGenre(int genre) {
+        return genreMap.getOrDefault(genre, new ArrayList<>());
     }
 
     public boolean containsGenre(int genre) {
         return genreMap.containsKey(genre);
-    }
-
-    public List<Song> getSongsFromGenre(String genre) {
-        List<Song> songsFromGenre = new ArrayList<>();
-
-        for(Song song : genreMap.values()) {
-            if(song.getAlbum().equals(genre)) {
-                songsFromGenre.add(song);
-            }
-        }
-
-        return songsFromGenre;
     }
 
     public int size() {

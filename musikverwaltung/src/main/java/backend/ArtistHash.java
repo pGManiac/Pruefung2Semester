@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ArtistHash {
-    private Map<String, Song> artistMap;
+    private Map<String, List<Song>> artistMap;
 
     public ArtistHash() {
         artistMap = new HashMap<>();
@@ -14,23 +14,24 @@ public class ArtistHash {
 
     public void addSong(Song song) {
         String key = song.getArtist();
-        artistMap.put(key, song);
-    }
 
-    public boolean containsArtist(String name) {
-        return artistMap.containsKey(name);
+        // Check if the artist already exists in the map
+        if (artistMap.containsKey(key)) {
+            List<Song> songsList = artistMap.get(key);
+            songsList.add(song);
+        } else {
+            List<Song> songsList = new ArrayList<>();
+            songsList.add(song);
+            artistMap.put(key, songsList);
+        }
     }
 
     public List<Song> getSongsFromArtist(String artist) {
-        List<Song> songsFromArtist = new ArrayList<>();
+        return artistMap.getOrDefault(artist, new ArrayList<>());
+    }
 
-        for(Song song : artistMap.values()) {
-            if(song.getAlbum().equals(artist)) {
-                songsFromArtist.add(song);
-            }
-        }
-
-        return songsFromArtist;
+    public boolean containsArtist(String artist) {
+        return artistMap.containsKey(artist);
     }
 
     public int size() {
