@@ -23,11 +23,11 @@ public class SongHash {
         }
     }
 
-    public Song getSong(String songName, String artistName) {
+    public Song getSong(String songName, String albumName, int genre, String artistName) {
         List<Song> songs = songMap.get(songName);
         if (songs != null) {
             for (Song song : songs) {
-                if (song.getName().equalsIgnoreCase(songName) && song.getArtist().equalsIgnoreCase(artistName)) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
                     return song;
                 }
             }

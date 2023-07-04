@@ -20,9 +20,9 @@ class SongHashTest {
 
     @Test
     public void testAddSong() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2");
-        Song song3 = new Song("Song 1", "Album 2", 3, "Artist 3");
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 1", "Album 2", 3, "Artist 3", "0");
 
         songHash.addSong(song1);
         songHash.addSong(song2);
@@ -37,9 +37,9 @@ class SongHashTest {
 
     @Test
     public void testRemoveSong() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2");
-        Song song3 = new Song("Song 1", "Album 2", 3, "Artist 3");
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 1", "Album 2", 3, "Artist 3", "0");
 
         songHash.addSong(song1);
         songHash.addSong(song2);
@@ -55,17 +55,17 @@ class SongHashTest {
 
     @Test
     public void testGetSong() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2");
-        Song song3 = new Song("Song 1", "Album 3", 3, "Artist 3");
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 1", "Album 3", 3, "Artist 3", "0");
 
         songHash.addSong(song1);
         songHash.addSong(song2);
         songHash.addSong(song3);
 
-        Song retrievedSong1 = songHash.getSong("Song 1", "Artist 1");
-        Song retrievedSong2 = songHash.getSong("Song 2", "Artist 2");
-        Song retrievedSong3 = songHash.getSong("Song 1", "Artist 3");
+        Song retrievedSong1 = songHash.getSong("Song 1", "Album 1", 1, "Artist 1");
+        Song retrievedSong2 = songHash.getSong("Song 2", "Album 2",  2, "Artist 2");
+        Song retrievedSong3 = songHash.getSong("Song 1", "Album 3", 3, "Artist 3");
 
         assertNotNull(retrievedSong1);
         assertNotNull(retrievedSong2);
@@ -89,10 +89,10 @@ class SongHashTest {
 
     @Test
     public void testContainsSong() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2");
-        Song song3 = new Song("Song 3", "Album 2", 3, "Artist 3");
-        Song song4 = new Song("Song 3", "Album 4", 4, "Artist 1");
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", 3, "Artist 3", "0");
+        Song song4 = new Song("Song 3", "Album 4", 4, "Artist 1", "0");
 
         songHash.addSong(song1);
         songHash.addSong(song3);
@@ -115,9 +115,9 @@ class SongHashTest {
     public void testSize() {
         assertEquals(0, songHash.size());
 
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2");
-        Song song3 = new Song("Song 1", "Album 2", 3, "Artist 3");
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 1", "Album 2", 3, "Artist 3", "0");
 
         songHash.addSong(song1);
         assertEquals(1, songHash.size());
@@ -141,18 +141,18 @@ class SongHashTest {
     @Test
     public void sortAToZ() {
         // Adding songs to the songHash
-        songHash.addSong(new Song("Song F", "5", 1, "1"));
-        songHash.addSong(new Song("Song I", "3", 1, "4"));
-        songHash.addSong(new Song("Song G", "7", 1, "3"));
-        songHash.addSong(new Song("Song J", "2", 1, "5"));
-        songHash.addSong(new Song("Song J", "1", 2, "1"));
-        songHash.addSong(new Song("Song C", "7", 3, "1"));
-        songHash.addSong(new Song("Song C", "9", 1, "2"));
-        songHash.addSong(new Song("Song B", "2", 1, "1"));
-        songHash.addSong(new Song("Song A", "5", 1, "1"));
-        songHash.addSong(new Song("Song E", "3", 1, "2"));
-        songHash.addSong(new Song("Song H", "4", 1, "1"));
-        songHash.addSong(new Song("Song D", "6", 1, "1"));
+        songHash.addSong(new Song("Song F", "5", 1, "1", "0"));
+        songHash.addSong(new Song("Song I", "3", 1, "4", "0"));
+        songHash.addSong(new Song("Song G", "7", 1, "3", "ß"));
+        songHash.addSong(new Song("Song J", "2", 1, "5", "0"));
+        songHash.addSong(new Song("Song J", "1", 2, "1", "0"));
+        songHash.addSong(new Song("Song C", "7", 3, "1", "ß"));
+        songHash.addSong(new Song("Song C", "9", 1, "2", "0"));
+        songHash.addSong(new Song("Song B", "2", 1, "1", "0"));
+        songHash.addSong(new Song("Song A", "5", 1, "1", "0"));
+        songHash.addSong(new Song("Song E", "3", 1, "2", "0"));
+        songHash.addSong(new Song("Song H", "4", 1, "1", "0"));
+        songHash.addSong(new Song("Song D", "6", 1, "1", "0"));
 
         // Sorting songs in alphabetical order
         List<Song> sortedSongs = songHash.sortAToZ();
@@ -180,18 +180,18 @@ class SongHashTest {
     @Test
     public void testSortZToA() {
         // Adding songs to the songHash
-        songHash.addSong(new Song("Song F", "5", 1, "1"));
-        songHash.addSong(new Song("Song I", "3", 1, "4"));
-        songHash.addSong(new Song("Song G", "7", 1, "3"));
-        songHash.addSong(new Song("Song J", "2", 1, "5"));
-        songHash.addSong(new Song("Song J", "1", 2, "1"));
-        songHash.addSong(new Song("Song C", "7", 3, "1"));
-        songHash.addSong(new Song("Song C", "9", 1, "2"));
-        songHash.addSong(new Song("Song B", "2", 1, "1"));
-        songHash.addSong(new Song("Song A", "5", 1, "1"));
-        songHash.addSong(new Song("Song E", "3", 1, "2"));
-        songHash.addSong(new Song("Song H", "4", 1, "1"));
-        songHash.addSong(new Song("Song D", "6", 1, "1"));
+        songHash.addSong(new Song("Song F", "5", 1, "1", "0"));
+        songHash.addSong(new Song("Song I", "3", 1, "4", "0"));
+        songHash.addSong(new Song("Song G", "7", 1, "3", "0"));
+        songHash.addSong(new Song("Song J", "2", 1, "5", "0"));
+        songHash.addSong(new Song("Song J", "1", 2, "1", "0"));
+        songHash.addSong(new Song("Song C", "7", 3, "1", "0"));
+        songHash.addSong(new Song("Song C", "9", 1, "2", "0"));
+        songHash.addSong(new Song("Song B", "2", 1, "1", "0"));
+        songHash.addSong(new Song("Song A", "5", 1, "1", "0"));
+        songHash.addSong(new Song("Song E", "3", 1, "2", "0"));
+        songHash.addSong(new Song("Song H", "4", 1, "1", "0"));
+        songHash.addSong(new Song("Song D", "6", 1, "1", "0"));
 
         // Sorting songs in reverse alphabetical order
         List<Song> sortedSongs = songHash.sortZToA();
@@ -219,18 +219,18 @@ class SongHashTest {
     @Test
     public void testSortAToZByGenre() {
         // Adding songs to the songHash
-        songHash.addSong(new Song("Song F", "4", 3, "3"));
-        songHash.addSong(new Song("Song I", "5", 1, "1"));
-        songHash.addSong(new Song("Song I", "1", 1, "3"));
-        songHash.addSong(new Song("Song G", "6", 1, "1"));
-        songHash.addSong(new Song("Song J", "3", 2, "1"));
-        songHash.addSong(new Song("Song C", "1", 1, "4"));
-        songHash.addSong(new Song("Song C", "2", 1, "1"));
-        songHash.addSong(new Song("Song B", "1", 4, "1"));
-        songHash.addSong(new Song("Song A", "3", 1, "7"));
-        songHash.addSong(new Song("Song E", "1", 1, "1"));
-        songHash.addSong(new Song("Song H", "2", 7, "2"));
-        songHash.addSong(new Song("Song D", "1", 1, "1"));
+        songHash.addSong(new Song("Song F", "4", 3, "3", "0"));
+        songHash.addSong(new Song("Song I", "5", 1, "1","0"));
+        songHash.addSong(new Song("Song I", "1", 1, "3", "0"));
+        songHash.addSong(new Song("Song G", "6", 1, "1", "0"));
+        songHash.addSong(new Song("Song J", "3", 2, "1", "0"));
+        songHash.addSong(new Song("Song C", "1", 1, "4", "0"));
+        songHash.addSong(new Song("Song C", "2", 1, "1", "0"));
+        songHash.addSong(new Song("Song B", "1", 4, "1", "0"));
+        songHash.addSong(new Song("Song A", "3", 1, "7", "0"));
+        songHash.addSong(new Song("Song E", "1", 1, "1", "0"));
+        songHash.addSong(new Song("Song H", "2", 7, "2", "0"));
+        songHash.addSong(new Song("Song D", "1", 1, "1", "0"));
 
         // Sorting songs by genre in alphabetical order
         List<Song> sortedSongs = songHash.sortAToZByGenre(1);

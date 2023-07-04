@@ -220,7 +220,7 @@ public class MusikverwaltungFXGUI extends Application{
                 System.err.println(ioException.getMessage());
             }
 
-        Song songNew = new Song(titleNew, albumNew, genreValue, artistNew);
+        Song songNew = new Song(titleNew, albumNew, genreValue, artistNew, destination);
         //Song Objekte im Anschluss in .ser file schreiben und immer beim Öffnen der Applikation die .ser files lesen
         v.getItems().add(songNew);
     }

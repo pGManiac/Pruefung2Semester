@@ -17,9 +17,9 @@ public class GenreHashTest {
 
     @Test
     public void testAddSong() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2");
-        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3");
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
 
         genreHash.addSong(song1);
         genreHash.addSong(song2);
@@ -33,10 +33,10 @@ public class GenreHashTest {
 
     @Test
     public void testGetSongsFromGenre() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2");
-        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3");
-        Song song4 = new Song("Song 4", "Album 3", 4, "Artist 4");
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
+        Song song4 = new Song("Song 4", "Album 3", 4, "Artist 4", "0");
 
         genreHash.addSong(song1);
         genreHash.addSong(song2);
@@ -51,9 +51,9 @@ public class GenreHashTest {
 
     @Test
     public void testContainsGenre() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2");
-        Song song3 = new Song("Song 3", "Album 2", 3, "Artist 3");
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", 3, "Artist 3", "0");
 
         genreHash.addSong(song1);
         genreHash.addSong(song3);
@@ -66,8 +66,8 @@ public class GenreHashTest {
     public void testSize() {
         assertEquals(0, genreHash.size());
 
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2");
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "=");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
 
         genreHash.addSong(song1);
         assertEquals(1, genreHash.size());
