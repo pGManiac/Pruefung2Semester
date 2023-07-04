@@ -25,10 +25,28 @@ public class GenreHashTest {
         genreHash.addSong(song2);
         genreHash.addSong(song3);
 
-        assertEquals(3, genreHash.size());
+        assertEquals(2, genreHash.size());
         assertTrue(genreHash.containsGenre(1));
         assertTrue(genreHash.containsGenre(2));
         assertFalse(genreHash.containsGenre(3));
+    }
+
+    @Test
+    public void testRemoveSong() {
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 1", "Album 2", 3, "Artist 3", "0");
+
+        genreHash.addSong(song1);
+        genreHash.addSong(song2);
+        genreHash.addSong(song3);
+
+        genreHash.removeSong("Song 1", "Album 1", 1, "Artist 1");
+
+        assertEquals(2, genreHash.size());
+        assertFalse(genreHash.containsGenre(1));
+        assertTrue(genreHash.containsGenre(2));
+        assertTrue(genreHash.containsGenre(3));
     }
 
     @Test

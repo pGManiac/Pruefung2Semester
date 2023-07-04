@@ -1,8 +1,9 @@
 package backend;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class GenreHash {
+public class GenreHash implements Serializable {
     private Map<Integer, List<Song>> genreMap;
 
     public GenreHash() {
@@ -40,6 +41,18 @@ public class GenreHash {
                 }
             }
         }
+    }
+
+    public Song getSong(String songName, String albumName, int genre, String artistName) {
+        List<Song> songs = genreMap.get(genre);
+        if (songs != null) {
+            for (Song song : songs) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
+                    return song;
+                }
+            }
+        }
+        return null;
     }
 
     public List<Song> getSongsFromGenre(int genre) {

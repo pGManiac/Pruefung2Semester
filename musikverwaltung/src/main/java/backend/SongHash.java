@@ -1,8 +1,9 @@
 package backend;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class SongHash {
+public class SongHash implements Serializable {
     private Map<String, List<Song>> songMap;
 
     public SongHash() {

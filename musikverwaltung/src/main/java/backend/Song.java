@@ -1,6 +1,8 @@
 package backend;
+import java.io.Serializable;
+import java.util.Objects;
 
-public class Song {
+public class Song implements Serializable {
     private String name;
     private String album;
     private int genre;
@@ -13,7 +15,24 @@ public class Song {
         this.album = album;
         this.genre = genre;
         this.artist = artist;
-        this.artist = mp3Path;
+        this.mp3Path = mp3Path;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Song song = (Song) obj;
+        return genre == song.genre &&
+                Objects.equals(name, song.name) &&
+                Objects.equals(album, song.album) &&
+                Objects.equals(artist, song.artist) &&
+                Objects.equals(mp3Path, song.mp3Path);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, album, genre, artist, mp3Path);
     }
 
     public String getName() {
