@@ -1,10 +1,14 @@
 package frontend;
 
+import java.io.BufferedOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -73,7 +77,7 @@ public class MusikverwaltungFXGUI extends Application{
         BorderPane border = new BorderPane(); //algemeines Layout
 
         //Moduswechsel
-        Image image = new Image("file:/home/misha/Documents/unicode/Java/Pruefung2Semester/musikverwaltung/src/main/java/frontend/icons/mode11.png"); //es muss vornedran file: stehen
+        Image image = new Image("file:src/main/java/frontend/icons/mode11.png"); //es muss vornedran file: stehen
         ImageView img = new ImageView(image);
         swap = new Button("Musik");
         img.setFitWidth(swap.getWidth());
@@ -128,12 +132,15 @@ public class MusikverwaltungFXGUI extends Application{
         HBox.setHgrow(swap, Priority.NEVER);
 
         border.setTop(hbox);
-        border.setCenter(lieder);
+        StackPane stack = new StackPane(lieder); //stack pane should automatically create scroller
+        border.setCenter(stack);
 
         Scene scene = new Scene(border, 960, 600);
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         
+        
         primaryStage.setScene(scene);
+        //readObjectFromFile(lieder);
         primaryStage.show();
 
 
@@ -209,20 +216,23 @@ public class MusikverwaltungFXGUI extends Application{
         }
 
         File selectedFile = fileChooser.showOpenDialog(stage); //root window stage cannot be accessed, while the is dialog open
-        String destination = "/home/misha/Documents/unicode/Java/Pruefung2Semester/musikverwaltung/src/main/java/frontend/lieder/";
+        String destination = "src/main/java/frontend/lieder/";
             String id = new SimpleDateFormat("mm:ss:SSS").format(new java.util.Date());
 
             Path source = selectedFile.toPath();
-            Path target = Path.of(destination + id + "_" + selectedFile.getName());
+            String targetString = destination + id + "_" + selectedFile.getName();
+            Path target = Path.of(targetString);
             try {
                 Files.copy(source, target, StandardCopyOption.COPY_ATTRIBUTES); //attributes of og file copied as well
             } catch (IOException ioException) {
                 System.err.println(ioException.getMessage());
             }
 
-        Song songNew = new Song(titleNew, albumNew, genreValue, artistNew, destination);
+        Song songNew = new Song(titleNew, albumNew, genreValue, artistNew, targetString);
         //Song Objekte im Anschluss in .ser file schreiben und immer beim Öffnen der Applikation die .ser files lesen
         v.getItems().add(songNew);
+
+        //writeObjectToFile(songNew);
     }
 
     /* File target = new File("/home/misha/Documents/unicode/Java/Pruefung2Semester/musikverwaltung/src/main/java/frontend/lieder/" + selectedFile.getName());
@@ -246,4 +256,54 @@ public class MusikverwaltungFXGUI extends Application{
             } catch (IOException ioException) {
             System.err.println("An error occurred while copying the file: " + ioException.getMessage());
             } */
+
+    public void writeObjectToFile(Song lied) { //database statt lied eigentlich
+        /* String serFileS = "songObjects.ser";
+        File serFile = new File(serFileS);
+         try {
+            if (!serFile.exists()) {
+            serFile.createNewFile();
+        } */
+         /* } catch (IOException ioException) {
+            System.err.println(ioException.getMessage());
+         } */
+
+        //try-with initialisiert die Streams in den runden Klammern, damit sie automatisch geschlossen werden, sobal man den try Block verlässt
+        try (FileOutputStream outputFile = new FileOutputStream("songObjects.ser", true);
+             ObjectOutputStream outputObject = new ObjectOutputStream(new BufferedOutputStream(outputFile))) {
+                
+                while (true) {
+                    try {
+                        outputObject.writeObject(lied); //database statt lied eigentlich
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+                
+             }
+        catch (IOException ioException) {
+            System.err.println(ioException.getMessage());
+        }
+    }
+
+    public void readObjectFromFile(TableView<Song> v) throws ClassNotFoundException {
+        //String serFileS = "songObjects.ser";
+
+        try (FileInputStream inputFile = new FileInputStream("songObjects.ser");
+             ObjectInputStream inputObject = new ObjectInputStream(inputFile)) {
+                
+                while (true) {
+                    try {
+                        Song loadedSong = (Song) inputObject.readObject();
+                        v.getItems().add(loadedSong);
+                    } catch (EOFException eofException) {
+                        break;
+                        //exception wird geworfen, wenn Ende des Files erreicht (end of file)
+                    }
+                }
+             }
+        catch (IOException ioException) {
+            System.err.println(ioException.getMessage());
+        }
+    }
 }

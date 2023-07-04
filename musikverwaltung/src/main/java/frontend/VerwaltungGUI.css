@@ -1,5 +1,5 @@
 .root {
-    -fx-background-image: url("file:/home/misha/Documents/unicode/Java/Pruefung2Semester/musikverwaltung/src/main/java/frontend/icons/mode1.png")
+    -fx-background-image: url("file:src/main/java/frontend/icons/back.png")
 }
 
 .table-view {
@@ -8,7 +8,12 @@
 
 .table-row-cell {
     -fx-background-color: transparent;
-    -fx-font-size:20px;
+    -fx-font-size:40px;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #0097653a;
+    -fx-text-fill: #638a7e;
 }
 
 .table-view .column-header-background {
@@ -24,7 +29,7 @@
 }
 
 .dialog {
-    -fx-background: mediumpurple;
+    -fx-background: transparent;
 }
 
 .diaGrid {
