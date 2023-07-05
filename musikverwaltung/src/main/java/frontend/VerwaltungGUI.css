@@ -1,5 +1,5 @@
 .root {
-    -fx-background-image: url("file:src/main/java/frontend/icons/back.png")
+    -fx-background-image: url("file:src/main/java/frontend/icons/backgnd.png")
 }
 
 .table-view {
@@ -9,11 +9,12 @@
 .table-row-cell {
     -fx-background-color: transparent;
     -fx-font-size:40px;
+    -fx-font-weight: bold;
 }
 
-.table-row-cell:selected {
-    -fx-background-color: #0097653a;
-    -fx-text-fill: #638a7e;
+.table-row-cell:filled:selected{
+    -fx-background-color: #00976536;
+    -fx-text-background-color: black;
 }
 
 .table-view .column-header-background {
@@ -21,15 +22,35 @@
 }
 
 .table-view .column-header {
-    -fx-background-color: transparent;
+    -fx-background-color: #4ea79b;
+    -fx-background-radius: 20px;
 }
 
 .menu-bar {
-    -fx-background-color: transparent;
+    -fx-background-color: #883ca7;
+    -fx-background-radius: 20px;
+    -fx-background-image: url("file:src/main/java/frontend/icons/backgnd.png")
+}
+
+.menu .label {
+    -fx-text-fill: black;
+}
+
+.menu:hover {
+    -fx-background-color:#638a7e;
+}
+
+.menu:hover .label {
+    -fx-text-fill: black;
+}
+
+.menu-item:hover {
+    -fx-background: #638a7e;
+    -fx-text-fill: black;
 }
 
 .dialog {
-    -fx-background: transparent;
+    -fx-background: #638a7e;
 }
 
 .diaGrid {
@@ -49,7 +70,16 @@
     -fx-font-size: 20px;
 }
 
-.button {
-    -fx-background-color: transparent;
+ .button {
+    -fx-background-color: #638a7e;
     -fx-font-size: 20px;
+    -fx-background-radius: 15px;
+}
+
+.swap {
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-background-color: white;
 }

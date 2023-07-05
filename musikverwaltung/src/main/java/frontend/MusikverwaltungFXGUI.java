@@ -84,6 +84,7 @@ public class MusikverwaltungFXGUI extends Application{
         img.setFitHeight(swap.getHeight()); //Button passt sich groesse des Bildes an
         swap.setGraphic(img);
         swap.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+        swap.getStyleClass().add("swap");
 
         //Menues
         genre = new Menu("_Genre"); //ermoeglicht shortkey durch Unterstrich (Anfangsbuchstabe)
@@ -123,6 +124,8 @@ public class MusikverwaltungFXGUI extends Application{
         spalte4.setCellValueFactory(new PropertyValueFactory<>("artist"));
         lieder.getColumns().addAll(spalte1, spalte2, spalte3, spalte4);
         lieder.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Spalten passen sich window an
+        //lieder.getSelectionModel().getSelectedItems();
+        //lieder.getSelectionModel().getSelectedItem();
         /* scroller.setContent(lieder);
         scroller.setFitToHeight(true);
         scroller.setFitToWidth(true); */
@@ -140,7 +143,7 @@ public class MusikverwaltungFXGUI extends Application{
         
         
         primaryStage.setScene(scene);
-        //readObjectFromFile(lieder);
+        readObjectFromFile(lieder);
         primaryStage.show();
 
 
@@ -232,7 +235,7 @@ public class MusikverwaltungFXGUI extends Application{
         //Song Objekte im Anschluss in .ser file schreiben und immer beim Öffnen der Applikation die .ser files lesen
         v.getItems().add(songNew);
 
-        //writeObjectToFile(songNew);
+        writeObjectToFile(songNew);
     }
 
     /* File target = new File("/home/misha/Documents/unicode/Java/Pruefung2Semester/musikverwaltung/src/main/java/frontend/lieder/" + selectedFile.getName());
@@ -272,13 +275,7 @@ public class MusikverwaltungFXGUI extends Application{
         try (FileOutputStream outputFile = new FileOutputStream("songObjects.ser", true);
              ObjectOutputStream outputObject = new ObjectOutputStream(new BufferedOutputStream(outputFile))) {
                 
-                while (true) {
-                    try {
-                        outputObject.writeObject(lied); //database statt lied eigentlich
-                    } catch (Exception e) {
-                        // TODO: handle exception
-                    }
-                }
+                outputObject.writeObject(lied); //database statt lied eigentlich
                 
              }
         catch (IOException ioException) {
