@@ -66,7 +66,7 @@ public class Database implements Serializable {
         int genre = song.getGenre();
         String artistName = song.getArtist();
 
-        if(genre >= 0 && genre < genreHash.numberOfGenres()) {
+        if (genre >= 0 && genre < genreHash.numberOfGenres()) {
             songHash.removeSong(songName, albumName, genre, artistName);
             albumHash.removeSong(songName, albumName, genre, artistName);
             genreHash.removeSong(songName, albumName, genre, artistName);
@@ -75,8 +75,14 @@ public class Database implements Serializable {
             Logger logger = Logger.getLogger(GenreHash.class.getName());
             logger.log(Level.WARNING, "Invalid genre value while removing Song: " + genre);
         }
-     }
+    }
 
+    public boolean containsSong(String songName, String albumName, int genre, String artistName) {
+        return (songHash.containsSong(songName, albumName, genre, artistName) &&
+                albumHash.containsSong(songName, albumName, genre, artistName) &&
+                genreHash.containsSong(songName, albumName, genre, artistName) &&
+                artistHash.containsSong(songName, albumName, genre, artistName));
+    }
 
     /**
      * @brief Serializes the provided Database object to a file with the given filename.
@@ -113,10 +119,6 @@ public class Database implements Serializable {
      *       differently based on your application's requirements.
      * @see java.io.Serializable
      */
-
-    public boolean containsSong(String songName, String albumName, int genre, String artistName) {
-        return songHash.containsSong(songName, albumName, genre, artistName) && albumHash.containsSong(songName, albumName, genre, artistName) && genreHash.containsSong(songName, albumName, genre, artistName) && artistHash.containsSong(songName, albumName, genre, artistName);
-    }
     public static Database deserializeDatabase(String filename) {
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename))) {
             Database database = (Database) inputStream.readObject();

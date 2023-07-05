@@ -5,6 +5,9 @@ import backend.GenreHash;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GenreHashTest {
@@ -61,6 +64,29 @@ public class GenreHashTest {
     }
 
     @Test
+    public void testRemoveAllSongs() {
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
+
+        genreHash.addSong(song1);
+        genreHash.addSong(song2);
+        genreHash.addSong(song3);
+
+        // Remove all songs
+        genreHash.removeSong("Song 1", "Album 1", 1, "Artist 1");
+        genreHash.removeSong("Song 2", "Album 2", 2, "Artist 2");
+        genreHash.removeSong("Song 3", "Album 2", 2, "Artist 3");
+
+        // Verify that all genres are empty
+        assertFalse(genreHash.containsGenre(1));
+        assertFalse(genreHash.containsGenre(2));
+
+        int numberOfGenres = genreHash.nonEmptyGenres();
+        assertEquals(0, numberOfGenres);
+    }
+
+    @Test
     public void testRemoveNonExistingSong() {
         Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
         Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
@@ -105,6 +131,41 @@ public class GenreHashTest {
         assertEquals(2, genreHash.getSongsFromGenre(2).size());
         assertEquals(0, genreHash.getSongsFromGenre(3).size());
         assertEquals(1, genreHash.getSongsFromGenre(4).size());
+    }
+
+    @Test
+    public void testGetSongsFromEmptyGenre() {
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+
+        genreHash.addSong(song1);
+        genreHash.addSong(song2);
+
+        // Get songs from non-existing genre
+        List<Song> songsFromGenre = genreHash.getSongsFromGenre(3);
+
+        // Verify that the returned list is empty
+        assertNotNull(songsFromGenre);
+        assertTrue(songsFromGenre.isEmpty());
+    }
+
+    @Test
+    public void testNonEmptyGenres() {
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
+        Song song4 = new Song("Song 4", "Album 3", 4, "Artist 4", "0");
+
+        genreHash.addSong(song1);
+        genreHash.addSong(song2);
+        genreHash.addSong(song3);
+        genreHash.addSong(song4);
+
+        // Check the number of non-empty genres
+        int nonEmptyGenres = genreHash.nonEmptyGenres();
+
+        // Verify that the correct number of non-empty genres is returned
+        assertEquals(3, nonEmptyGenres);
     }
 
     @Test

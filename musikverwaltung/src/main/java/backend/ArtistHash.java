@@ -31,7 +31,8 @@ public class ArtistHash implements Serializable {
             Iterator<Song> iterator = songs.iterator();
             while (iterator.hasNext()) {
                 Song song = iterator.next();
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)); {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) &&
+                        (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
                     iterator.remove();
                     // If the list is empty after removing the song, remove the key from the map
                     if (songs.isEmpty()) {
@@ -47,7 +48,8 @@ public class ArtistHash implements Serializable {
         List<Song> songs = artistMap.get(artistName);
         if (songs != null) {
             for (Song song : songs) {
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) &&
+                        (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
                     return song;
                 }
             }
@@ -59,7 +61,8 @@ public class ArtistHash implements Serializable {
         List<Song> songs = artistMap.get(artistName);
         if (songs != null) {
             for (Song song : songs) {
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) &&
+                        (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
                     return true;
                 }
             }

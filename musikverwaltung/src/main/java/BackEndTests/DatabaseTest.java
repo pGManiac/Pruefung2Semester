@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,9 +24,7 @@ class DatabaseTest {
 
     @BeforeEach
     public void setUp() {
-        // Create a sample database with some data for testing
         originalDatabase = new Database(15  );
-
     }
 
     @AfterEach
@@ -77,6 +76,29 @@ class DatabaseTest {
         assertFalse(originalDatabase.containsSong("Song 3", "Album 2", 2, "Artist 2"));
         assertFalse(originalDatabase.containsSong("Song 3", "Album 1", 2, "Artist 3"));
         assertFalse(originalDatabase.containsSong("Song 4", "Album 2", 2, "Artist 3"));
+    }
+
+    @Test
+    public void testRemoveNonExistingSong() {
+
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
+
+        originalDatabase.addSong(song1);
+        originalDatabase.addSong(song2);
+        originalDatabase.addSong(song3);
+
+        Song nonExistingSong = new Song("Non-Existing Song", "Album 2", 1, "Artist 3", "0");
+        originalDatabase.removeSong(nonExistingSong);
+
+        assertTrue(originalDatabase.containsSong("Song 1", "Album 1", 1, "Artist 1"));
+        assertTrue(originalDatabase.containsSong("Song 2", "Album 2", 2, "Artist 2"));
+        assertTrue(originalDatabase.containsSong("Song 3", "Album 2", 2, "Artist 3"));
+        assertFalse(originalDatabase.containsSong("Non-Existing Song", "Album 2", 1, "Artist 3"));
+
+        int numberOfSongs = originalDatabase.getSongHash().getAllSongs().size();
+        assertEquals(3, numberOfSongs);
     }
 
     @Test
