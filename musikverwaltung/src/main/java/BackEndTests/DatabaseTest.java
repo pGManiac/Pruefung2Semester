@@ -2,6 +2,11 @@ package BackEndTests;
 
 import backend.Database;
 import backend.Song;
+import backend.SongHash;
+import backend.AlbumHash;
+import backend.GenreHash;
+import backend.ArtistHash;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
@@ -19,15 +24,8 @@ class DatabaseTest {
     @BeforeEach
     public void setUp() {
         // Create a sample database with some data for testing
-        originalDatabase = new Database();
-        originalDatabase.addSong(new Song("Song 1", "Album 1", 1, "Artist 1", "path1"));
-        originalDatabase.addSong(new Song("Song 2", "Album 2", 2, "Artist 2", "path2"));
+        originalDatabase = new Database(15  );
 
-        // Serialize the database
-        Database.serializeDatabase(originalDatabase, TEST_FILENAME);
-
-        // Deserialize the database
-        deserializedDatabase = Database.deserializeDatabase(TEST_FILENAME);
     }
 
     @AfterEach
@@ -40,13 +38,64 @@ class DatabaseTest {
     }
 
     @Test
+    public void testAddSongs() {
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
+        originalDatabase.addSong(song1);
+        originalDatabase.addSong(song2);
+        originalDatabase.addSong(song3);
+
+
+        assertTrue(originalDatabase.containsSong("Song 1", "Album 1", 1, "Artist 1"));
+        assertTrue(originalDatabase.containsSong("Song 2", "Album 2", 2, "Artist 2"));
+        assertTrue(originalDatabase.containsSong("Song 3", "Album 2", 2, "Artist 3"));
+        assertFalse(originalDatabase.containsSong("Song 3", "Album 2", 3, "Artist 3"));
+        assertFalse(originalDatabase.containsSong("Song 3", "Album 2", 2, "Artist 2"));
+        assertFalse(originalDatabase.containsSong("Song 3", "Album 1", 2, "Artist 3"));
+        assertFalse(originalDatabase.containsSong("Song 4", "Album 2", 2, "Artist 3"));
+    }
+
+    @Test
+    public void testRemoveSongs() {
+        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
+
+        originalDatabase.addSong(song1);
+        originalDatabase.addSong(song2);
+        originalDatabase.addSong(song3);
+
+        originalDatabase.removeSong(song1);
+        originalDatabase.removeSong(song2);
+
+
+        assertFalse(originalDatabase.containsSong("Song 1", "Album 1", 1, "Artist 1"));
+        assertFalse(originalDatabase.containsSong("Song 2", "Album 2", 2, "Artist 2"));
+        assertTrue(originalDatabase.containsSong("Song 3", "Album 2", 2, "Artist 3"));
+        assertFalse(originalDatabase.containsSong("Song 3", "Album 2", 3, "Artist 3"));
+        assertFalse(originalDatabase.containsSong("Song 3", "Album 2", 2, "Artist 2"));
+        assertFalse(originalDatabase.containsSong("Song 3", "Album 1", 2, "Artist 3"));
+        assertFalse(originalDatabase.containsSong("Song 4", "Album 2", 2, "Artist 3"));
+    }
+
+    @Test
     public void testSerializationDeserialization() {
+        originalDatabase.addSong(new Song("Song 1", "Album 1", 1, "Artist 1", "path1"));
+        originalDatabase.addSong(new Song("Song 2", "Album 2", 2, "Artist 2", "path2"));
+
+        // Serialize the database
+        Database.serializeDatabase(originalDatabase, TEST_FILENAME);
+
+        // Deserialize the database
+        deserializedDatabase = Database.deserializeDatabase(TEST_FILENAME);
+
         assertNotNull(deserializedDatabase, "Deserialized database should not be null");
 
-        // Compare original and deserialized databases
+        // Compare original and deserialized databases sizes
         assertEquals(originalDatabase.getSongHash().size(), deserializedDatabase.getSongHash().size());
         assertEquals(originalDatabase.getAlbumHash().size(), deserializedDatabase.getAlbumHash().size());
-        assertEquals(originalDatabase.getGenreHash().size(), deserializedDatabase.getGenreHash().size());
+        assertEquals(originalDatabase.getGenreHash().nonEmptyGenres(), deserializedDatabase.getGenreHash().nonEmptyGenres());
         assertEquals(originalDatabase.getArtistHash().size(), deserializedDatabase.getArtistHash().size());
 
         // Compare specific data in the original and deserialized databases
@@ -73,6 +122,15 @@ class DatabaseTest {
 
     @Test
     public void testSerializationDeserializationWithNonExistingFile() {
+        originalDatabase.addSong(new Song("Song 1", "Album 1", 1, "Artist 1", "path1"));
+        originalDatabase.addSong(new Song("Song 2", "Album 2", 2, "Artist 2", "path2"));
+
+        // Serialize the database
+        Database.serializeDatabase(originalDatabase, TEST_FILENAME);
+
+        // Deserialize the database
+        deserializedDatabase = Database.deserializeDatabase(TEST_FILENAME);
+
         // Attempt to deserialize a non-existing file
         Database nonExistingDatabase = Database.deserializeDatabase("non_existing_file.ser");
 

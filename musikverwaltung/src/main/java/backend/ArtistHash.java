@@ -55,6 +55,18 @@ public class ArtistHash implements Serializable {
         return null;
     }
 
+    public boolean containsSong(String songName, String albumName, int genre, String artistName) {
+        List<Song> songs = artistMap.get(artistName);
+        if (songs != null) {
+            for (Song song : songs) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public List<Song> getSongsFromArtist(String artist) {
         return artistMap.getOrDefault(artist, null);
     }

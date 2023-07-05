@@ -60,6 +60,18 @@ public class AlbumHash implements Serializable {
         return null;
     }
 
+    public boolean containsSong(String songName, String albumName, int genre, String artistName) {
+        List<Song> songs = albumMap.get(albumName);
+        if (songs != null) {
+            for (Song song : songs) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public List<Song> getSongsFromAlbum(String album) {
         return albumMap.getOrDefault(album, null);
     }

@@ -71,6 +71,18 @@ public class SongHash implements Serializable {
         return false;
     }
 
+    public List<Song> getAllSongs() {
+        List<Song> allSongs = new ArrayList<>();
+        for (List<Song> songs : songMap.values()) {
+            allSongs.addAll(songs);
+        }
+        return allSongs;
+    }
+
+    public boolean isEmpty() {
+        return songMap.isEmpty();
+    }
+
     public int size() {
         return songMap.size();
     }

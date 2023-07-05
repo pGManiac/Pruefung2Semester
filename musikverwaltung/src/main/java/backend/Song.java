@@ -7,7 +7,6 @@ public class Song implements Serializable {
     private String album;
     private int genre;
     private String artist;
-
     private String mp3Path;
 
     public Song(String name, String album, int genre, String artist, String mp3Path) {

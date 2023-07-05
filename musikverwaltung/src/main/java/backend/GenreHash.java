@@ -4,66 +4,54 @@ import java.io.Serializable;
 import java.util.*;
 
 public class GenreHash implements Serializable {
-    private Map<Integer, List<Song>> genreMap;
+    private SongHash[] songHashArray;
 
-    public GenreHash() {
-        genreMap = new HashMap<>();
+
+    public GenreHash(int numberOfGenres) {
+        songHashArray = new SongHash[numberOfGenres];
+        for(int i = 0; i < numberOfGenres; i++) {
+            songHashArray[i] = new SongHash();
+        }
     }
 
     public void addSong(Song song) {
-        int key = song.getGenre();
-
-        // Check if the genre already exists in the map
-        if (genreMap.containsKey(key)) {
-            List<Song> songsList = genreMap.get(key);
-            songsList.add(song);
-        } else {
-            List<Song> songsList = new ArrayList<>();
-            songsList.add(song);
-            genreMap.put(key, songsList);
-        }
+        songHashArray[song.getGenre()].addSong(song);
     }
 
     public void removeSong(String songName, String albumName, int genre, String artistName) {
-        List<Song> songs = genreMap.get(genre);
-
-        if (songs != null) {
-            Iterator<Song> iterator = songs.iterator();
-            while (iterator.hasNext()) {
-                Song song = iterator.next();
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)); {
-                    iterator.remove();
-                    // If the list is empty after removing the song, remove the key from the map
-                    if (songs.isEmpty()) {
-                        genreMap.remove(genre);
-                    }
-                    return;
-                }
-            }
-        }
+        songHashArray[genre].removeSong(songName, albumName, genre, artistName);
     }
 
     public Song getSong(String songName, String albumName, int genre, String artistName) {
-        List<Song> songs = genreMap.get(genre);
-        if (songs != null) {
-            for (Song song : songs) {
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
-                    return song;
-                }
-            }
+        return songHashArray[genre].getSong(songName, albumName, genre, artistName);
+    }
+
+    public boolean containsSong(String songName, String albumName, int genre, String artistName) {
+        if (genre >= 0 && genre < songHashArray.length) {
+            return songHashArray[genre].containsSong(songName, albumName, genre, artistName);
         }
-        return null;
+        return false;
     }
 
     public List<Song> getSongsFromGenre(int genre) {
-        return genreMap.getOrDefault(genre, new ArrayList<>());
+        return songHashArray[genre].getAllSongs();
     }
 
     public boolean containsGenre(int genre) {
-        return genreMap.containsKey(genre);
+        return !(songHashArray[genre].isEmpty());
     }
 
-    public int size() {
-        return genreMap.size();
+    public int nonEmptyGenres() {
+        int sum = 0;
+        for (int i = 0; i < songHashArray.length; i++) {
+            if(!(songHashArray[i].isEmpty())) {
+                sum++;
+            }
+        }
+        return sum;
+    }
+
+    public int numberOfGenres() {
+        return songHashArray.length;
     }
 }
