@@ -1,4 +1,4 @@
-package BackEndTests;
+package backendTesting;
 
 import backend.Song;
 import backend.GenreHash;
@@ -102,7 +102,7 @@ public class GenreHashTest {
 
         // Verify that the genre still contains the existing song
         assertTrue(genreHash.containsGenre(0));
-        assertEquals(1, genreHash.getSongsFromGenre(1).size());
+        assertEquals(1, genreHash.getSongsFromGenre(0).size());
     }
 
     @Test
@@ -209,7 +209,7 @@ public class GenreHashTest {
         genreHash.addSong(song2);
 
         assertTrue(genreHash.containsGenre(0));
-        assertFalse(genreHash.containsGenre(1));
+        assertTrue(genreHash.containsGenre(1));
         assertTrue(genreHash.containsGenre(2));
     }
 }

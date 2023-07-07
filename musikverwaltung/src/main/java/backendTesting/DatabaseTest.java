@@ -1,18 +1,13 @@
-package BackEndTests;
+package backendTesting;
 
 import backend.Database;
 import backend.Song;
-import backend.SongHash;
-import backend.AlbumHash;
-import backend.GenreHash;
-import backend.ArtistHash;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
 import java.io.File;
-import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;

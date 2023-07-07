@@ -1,12 +1,7 @@
 package backend;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 
 public class AlbumHash implements Serializable {
     private Map<String, List<Song>> albumMap;
@@ -49,6 +44,48 @@ public class AlbumHash implements Serializable {
         }
     }
 
+    public List<Song> getSongsFromAlbum(String album) {
+        return albumMap.getOrDefault(album, null);
+    }
+
+    public List<Song> getOneSongPerAlbum() {
+        List<Song> result = new ArrayList<>();
+        Set<String> visitedAlbums = new HashSet<>();
+
+        for (List<Song> albumSongs : albumMap.values()) {
+            for (Song song : albumSongs) {
+                String albumName = song.getAlbum();
+                String artistName = song.getArtist();
+                String albumKey = albumName + artistName;
+
+                if (!visitedAlbums.contains(albumKey)) {
+                    result.add(song);
+                    visitedAlbums.add(albumKey);
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<Song> getAllSongsFromAlbum(Song song) {
+        String albumName = song.getAlbum();
+        String artistName = song.getArtist();
+
+        List<Song> songsFromAlbum = albumMap.get(albumName);
+        List<Song> result = new ArrayList<>();
+
+        if (songsFromAlbum != null) {
+            for (Song albumSong : songsFromAlbum) {
+                if (albumSong.getArtist().equals(artistName)) {
+                    result.add(albumSong);
+                }
+            }
+        }
+
+        return result;
+    }
+
+
     public Song getSong(String songName, String albumName, int genre, String artistName) {
         List<Song> songs = albumMap.get(albumName);
         if (songs != null) {
@@ -60,7 +97,6 @@ public class AlbumHash implements Serializable {
         }
         return null;
     }
-
     public boolean containsSong(String songName, String albumName, int genre, String artistName) {
         List<Song> songs = albumMap.get(albumName);
         if (songs != null) {
@@ -71,10 +107,6 @@ public class AlbumHash implements Serializable {
             }
         }
         return false;
-    }
-
-    public List<Song> getSongsFromAlbum(String album) {
-        return albumMap.getOrDefault(album, null);
     }
 
     public boolean containsAlbum(String album) {

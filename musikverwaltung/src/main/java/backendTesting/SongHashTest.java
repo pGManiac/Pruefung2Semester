@@ -1,4 +1,4 @@
-package BackEndTests;
+package backendTesting;
 
 import backend.Song;
 import backend.SongHash;
