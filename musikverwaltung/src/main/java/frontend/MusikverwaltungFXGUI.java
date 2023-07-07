@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import backend.Database;
 import backend.Song;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -62,11 +63,12 @@ public class MusikverwaltungFXGUI extends Application{
     TableView<Song> lieder;
     ScrollPane scroller;
     Dialog<Song> adder;
-    ObservableList<String> options = FXCollections.observableArrayList("Metal", "Pop", "Rock", "Klassik", "Country");
+    ObservableList<String> options = FXCollections.observableArrayList("Rock", "Pop", "Hip-Hop", "Electronic", "Indie", "Classical", "Metal");
     FileChooser fileChooser = new FileChooser();
     Button swap;
     private Database data;
     Button exit;
+    Scene scene;
 
     public static void initiate() {
         launch();
@@ -95,6 +97,7 @@ public class MusikverwaltungFXGUI extends Application{
         //Database speichern und beenden
         exit = new Button("Save and Exit");
         exit.setOnAction(e-> {saveAndExit(data);});
+        Platform.runLater(() -> {exit.setPrefHeight(swap.getHeight());});
 
         //Menues
         genre = new Menu("_Genre"); //ermoeglicht shortkey durch Unterstrich (Anfangsbuchstabe)
@@ -107,7 +110,9 @@ public class MusikverwaltungFXGUI extends Application{
         entfernen = new MenuItem("Entfernen");
         entfernen.setOnAction(e-> {loeschen(data, lieder);});
         az = new MenuItem("A-Z");
+        az.setOnAction(e-> {alphabeticalSortA(data, lieder);});
         za = new MenuItem("Z-A");
+        za.setOnAction(e-> {alphabeticalSortZ(data, lieder);});
         metal = new MenuItem("Metal");
         pop = new MenuItem("Pop");
         rock = new MenuItem("Rock");
@@ -126,15 +131,18 @@ public class MusikverwaltungFXGUI extends Application{
         //Tabelle
         lieder = new TableView<>();
         ObservableList<Song> tableData = FXCollections.observableList(data.getSongHash().getAllSongs());
-        TableColumn<Song, String> spalte1 = new TableColumn<>("Titel");
-        TableColumn<Song, String> spalte2 = new TableColumn<>("Album");
-        TableColumn<Song, Integer> spalte3 = new TableColumn<>("Genre");
-        TableColumn<Song, String> spalte4 = new TableColumn<>("Interpret");
+        TableColumn<Song, String> spalte1 = new TableColumn<Song, String>("Titel");
+        TableColumn<Song, String> spalte2 = new TableColumn<Song, String>("Album");
+        TableColumn<Song, String> spalte3 = new TableColumn<Song, String>("Genre");
+        TableColumn<Song, String> spalte4 = new TableColumn<Song, String>("Interpret");
         spalte1.setCellValueFactory(new PropertyValueFactory<>("name"));
         spalte2.setCellValueFactory(new PropertyValueFactory<>("album"));
-        spalte3.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        spalte3.setCellValueFactory(new PropertyValueFactory<>("genreName"));
         spalte4.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        lieder.getColumns().addAll(spalte1, spalte2, spalte3, spalte4);
+        lieder.getColumns().add(spalte1);
+        lieder.getColumns().add(spalte2);
+        lieder.getColumns().add(spalte3);
+        lieder.getColumns().add(spalte4);
         lieder.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Spalten passen sich window an
         lieder.setItems(tableData);
         //lieder.getSelectionModel().getSelectedItems();
@@ -146,12 +154,13 @@ public class MusikverwaltungFXGUI extends Application{
         HBox hbox = new HBox(menuBar, swap, exit); //button und menubar in hbox, wobei menubar sich resizen darf
         HBox.setHgrow(menuBar, Priority.ALWAYS);
         HBox.setHgrow(swap, Priority.NEVER);
+        HBox.setHgrow(exit, Priority.NEVER);
 
         border.setTop(hbox);
         StackPane stack = new StackPane(lieder); //stack pane should automatically create scroller
         border.setCenter(stack);
 
-        Scene scene = new Scene(border, 960, 600);
+        scene = new Scene(border, 960, 600);
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         
         
@@ -162,11 +171,11 @@ public class MusikverwaltungFXGUI extends Application{
     }
 
     public void einfuegen(Stage stage, TableView<Song> v, Database database) {
-        //Dialogfenster
+        //Dialogfenster Hinzufuegen
         adder = new Dialog<>();
         adder.setTitle("Songeingabe");
-        //adder.setHeaderText("Geben Sie Details zu Ihrem Song ein:");
-        Label header = new Label("Geben Sie Details zu Ihrem Song ein:");
+        Label headerE = new Label("Geben Sie Details zu Ihrem Song ein:");
+        headerE.setId("headerEinfuegen");
         adder.setResizable(true);
         DialogPane diaPane = adder.getDialogPane();
         diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
@@ -198,7 +207,10 @@ public class MusikverwaltungFXGUI extends Application{
         grid.add(interTField, 2, 4);
         grid.add(create, 3, 7);
         ButtonType okButtonType = new ButtonType("Fertig", ButtonData.OK_DONE); //dieser Button ist notwendig zum Schliessen des Dialogs
-        adder.getDialogPane().setContent(grid);
+        BorderPane diaBorder = new BorderPane();
+        diaBorder.setTop(headerE);
+        diaBorder.setCenter(grid);
+        adder.getDialogPane().setContent(diaBorder);
         adder.getDialogPane().getButtonTypes().add(okButtonType);
         
         adder.showAndWait();
@@ -210,7 +222,7 @@ public class MusikverwaltungFXGUI extends Application{
         String genreNew = g.getValue();
         String artistNew = i.getText();
 
-        File selectedFile = fileChooser.showOpenDialog(stage); //root window stage cannot be accessed, while the is dialog open
+        File selectedFile = fileChooser.showOpenDialog(stage); //root window stage cannot be accessed, while the dialog is open
         String destination = "src/main/java/frontend/lieder/";
             String id = new SimpleDateFormat("mm:ss:SSS").format(new java.util.Date());
 
@@ -231,17 +243,32 @@ public class MusikverwaltungFXGUI extends Application{
     }
 
     public void loeschen(Database database, TableView<Song> v) {
+        //Dialogfenster entfernen
         Dialog<Song> alert = new Dialog<>();
+        DialogPane alertPane = alert.getDialogPane();
+        alertPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
+        alertPane.getStyleClass().add("alert");
         alert.setTitle("Loeschen bestaetigen");
-        alert.setHeaderText("Ausgewaehlten Song loeschen?");
+        Label headerL = new Label("Ausgewaehlten Song loeschen?");
+        headerL.setId("headerLoeschen");
         Button yes = new Button("Ja");
         Button no = new Button("Nein");
-        yes.setOnAction(e-> {deleteSong(database, v.getSelectionModel().getSelectedItem(), alert, v);});
-        no.setOnAction(e-> {dialogClosing(alert);;});
-        GridPane alertGrid = new GridPane();
-        alertGrid.add(yes, 0, 0);
-        alertGrid.add(no, 3, 0);
-        alert.getDialogPane().setContent(alertGrid);
+        Song picked = v.getSelectionModel().getSelectedItem();
+        yes.setOnAction(e-> {deleteSong(database, picked, alert, v);});
+        no.setOnAction(e-> {dialogClosing(alert);});
+        
+        /* GridPane alertGrid = new GridPane();
+        alertGrid.getStyleClass().add("alertGrid");
+        alertGrid.add(yes, 1, 1);
+        alertGrid.add(no, 3, 1); */
+
+        HBox alertHBox = new HBox(50, yes, no);
+        alertHBox.getStyleClass().add("alertHBox");
+        
+        BorderPane alertBorder = new BorderPane();
+        alertBorder.setTop(headerL);
+        alertBorder.setCenter(alertHBox);
+        alert.getDialogPane().setContent(alertBorder);
         alert.showAndWait();
     }
 
@@ -250,6 +277,16 @@ public class MusikverwaltungFXGUI extends Application{
         ObservableList<Song> tableDataNew = FXCollections.observableList(database.getSongHash().getAllSongs());
         v.setItems(tableDataNew);
         dialogClosing(a);
+    }
+
+    public void alphabeticalSortA(Database database, TableView<Song> v) {
+        ObservableList<Song> sortedTableA = FXCollections.observableList(database.getSongHash().sortAToZ());
+        v.setItems(sortedTableA);
+    }
+
+    public void alphabeticalSortZ(Database database, TableView<Song> v) {
+        ObservableList<Song> sortedTableZ = FXCollections.observableList(database.getSongHash().sortZToA());
+        v.setItems(sortedTableZ);
     }
 
     /* File target = new File("/home/misha/Documents/unicode/Java/Pruefung2Semester/musikverwaltung/src/main/java/frontend/lieder/" + selectedFile.getName());
@@ -320,5 +357,9 @@ public class MusikverwaltungFXGUI extends Application{
         dialog.setResult(null); //Dialog gibt nichts zurück, da wir das ja nur für entfernen nutzen, was nichts zurückgeben muss
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
         stage.close(); //anstatt des dialogs selbst, hole ich mir die stage, auf der der Dialog ist und schließe diese, womit auch der dialog weg ist
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 }

@@ -49,13 +49,24 @@
     -fx-text-fill: black;
 }
 
-.dialog {
-    -fx-background: #4ea79b;
-}
-
 .diaGrid {
     -fx-alignment: center;
     -fx-size: 100px;
+}
+
+#headerEinfuegen {
+    -fx-background-color: #4ea79b;
+    -fx-background-radius: 20px;
+}
+
+.alertHBox {
+    -fx-alignment: center;
+    -fx-size: 100px;
+}
+
+#headerLoeschen {
+    -fx-background-color: #4ea79b;
+    -fx-background-radius: 20px;
 }
 
 .label {
@@ -70,7 +81,7 @@
     -fx-font-size: 20px;
 }
 
- .button {
+.button {
     -fx-background-color: #4ea79b;
     -fx-font-size: 20px;
     -fx-background-radius: 15px;
@@ -83,3 +94,5 @@
 .button:hover {
     -fx-background-color: white;
 }
+
+
