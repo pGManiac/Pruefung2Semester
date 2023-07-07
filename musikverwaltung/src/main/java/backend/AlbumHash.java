@@ -29,18 +29,19 @@ public class AlbumHash implements Serializable {
         }
     }
 
-    public void removeSong(String songName, String album, int genre, String artist) {
-        List<Song> songs = albumMap.get(album);
+    public void removeSong(Song song) {
+        String key = song.getAlbum();
+        List<Song> songs = albumMap.get(key);
 
         if (songs != null) {
             Iterator<Song> iterator = songs.iterator();
             while (iterator.hasNext()) {
-                Song song = iterator.next();
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), album) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artist)) {
+                Song comparedSong = iterator.next();
+                if (song.equals(comparedSong)) {
                     iterator.remove();
                     // If the list is empty after removing the song, remove the key from the map
                     if (songs.isEmpty()) {
-                        albumMap.remove(album);
+                        albumMap.remove(key);
                     }
                     return;
                 }
@@ -52,7 +53,7 @@ public class AlbumHash implements Serializable {
         List<Song> songs = albumMap.get(albumName);
         if (songs != null) {
             for (Song song : songs) {
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenreNumber()) && Objects.equals(song.getArtist(), artistName)) {
                     return song;
                 }
             }
@@ -64,7 +65,7 @@ public class AlbumHash implements Serializable {
         List<Song> songs = albumMap.get(albumName);
         if (songs != null) {
             for (Song song : songs) {
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenreNumber()) && Objects.equals(song.getArtist(), artistName)) {
                     return true;
                 }
             }

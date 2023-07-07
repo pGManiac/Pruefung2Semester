@@ -28,7 +28,7 @@ public class SongHash implements Serializable {
         List<Song> songs = songMap.get(songName);
         if (songs != null) {
             for (Song song : songs) {
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenreNumber()) && Objects.equals(song.getArtist(), artistName)) {
                     return song;
                 }
             }
@@ -36,18 +36,19 @@ public class SongHash implements Serializable {
         return null;
     }
 
-    public void removeSong(String songName, String albumName, int genre, String artistName) {
-        List<Song> songs = songMap.get(songName);
+    public void removeSong(Song song) {
+        String key = song.getName();
+        List<Song> songs = songMap.get(key);
 
         if (songs != null) {
             Iterator<Song> iterator = songs.iterator();
             while (iterator.hasNext()) {
-                Song song = iterator.next();
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)); {
+                Song comparedSong = iterator.next();
+                if (song.equals(comparedSong)) {
                     iterator.remove();
                     // If the list is empty after removing the song, remove the key from the map
                     if (songs.isEmpty()) {
-                        songMap.remove(songName);
+                        songMap.remove(key);
                     }
                     return;
                 }
@@ -63,7 +64,7 @@ public class SongHash implements Serializable {
         List<Song> songs = songMap.get(songName);
         if (songs != null) {
             for (Song song : songs) {
-                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenre()) && Objects.equals(song.getArtist(), artistName)) {
+                if (Objects.equals(song.getName(), songName) && Objects.equals(song.getAlbum(), albumName) && (genre == song.getGenreNumber()) && Objects.equals(song.getArtist(), artistName)) {
                     return true;
                 }
             }
@@ -133,7 +134,7 @@ public class SongHash implements Serializable {
         List<Song> songsByGenre = new ArrayList<>();
         for (List<Song> songsList : songMap.values()) {
             for (Song song : songsList) {
-                if (song.getGenre() == genre) {
+                if (song.getGenreNumber() == genre) {
                     songsByGenre.add(song);
                 }
             }

@@ -24,7 +24,7 @@ class DatabaseTest {
 
     @BeforeEach
     public void setUp() {
-        originalDatabase = new Database(15  );
+        originalDatabase = new Database();
     }
 
     @AfterEach
@@ -38,9 +38,9 @@ class DatabaseTest {
 
     @Test
     public void testAddSongs() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
-        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop","Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", "Hip-Hop", "Artist 3", "0");
         originalDatabase.addSong(song1);
         originalDatabase.addSong(song2);
         originalDatabase.addSong(song3);
@@ -57,9 +57,9 @@ class DatabaseTest {
 
     @Test
     public void testRemoveSongs() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
-        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop","Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", "Hip-Hop", "Artist 3", "0");
 
         originalDatabase.addSong(song1);
         originalDatabase.addSong(song2);
@@ -81,15 +81,15 @@ class DatabaseTest {
     @Test
     public void testRemoveNonExistingSong() {
 
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
-        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 3", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", "Hip-Hop", "Artist 3", "0");
 
         originalDatabase.addSong(song1);
         originalDatabase.addSong(song2);
         originalDatabase.addSong(song3);
 
-        Song nonExistingSong = new Song("Non-Existing Song", "Album 2", 1, "Artist 3", "0");
+        Song nonExistingSong = new Song("Non-Existing Song", "Album 2", "Pop", "Artist 3", "0");
         originalDatabase.removeSong(nonExistingSong);
 
         assertTrue(originalDatabase.containsSong("Song 1", "Album 1", 1, "Artist 1"));
@@ -103,8 +103,8 @@ class DatabaseTest {
 
     @Test
     public void testSerializationDeserialization() {
-        originalDatabase.addSong(new Song("Song 1", "Album 1", 1, "Artist 1", "path1"));
-        originalDatabase.addSong(new Song("Song 2", "Album 2", 2, "Artist 2", "path2"));
+        originalDatabase.addSong(new Song("Song 1", "Album 1", "Pop", "Artist 1", "path1"));
+        originalDatabase.addSong(new Song("Song 2", "Album 2", "Hip-Hop", "Artist 2", "path2"));
 
         // Serialize the database
         Database.serializeDatabase(originalDatabase, TEST_FILENAME);
@@ -144,8 +144,8 @@ class DatabaseTest {
 
     @Test
     public void testSerializationDeserializationWithNonExistingFile() {
-        originalDatabase.addSong(new Song("Song 1", "Album 1", 1, "Artist 1", "path1"));
-        originalDatabase.addSong(new Song("Song 2", "Album 2", 2, "Artist 2", "path2"));
+        originalDatabase.addSong(new Song("Song 1", "Album 1", "Pop", "Artist 1", "path1"));
+        originalDatabase.addSong(new Song("Song 2", "Album 2", "Hip-Hop", "Artist 2", "path2"));
 
         // Serialize the database
         Database.serializeDatabase(originalDatabase, TEST_FILENAME);

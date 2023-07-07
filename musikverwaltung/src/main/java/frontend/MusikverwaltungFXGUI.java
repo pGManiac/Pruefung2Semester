@@ -209,27 +209,6 @@ public class MusikverwaltungFXGUI extends Application{
         String albumNew = a.getText();
         String genreNew = g.getValue();
         String artistNew = i.getText();
-        int genreValue;
-
-        switch (genreNew) {
-            case "Metal":
-                genreValue = 0;
-                break;
-            case "Pop":
-                genreValue = 1;
-                break;
-            case "Rock":
-                genreValue = 2;
-                break;
-            case "Klassik":
-                genreValue = 3;
-                break;
-            case "Country":
-                genreValue = 4;
-                break;
-            default:
-                genreValue = -1; //Genre N/A
-        }
 
         File selectedFile = fileChooser.showOpenDialog(stage); //root window stage cannot be accessed, while the is dialog open
         String destination = "src/main/java/frontend/lieder/";
@@ -244,7 +223,7 @@ public class MusikverwaltungFXGUI extends Application{
                 System.err.println(ioException.getMessage());
             }
 
-        Song songNew = new Song(titleNew, albumNew, genreValue, artistNew, targetString);
+        Song songNew = new Song(titleNew, albumNew, genreNew, artistNew, targetString);
         //Song Objekte im Anschluss in .ser file schreiben und immer beim Öffnen der Applikation die .ser files lesen
         database.addSong(songNew);
         ObservableList<Song> tableDataNew = FXCollections.observableList(database.getSongHash().getAllSongs());
@@ -326,7 +305,7 @@ public class MusikverwaltungFXGUI extends Application{
             }
         catch (IOException ioException) {
             System.err.println(ioException.getMessage());
-            return new Database(5);
+            return new Database();
         }
     }
 

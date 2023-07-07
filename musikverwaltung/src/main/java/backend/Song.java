@@ -5,16 +5,51 @@ import java.util.Objects;
 public class Song implements Serializable {
     private String name;
     private String album;
-    private int genre;
+    private int genreNumber;
+
+    private String genreName;
     private String artist;
     private String mp3Path;
 
-    public Song(String name, String album, int genre, String artist, String mp3Path) {
+
+    public Song(String name, String album, String genreName, String artist, String mp3Path) {
         this.name = name;
         this.album = album;
-        this.genre = genre;
+        this.genreNumber = convertGenreStringToInt(genreName);
+        this.genreName = genreName;
         this.artist = artist;
         this.mp3Path = mp3Path;
+    }
+    public int convertGenreStringToInt(String genreName) {
+        int genreNumber;
+
+        switch (genreName) {
+            case "Rock":
+                genreNumber = 0;
+                break;
+            case "Pop":
+                genreNumber = 1;
+                break;
+            case "Hip-Hop":
+                genreNumber = 2;
+                break;
+            case "Electronic":
+                genreNumber = 3;
+                break;
+            case "Indie":
+                genreNumber = 4;
+                break;
+            case "Classical":
+                genreNumber = 5;
+                break;
+            case "Metal":
+                genreNumber = 6;
+                break;
+            default:
+                genreNumber = -1; // Default value if the genre name doesn't match any case
+                break;
+        }
+        return genreNumber;
     }
 
     @Override
@@ -22,7 +57,7 @@ public class Song implements Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Song song = (Song) obj;
-        return genre == song.genre &&
+        return genreNumber == song.genreNumber &&
                 Objects.equals(name, song.name) &&
                 Objects.equals(album, song.album) &&
                 Objects.equals(artist, song.artist) &&
@@ -31,7 +66,7 @@ public class Song implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, album, genre, artist, mp3Path);
+        return Objects.hash(name, album, genreNumber, artist, mp3Path);
     }
 
     public String getName() {
@@ -42,9 +77,11 @@ public class Song implements Serializable {
         return album;
     }
 
-    public int getGenre() {
-        return genre;
+    public int getGenreNumber() {
+        return genreNumber;
     }
+
+    public String getGenreName() { return genreName;}
 
     public String getArtist() {
         return artist;
@@ -60,9 +97,11 @@ public class Song implements Serializable {
         this.album = album;
     }
 
-    public void setGenre(int genre) {
-        this.genre = genre;
+    public void setGenreNumber(int genreNumber) {
+        this.genreNumber = genreNumber;
     }
+
+    public void setGenreName(String genreName) { this.genreName = genreName;}
 
     public void setArtist(String artist) {
         this.artist = artist;

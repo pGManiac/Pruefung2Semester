@@ -25,10 +25,10 @@ public class Database implements Serializable {
      * @see backend.GenreHash
      * @see backend.ArtistHash
      */
-    public Database(int numberOfGenres) {
+    public Database() {
         songHash = new SongHash();
         albumHash = new AlbumHash();
-        genreHash = new GenreHash(numberOfGenres);
+        genreHash = new GenreHash();
         artistHash = new ArtistHash();
     }
 
@@ -40,7 +40,7 @@ public class Database implements Serializable {
      *                                  Any value outside this range will result in an IllegalArgumentException.
      */
     public void addSong(Song song) {
-        int genre = song.getGenre();
+        int genre = song.getGenreNumber();
 
         if(genre >= 0 && genre < genreHash.numberOfGenres()) {
             songHash.addSong(song);
@@ -61,16 +61,13 @@ public class Database implements Serializable {
      *                                  The error is logged using a Logger with a warning level.
      */
     public void removeSong(Song song) {
-        String songName = song.getName();
-        String albumName = song.getAlbum();
-        int genre = song.getGenre();
-        String artistName = song.getArtist();
+        int genre = song.getGenreNumber();
 
         if (genre >= 0 && genre < genreHash.numberOfGenres()) {
-            songHash.removeSong(songName, albumName, genre, artistName);
-            albumHash.removeSong(songName, albumName, genre, artistName);
-            genreHash.removeSong(songName, albumName, genre, artistName);
-            artistHash.removeSong(songName, albumName, genre, artistName);
+            songHash.removeSong(song);
+            albumHash.removeSong(song);
+            genreHash.removeSong(song);
+            artistHash.removeSong(song);
         } else {
             Logger logger = Logger.getLogger(GenreHash.class.getName());
             logger.log(Level.WARNING, "Invalid genre value while removing Song: " + genre);

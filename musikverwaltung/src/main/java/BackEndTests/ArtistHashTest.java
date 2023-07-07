@@ -20,9 +20,9 @@ public class ArtistHashTest {
 
     @Test
     public void testAddSong() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 1", "0");
-        Song song3 = new Song("Song 3", "Album 2", 3, "Artist 2", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 1", "0");
+        Song song3 = new Song("Song 3", "Album 2", "Electronic", "Artist 2", "0");
 
         artistHash.addSong(song1);
         artistHash.addSong(song2);
@@ -35,9 +35,9 @@ public class ArtistHashTest {
 
     @Test
     public void testAddMultipleSongsToSameArtist() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 1", "0");
-        Song song3 = new Song("Song 3", "Album 3", 3, "Artist 1", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 1", "0");
+        Song song3 = new Song("Song 3", "Album 2", "Electronic", "Artist 1", "0");
 
         artistHash.addSong(song1);
         artistHash.addSong(song2);
@@ -53,9 +53,9 @@ public class ArtistHashTest {
 
     @Test
     public void testRemoveSong() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 1", "0");
-        Song song3 = new Song("Song 1", "Album 2", 3, "Artist 2", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 1", "0");
+        Song song3 = new Song("Song 1", "Album 2", "Electronic", "Artist 2", "0");
 
         artistHash.addSong(song1);
         artistHash.addSong(song2);
@@ -63,7 +63,7 @@ public class ArtistHashTest {
 
         assertEquals(2, artistHash.size());
 
-        artistHash.removeSong("Song 1", "Album 2", 3, "Artist 2");
+        artistHash.removeSong(song3);
 
         assertEquals(1, artistHash.size());
 
@@ -74,15 +74,15 @@ public class ArtistHashTest {
 
     @Test
     public void testRemoveAllSongsFromArtist() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 1", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 1", "0");
 
         artistHash.addSong(song1);
         artistHash.addSong(song2);
 
         // Remove all songs from artist "Artist 1"
-        artistHash.removeSong("Song 1", "Album 1", 1, "Artist 1");
-        artistHash.removeSong("Song 2", "Album 2", 2, "Artist 1");
+        artistHash.removeSong(song1);
+        artistHash.removeSong(song2);
 
         // Verify that the artist hash no longer contains the artist
         assertFalse(artistHash.containsArtist("Artist 1"));
@@ -91,10 +91,10 @@ public class ArtistHashTest {
 
     @Test
     public void testGetSongsFromArtist() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 1", "0");
-        Song song3 = new Song("Song 3", "Album 2", 2, "Artist 2", "0");
-        Song song4 = new Song("Song 4", "Album 3", 4, "Artist 3", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 1", "0");
+        Song song3 = new Song("Song 3", "Album 2", "Hip-Hop", "Artist 2", "0");
+        Song song4 = new Song("Song 4", "Album 3", "Indie", "Artist 3", "0");
 
         artistHash.addSong(song1);
         artistHash.addSong(song2);
@@ -109,8 +109,8 @@ public class ArtistHashTest {
 
     @Test
     public void testGetNonExistingSongFromArtist() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 2", "0");
 
         artistHash.addSong(song1);
 
@@ -123,8 +123,8 @@ public class ArtistHashTest {
 
     @Test
     public void testGetSongsFromNonExistingArtist() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 2", "0");
 
         artistHash.addSong(song1);
 
@@ -137,9 +137,9 @@ public class ArtistHashTest {
 
     @Test
     public void testContainsArtist() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 4", 2, "Artist 2", "0");
-        Song song3 = new Song("Song 3", "Album 2", 3, "Artist 3", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 4", "Hip-Hop", "Artist 2", "0");
+        Song song3 = new Song("Song 3", "Album 2", "Electronic", "Artist 3", "0");
 
         artistHash.addSong(song1);
         artistHash.addSong(song3);
@@ -151,8 +151,8 @@ public class ArtistHashTest {
 
     @Test
     public void testContainsSongInNonExistingArtist() {
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 2", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 2", "0");
 
         artistHash.addSong(song1);
 
@@ -167,8 +167,8 @@ public class ArtistHashTest {
     public void testSize() {
         assertEquals(0, artistHash.size());
 
-        Song song1 = new Song("Song 1", "Album 1", 1, "Artist 1", "0");
-        Song song2 = new Song("Song 2", "Album 2", 2, "Artist 1", "0");
+        Song song1 = new Song("Song 1", "Album 1", "Pop", "Artist 1", "0");
+        Song song2 = new Song("Song 2", "Album 2", "Hip-Hop", "Artist 1", "0");
 
         artistHash.addSong(song1);
         assertEquals(1, artistHash.size());

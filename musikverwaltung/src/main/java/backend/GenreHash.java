@@ -7,7 +7,8 @@ public class GenreHash implements Serializable {
     private SongHash[] songHashArray;
 
 
-    public GenreHash(int numberOfGenres) {
+    public GenreHash() {
+        final int numberOfGenres = 7;
         songHashArray = new SongHash[numberOfGenres];
         for(int i = 0; i < numberOfGenres; i++) {
             songHashArray[i] = new SongHash();
@@ -15,11 +16,11 @@ public class GenreHash implements Serializable {
     }
 
     public void addSong(Song song) {
-        songHashArray[song.getGenre()].addSong(song);
+        songHashArray[song.getGenreNumber()].addSong(song);
     }
 
-    public void removeSong(String songName, String albumName, int genre, String artistName) {
-        songHashArray[genre].removeSong(songName, albumName, genre, artistName);
+    public void removeSong(Song song) {
+        songHashArray[song.getGenreNumber()].removeSong(song);
     }
 
     public Song getSong(String songName, String albumName, int genre, String artistName) {

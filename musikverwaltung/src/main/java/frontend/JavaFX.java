@@ -12,7 +12,7 @@ public class JavaFX extends Application {
     // Test-Programm aus den Docs um zu checken, ob JavaFX laeuft
     @Override
     public void start(Stage stage) {
-        Song song = new Song("hi","hi", 1, "hans", "0");
+        Song song = new Song("hi","hi", "Pop", "hans", "0");
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
         Label l = new Label("Hello, JavaFX " +  song.getName()+ javafxVersion + ", running on Java " + javaVersion + ".");
