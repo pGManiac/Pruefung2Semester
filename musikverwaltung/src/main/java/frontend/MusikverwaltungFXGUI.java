@@ -63,7 +63,7 @@ public class MusikverwaltungFXGUI extends Application{
     TableView<Song> lieder;
     ScrollPane scroller;
     Dialog<Song> adder;
-    ObservableList<String> options = FXCollections.observableArrayList("Metal", "Pop", "Rock", "Klassik", "Country");
+    ObservableList<String> options = FXCollections.observableArrayList("Rock", "Pop", "Hip-Hop", "Electronic", "Indie", "Classical", "Metal");
     FileChooser fileChooser = new FileChooser();
     Button swap;
     private Database data;
@@ -133,11 +133,11 @@ public class MusikverwaltungFXGUI extends Application{
         ObservableList<Song> tableData = FXCollections.observableList(data.getSongHash().getAllSongs());
         TableColumn<Song, String> spalte1 = new TableColumn<Song, String>("Titel");
         TableColumn<Song, String> spalte2 = new TableColumn<Song, String>("Album");
-        TableColumn<Song, Integer> spalte3 = new TableColumn<Song, Integer>("Genre");
+        TableColumn<Song, String> spalte3 = new TableColumn<Song, String>("Genre");
         TableColumn<Song, String> spalte4 = new TableColumn<Song, String>("Interpret");
         spalte1.setCellValueFactory(new PropertyValueFactory<>("name"));
         spalte2.setCellValueFactory(new PropertyValueFactory<>("album"));
-        spalte3.setCellValueFactory(new PropertyValueFactory<>("genre"));
+        spalte3.setCellValueFactory(new PropertyValueFactory<>("genreName"));
         spalte4.setCellValueFactory(new PropertyValueFactory<>("artist"));
         lieder.getColumns().add(spalte1);
         lieder.getColumns().add(spalte2);
@@ -154,6 +154,7 @@ public class MusikverwaltungFXGUI extends Application{
         HBox hbox = new HBox(menuBar, swap, exit); //button und menubar in hbox, wobei menubar sich resizen darf
         HBox.setHgrow(menuBar, Priority.ALWAYS);
         HBox.setHgrow(swap, Priority.NEVER);
+        HBox.setHgrow(exit, Priority.NEVER);
 
         border.setTop(hbox);
         StackPane stack = new StackPane(lieder); //stack pane should automatically create scroller
@@ -252,7 +253,8 @@ public class MusikverwaltungFXGUI extends Application{
         headerL.setId("headerLoeschen");
         Button yes = new Button("Ja");
         Button no = new Button("Nein");
-        yes.setOnAction(e-> {deleteSong(database, v.getSelectionModel().getSelectedItem(), alert, v);});
+        Song picked = v.getSelectionModel().getSelectedItem();
+        yes.setOnAction(e-> {deleteSong(database, picked, alert, v);});
         no.setOnAction(e-> {dialogClosing(alert);});
         
         /* GridPane alertGrid = new GridPane();
