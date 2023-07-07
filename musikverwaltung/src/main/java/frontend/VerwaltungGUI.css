@@ -27,7 +27,7 @@
 }
 
 .menu-bar {
-    -fx-background-color: #883ca7;
+    -fx-background-color: #4ea79b;
     -fx-background-radius: 20px;
     -fx-background-image: url("file:src/main/java/frontend/icons/backgnd.png")
 }
@@ -37,7 +37,7 @@
 }
 
 .menu:hover {
-    -fx-background-color:#638a7e;
+    -fx-background-color:#4ea79b;
 }
 
 .menu:hover .label {
@@ -45,12 +45,12 @@
 }
 
 .menu-item:hover {
-    -fx-background: #638a7e;
+    -fx-background: #4ea79b;
     -fx-text-fill: black;
 }
 
 .dialog {
-    -fx-background: #638a7e;
+    -fx-background: #4ea79b;
 }
 
 .diaGrid {
@@ -71,7 +71,7 @@
 }
 
  .button {
-    -fx-background-color: #638a7e;
+    -fx-background-color: #4ea79b;
     -fx-font-size: 20px;
     -fx-background-radius: 15px;
 }

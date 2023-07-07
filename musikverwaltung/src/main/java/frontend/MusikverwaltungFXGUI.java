@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 
+import backend.Database;
 import backend.Song;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -23,7 +24,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart.Data;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -62,6 +65,8 @@ public class MusikverwaltungFXGUI extends Application{
     ObservableList<String> options = FXCollections.observableArrayList("Metal", "Pop", "Rock", "Klassik", "Country");
     FileChooser fileChooser = new FileChooser();
     Button swap;
+    private Database data;
+    Button exit;
 
     public static void initiate() {
         launch();
@@ -69,6 +74,7 @@ public class MusikverwaltungFXGUI extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        data = readObjectFromFile();
         primaryStage.setTitle("Music Player");
 
         /* StackPane layout = new StackPane();
@@ -86,6 +92,10 @@ public class MusikverwaltungFXGUI extends Application{
         swap.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         swap.getStyleClass().add("swap");
 
+        //Database speichern und beenden
+        exit = new Button("Save and Exit");
+        exit.setOnAction(e-> {saveAndExit(data);});
+
         //Menues
         genre = new Menu("_Genre"); //ermoeglicht shortkey durch Unterstrich (Anfangsbuchstabe)
         datei = new Menu("_Datei");
@@ -93,8 +103,9 @@ public class MusikverwaltungFXGUI extends Application{
         darstellung = new Menu("_Ansicht");
 
         hinzu = new MenuItem("Hinzufuegen");
-        hinzu.setOnAction(e-> {einfuegen(primaryStage, lieder);});
+        hinzu.setOnAction(e-> {einfuegen(primaryStage, lieder, data);});
         entfernen = new MenuItem("Entfernen");
+        entfernen.setOnAction(e-> {loeschen(data, lieder);});
         az = new MenuItem("A-Z");
         za = new MenuItem("Z-A");
         metal = new MenuItem("Metal");
@@ -114,6 +125,7 @@ public class MusikverwaltungFXGUI extends Application{
 
         //Tabelle
         lieder = new TableView<>();
+        ObservableList<Song> tableData = FXCollections.observableList(data.getSongHash().getAllSongs());
         TableColumn<Song, String> spalte1 = new TableColumn<>("Titel");
         TableColumn<Song, String> spalte2 = new TableColumn<>("Album");
         TableColumn<Song, Integer> spalte3 = new TableColumn<>("Genre");
@@ -124,13 +136,14 @@ public class MusikverwaltungFXGUI extends Application{
         spalte4.setCellValueFactory(new PropertyValueFactory<>("artist"));
         lieder.getColumns().addAll(spalte1, spalte2, spalte3, spalte4);
         lieder.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Spalten passen sich window an
+        lieder.setItems(tableData);
         //lieder.getSelectionModel().getSelectedItems();
         //lieder.getSelectionModel().getSelectedItem();
         /* scroller.setContent(lieder);
         scroller.setFitToHeight(true);
         scroller.setFitToWidth(true); */
 
-        HBox hbox = new HBox(menuBar, swap); //button und menubar in hbox, wobei menubar sich resizen darf
+        HBox hbox = new HBox(menuBar, swap, exit); //button und menubar in hbox, wobei menubar sich resizen darf
         HBox.setHgrow(menuBar, Priority.ALWAYS);
         HBox.setHgrow(swap, Priority.NEVER);
 
@@ -143,17 +156,17 @@ public class MusikverwaltungFXGUI extends Application{
         
         
         primaryStage.setScene(scene);
-        readObjectFromFile(lieder);
         primaryStage.show();
 
 
     }
 
-    public void einfuegen(Stage stage, TableView<Song> v) {
+    public void einfuegen(Stage stage, TableView<Song> v, Database database) {
         //Dialogfenster
         adder = new Dialog<>();
         adder.setTitle("Songeingabe");
-        adder.setHeaderText("Geben Sie Details zu Ihrem Song ein:");
+        //adder.setHeaderText("Geben Sie Details zu Ihrem Song ein:");
+        Label header = new Label("Geben Sie Details zu Ihrem Song ein:");
         adder.setResizable(true);
         DialogPane diaPane = adder.getDialogPane();
         diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
@@ -170,8 +183,8 @@ public class MusikverwaltungFXGUI extends Application{
         TextField interTField = new TextField();
         fileChooser.setTitle("MP3-Datei waehlen");
         fileChooser.getExtensionFilters().add(new ExtensionFilter("MP3", "*.mp3"));
-        Button finish = new Button("Create!");
-        finish.setOnAction(e -> {createSong(stage, titTField, albTField, genComboBox, interTField, v);}); //durch create ist es moeglich mehrere Songs hintereinander zu adden
+        Button create = new Button("Create!");
+        create.setOnAction(e -> {createSong(stage, titTField, albTField, genComboBox, interTField, v, database);}); //durch create ist es moeglich mehrere Songs hintereinander zu adden
         
         GridPane grid = new GridPane();
         grid.getStyleClass().add("diaGrid");
@@ -183,7 +196,7 @@ public class MusikverwaltungFXGUI extends Application{
         grid.add(albTField, 2, 2);
         grid.add(genComboBox, 2, 3);
         grid.add(interTField, 2, 4);
-        grid.add(finish, 3, 7);
+        grid.add(create, 3, 7);
         ButtonType okButtonType = new ButtonType("Fertig", ButtonData.OK_DONE); //dieser Button ist notwendig zum Schliessen des Dialogs
         adder.getDialogPane().setContent(grid);
         adder.getDialogPane().getButtonTypes().add(okButtonType);
@@ -191,7 +204,7 @@ public class MusikverwaltungFXGUI extends Application{
         adder.showAndWait();
     }
 
-    public void createSong(Stage stage, TextField t, TextField a, ComboBox<String> g, TextField i, TableView<Song> v) {
+    public void createSong(Stage stage, TextField t, TextField a, ComboBox<String> g, TextField i, TableView<Song> v, Database database) {
         String titleNew = t.getText();
         String albumNew = a.getText();
         String genreNew = g.getValue();
@@ -233,9 +246,31 @@ public class MusikverwaltungFXGUI extends Application{
 
         Song songNew = new Song(titleNew, albumNew, genreValue, artistNew, targetString);
         //Song Objekte im Anschluss in .ser file schreiben und immer beim Öffnen der Applikation die .ser files lesen
-        v.getItems().add(songNew);
+        database.addSong(songNew);
+        ObservableList<Song> tableDataNew = FXCollections.observableList(database.getSongHash().getAllSongs());
+        v.setItems(tableDataNew);
+    }
 
-        writeObjectToFile(songNew);
+    public void loeschen(Database database, TableView<Song> v) {
+        Dialog<Song> alert = new Dialog<>();
+        alert.setTitle("Loeschen bestaetigen");
+        alert.setHeaderText("Ausgewaehlten Song loeschen?");
+        Button yes = new Button("Ja");
+        Button no = new Button("Nein");
+        yes.setOnAction(e-> {deleteSong(database, v.getSelectionModel().getSelectedItem(), alert, v);});
+        no.setOnAction(e-> {dialogClosing(alert);;});
+        GridPane alertGrid = new GridPane();
+        alertGrid.add(yes, 0, 0);
+        alertGrid.add(no, 3, 0);
+        alert.getDialogPane().setContent(alertGrid);
+        alert.showAndWait();
+    }
+
+    public void deleteSong(Database database, Song song, Dialog<Song> a, TableView<Song> v) {
+        database.removeSong(song);
+        ObservableList<Song> tableDataNew = FXCollections.observableList(database.getSongHash().getAllSongs());
+        v.setItems(tableDataNew);
+        dialogClosing(a);
     }
 
     /* File target = new File("/home/misha/Documents/unicode/Java/Pruefung2Semester/musikverwaltung/src/main/java/frontend/lieder/" + selectedFile.getName());
@@ -260,7 +295,7 @@ public class MusikverwaltungFXGUI extends Application{
             System.err.println("An error occurred while copying the file: " + ioException.getMessage());
             } */
 
-    public void writeObjectToFile(Song lied) { //database statt lied eigentlich
+    public void writeObjectToFile(Database database) {
         /* String serFileS = "songObjects.ser";
         File serFile = new File(serFileS);
          try {
@@ -275,7 +310,7 @@ public class MusikverwaltungFXGUI extends Application{
         try (FileOutputStream outputFile = new FileOutputStream("songObjects.ser", true);
              ObjectOutputStream outputObject = new ObjectOutputStream(new BufferedOutputStream(outputFile))) {
                 
-                outputObject.writeObject(lied); //database statt lied eigentlich
+                outputObject.writeObject(database);
                 
              }
         catch (IOException ioException) {
@@ -283,24 +318,28 @@ public class MusikverwaltungFXGUI extends Application{
         }
     }
 
-    public void readObjectFromFile(TableView<Song> v) throws ClassNotFoundException {
-        //String serFileS = "songObjects.ser";
-
+    public Database readObjectFromFile() throws ClassNotFoundException {
         try (FileInputStream inputFile = new FileInputStream("songObjects.ser");
              ObjectInputStream inputObject = new ObjectInputStream(inputFile)) {
-                
-                while (true) {
-                    try {
-                        Song loadedSong = (Song) inputObject.readObject();
-                        v.getItems().add(loadedSong);
-                    } catch (EOFException eofException) {
-                        break;
-                        //exception wird geworfen, wenn Ende des Files erreicht (end of file)
-                    }
-                }
-             }
+                Database dataRead = (Database) inputObject.readObject();
+                return dataRead;
+            }
         catch (IOException ioException) {
             System.err.println(ioException.getMessage());
+            return new Database(5);
         }
+    }
+
+    public void saveAndExit(Database database) {
+        File oldSer = new File("songObjects.ser");
+        oldSer.delete();
+        writeObjectToFile(database);
+        System.exit(0);
+    }
+
+    public void dialogClosing(Dialog<Song> dialog) { //workaround, da dialog.close() einfach so nicht funktioniert
+        dialog.setResult(null); //Dialog gibt nichts zurück, da wir das ja nur für entfernen nutzen, was nichts zurückgeben muss
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.close(); //anstatt des dialogs selbst, hole ich mir die stage, auf der der Dialog ist und schließe diese, womit auch der dialog weg ist
     }
 }
