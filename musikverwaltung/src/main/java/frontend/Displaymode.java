@@ -1,45 +1,24 @@
 package frontend;
 
-import backend.Song;
-import com.sun.javafx.scene.SceneUtils;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 
 public class Displaymode extends Application {
 
-    Button button;
     MenuBar menuBar;
     Menu datei;
     Menu playlists;
-    Menu darstellung;
-    MenuItem hinzu;
-    MenuItem entfernen;
-    MenuItem az;
-    MenuItem za;
     MenuItem genre;
     MenuItem alben;
-    MenuItem metal;
-    MenuItem pop;
-    MenuItem rock;
-    MenuItem klassik;
-    MenuItem country;
-    TableView<Song> lieder;
-    ScrollPane scroller;
-    Dialog<Song> adder;
-    ObservableList<String> options = FXCollections.observableArrayList("Metal", "Pop", "Rock", "Klassik", "Country");
-    FileChooser fileChooser = new FileChooser();
     Button swap;
     Button exit;
 
@@ -56,7 +35,7 @@ public class Displaymode extends Application {
         primaryStage.show();
     }
 
-    private Scene createDisplayScene() {
+    public Scene createDisplayScene() {
 
         BorderPane border = new BorderPane(); // allgemeines Layout
 
@@ -88,17 +67,15 @@ public class Displaymode extends Application {
         swap.getStyleClass().add("swap");
         swap.setOnAction(e -> {
             // Methode zum Wechseln der Szene aufrufen
-            switchToNewScene();
+            switchToArchivemode();
         });
 
         // Beenden button
-        exit = new Button("Beenden");
-        exit.setOnAction(e-> {System.exit(0);});
+        exit = new Button("Save and Exit");
+        exit.setOnAction(e-> System.exit(0));
 
         // exit button wird erst angepasst, wenn JavaFX vollst. initialisiert
-        Platform.runLater(() -> {
-            exit.setPrefHeight(swap.getHeight());
-        });
+        Platform.runLater(() -> exit.setPrefHeight(swap.getHeight()));
 
         HBox hbox = new HBox(menuBar, swap, exit); //menubar in hbox + swap
         HBox.setHgrow(menuBar, Priority.ALWAYS);
@@ -163,14 +140,14 @@ public class Displaymode extends Application {
         return button;
     }
 
-    public void switchToNewScene() {
+    public void switchToArchivemode() {
         try {
             MusikverwaltungFXGUI musikverwaltung = new MusikverwaltungFXGUI();
             Scene newScene = musikverwaltung.createScene();
 
             Stage currentStage = (Stage) swap.getScene().getWindow();
             currentStage.setScene(newScene);
-            currentStage.setTitle("New Scene");
+            currentStage.setTitle("Verwaltungsmodus");
             currentStage.show();
         } catch (Exception e) {
             e.printStackTrace();

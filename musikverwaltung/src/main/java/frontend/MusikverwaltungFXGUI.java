@@ -93,6 +93,10 @@ public class MusikverwaltungFXGUI {
         swap.setGraphic(img);
         swap.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         swap.getStyleClass().add("swap");
+        swap.setOnAction(e -> {
+            // Methode zum Wechseln der Szene aufrufen
+            switchToDisplaymode();
+        });
 
         //Database speichern und beenden
         exit = new Button("Save and Exit");
@@ -168,10 +172,6 @@ public class MusikverwaltungFXGUI {
         //primaryStage.show();
 
         return scene;
-    }
-
-    public void switchToDisplayScene() {
-
     }
 
     public void einfuegen(Stage stage, TableView<Song> v, Database database) {
@@ -365,5 +365,19 @@ public class MusikverwaltungFXGUI {
 
     public Scene getScene() {
         return scene;
+    }
+
+    public void switchToDisplaymode() {
+        try {
+            Displaymode displaymode = new Displaymode();
+            Scene displayScene = displaymode.createDisplayScene();
+
+            Stage currentStage = (Stage) swap.getScene().getWindow();
+            currentStage.setScene(displayScene);
+            currentStage.setTitle("Darstellungsmodus");
+            currentStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
