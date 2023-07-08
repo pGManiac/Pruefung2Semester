@@ -142,10 +142,11 @@ public class Displaymode extends Application {
 
     public void switchToArchivemode() {
         try {
-            MusikverwaltungFXGUI musikverwaltung = new MusikverwaltungFXGUI();
+            Stage currentStage = (Stage) swap.getScene().getWindow();
+
+            Archivemode musikverwaltung = new Archivemode(currentStage);
             Scene newScene = musikverwaltung.createScene();
 
-            Stage currentStage = (Stage) swap.getScene().getWindow();
             currentStage.setScene(newScene);
             currentStage.setTitle("Verwaltungsmodus");
             currentStage.show();

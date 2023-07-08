@@ -1,50 +1,38 @@
 package frontend;
 
 import java.io.BufferedOutputStream;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 
 import backend.Database;
 import backend.Song;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart.Data;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.css.*;
 
-public class MusikverwaltungFXGUI {
+public class Archivemode {
     
     Button button;
     MenuBar menuBar;
@@ -69,6 +57,11 @@ public class MusikverwaltungFXGUI {
     private Database data;
     Button exit;
     Scene scene;
+    private Stage primaryStage;
+
+    public Archivemode(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
 
     /* public static void initiate() {
         launch();
@@ -110,7 +103,7 @@ public class MusikverwaltungFXGUI {
         darstellung = new Menu("_Ansicht");
 
         hinzu = new MenuItem("Hinzufuegen");
-        //hinzu.setOnAction(e-> {einfuegen(primaryStage, lieder, data);});
+        hinzu.setOnAction(e-> {einfuegen(primaryStage, lieder, data);});
         entfernen = new MenuItem("Entfernen");
         entfernen.setOnAction(e-> {loeschen(data, lieder);});
         az = new MenuItem("A-Z");
