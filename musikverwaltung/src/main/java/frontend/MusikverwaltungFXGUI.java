@@ -44,7 +44,7 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.css.*;
 
-public class MusikverwaltungFXGUI extends Application{
+public class MusikverwaltungFXGUI {
     
     Button button;
     MenuBar menuBar;
@@ -70,14 +70,14 @@ public class MusikverwaltungFXGUI extends Application{
     Button exit;
     Scene scene;
 
-    public static void initiate() {
+    /* public static void initiate() {
         launch();
-    }
+    } */
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    //@Override
+    public Scene createScene() throws Exception {
         data = readObjectFromFile();
-        primaryStage.setTitle("Music Player");
+        //primaryStage.setTitle("Music Player");
 
         /* StackPane layout = new StackPane();
         layout.getChildren().add(button); */
@@ -106,7 +106,7 @@ public class MusikverwaltungFXGUI extends Application{
         darstellung = new Menu("_Ansicht");
 
         hinzu = new MenuItem("Hinzufuegen");
-        hinzu.setOnAction(e-> {einfuegen(primaryStage, lieder, data);});
+        //hinzu.setOnAction(e-> {einfuegen(primaryStage, lieder, data);});
         entfernen = new MenuItem("Entfernen");
         entfernen.setOnAction(e-> {loeschen(data, lieder);});
         az = new MenuItem("A-Z");
@@ -164,9 +164,13 @@ public class MusikverwaltungFXGUI extends Application{
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         
         
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        //primaryStage.setScene(scene);
+        //primaryStage.show();
 
+        return scene;
+    }
+
+    public void switchToDisplayScene() {
 
     }
 

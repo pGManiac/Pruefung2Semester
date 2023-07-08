@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 
 public class JavaFX extends Application {
 
-    // Test-Programm aus den Docs um zu checken, ob JavaFX laeuft
     @Override
     public void start(Stage stage) {
         Song song = new Song("hi","hi", "Pop", "hans", "0");

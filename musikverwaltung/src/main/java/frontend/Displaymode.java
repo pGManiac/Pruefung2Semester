@@ -1,6 +1,7 @@
 package frontend;
 
 import backend.Song;
+import com.sun.javafx.scene.SceneUtils;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -8,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -16,11 +16,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
 
 public class Displaymode extends Application {
 
@@ -52,6 +47,17 @@ public class Displaymode extends Application {
     public void start(Stage primaryStage) {
 
         primaryStage.setTitle("Darstellungsmodus");
+
+        // Macht Scene und Stage sichtbar
+        Scene DisplayScene = createDisplayScene();
+
+        primaryStage.setScene(DisplayScene);
+        //primaryStage.setMaximized(true);
+        primaryStage.show();
+    }
+
+    private Scene createDisplayScene() {
+
         BorderPane border = new BorderPane(); // allgemeines Layout
 
         // *** TOP ***
@@ -82,7 +88,7 @@ public class Displaymode extends Application {
         swap.getStyleClass().add("swap");
         swap.setOnAction(e -> {
             // Methode zum Wechseln der Szene aufrufen
-            switchScene();
+            switchToNewScene();
         });
 
         // Beenden button
@@ -135,14 +141,11 @@ public class Displaymode extends Application {
 
         border.setBottom(root);
 
-        // Macht Scene und Stage sichtbar
         Scene scene = new Scene(border, 960, 600);
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         scene.getStylesheets().add((new File("src/main/java/frontend/DarstellungGUI.css")).toURI().toString());
 
-        primaryStage.setScene(scene);
-        //primaryStage.setMaximized(true);
-        primaryStage.show();
+        return scene;
     }
 
     private Button createButton(String name, String iconPath) {
@@ -157,15 +160,21 @@ public class Displaymode extends Application {
             button.setGraphic(imageView);
             button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
-
         return button;
     }
 
-    private void switchScene(Stage primaryStage) {
-        // Musik-Szene anzeigen
-        MusikverwaltungFXGUI managementGUI = new MusikverwaltungFXGUI();
-        MusikverwaltungFXGUI.initiate();
-        primaryStage.setScene(managementGUI.getScene());
+    public void switchToNewScene() {
+        try {
+            MusikverwaltungFXGUI musikverwaltung = new MusikverwaltungFXGUI();
+            Scene newScene = musikverwaltung.createScene();
+
+            Stage currentStage = (Stage) swap.getScene().getWindow();
+            currentStage.setScene(newScene);
+            currentStage.setTitle("New Scene");
+            currentStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void initiate() {
