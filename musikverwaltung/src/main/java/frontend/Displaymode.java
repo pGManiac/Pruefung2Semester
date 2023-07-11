@@ -57,7 +57,7 @@ public class    Displaymode extends Application {
         playlists.getItems().addAll(genre, alben);
 
         //Moduswechsel
-        Image image = new Image("file:src/main/java/frontend/icons/mode11.png"); //es muss vornedran file: stehen
+        Image image = new Image("file:src/main/java/frontend/icons/mode2.PNG"); //es muss vornedran file: stehen
         ImageView img = new ImageView(image);
         swap = new Button("Musik");
         img.setFitWidth(swap.getWidth());
@@ -95,9 +95,9 @@ public class    Displaymode extends Application {
 
         // *** BOTTOM ***
         // Erstelle die Buttons mit Icon
-        Button playButton = createButton("Play", "file:src/main/java/frontend/icons/play.png");
-        Button nextButton = createButton("Next", "file:src/main/java/frontend/icons/next.png");
-        Button previousButton = createButton("Previous", "file:src/main/java/frontend/icons/previous.png");
+        Button playButton = createButton("Play", "file:src/main/java/frontend/icons/playglow.PNG");
+        Button nextButton = createButton("Next", "file:src/main/java/frontend/icons/nextglow.PNG");
+        Button previousButton = createButton("Previous", "file:src/main/java/frontend/icons/previousglow.PNG");
 
         //Groesse der Buttons
         playButton.setPrefSize(80, 80); // Breite: 80, Höhe: 40

@@ -75,17 +75,22 @@ public class Archivemode {
         this.primaryStage = primaryStage;
     }
 
-    /* public static void initiate() {
-        launch();
-    } */
 
+    /**
+     * @brief Creates the scene in archivemode and adds all necessary controls to it.
+     * @param none
+     * @return The created scene.
+     * @implNote none
+     * @note This method uses standard JavaFX controls and implements a css stylesheet.
+     *       More detailed information on how the controls are implemented is noted directly
+     *       in the method. For more details on how the controls work check official JavaFX documentation.
+     * @see javafx.scene
+     * @see javafx.application.Platform
+     * @see javafx.collections
+     */
     //@Override
     public Scene createScene() throws Exception {
         data = readObjectFromFile();
-        //primaryStage.setTitle("Music Player");
-
-        /* StackPane layout = new StackPane();
-        layout.getChildren().add(button); */
 
         BorderPane border = new BorderPane(); //algemeines Layout
 
@@ -105,7 +110,7 @@ public class Archivemode {
 
         //Database speichern und beenden
         saveExit = new Button("Save and Exit");
-        saveExit.setOnAction(e-> {saveAndExit(data);});
+        saveExit.setOnAction(e-> {saveAndExit();});
         Platform.runLater(() -> {saveExit.setPrefHeight(swap.getHeight());});
 
         //Menues
@@ -114,27 +119,27 @@ public class Archivemode {
         datei.setId("datei");
         darstellung = new Menu("_Ansicht");
         hinzu = new MenuItem("Hinzufuegen");
-        hinzu.setOnAction(e-> {einfuegen(primaryStage, lieder, data);});
+        hinzu.setOnAction(e-> {einfuegen();});
         entfernen = new MenuItem("Entfernen");
-        entfernen.setOnAction(e-> {loeschen(data, lieder);});
+        entfernen.setOnAction(e-> {loeschen();});
         az = new MenuItem("A-Z");
-        az.setOnAction(e-> {alphabeticalSortA(data, lieder);});
+        az.setOnAction(e-> {alphabeticalSortA();});
         za = new MenuItem("Z-A");
-        za.setOnAction(e-> {alphabeticalSortZ(data, lieder);});
+        za.setOnAction(e-> {alphabeticalSortZ();});
         rock = new MenuItem("Rock");
-        rock.setOnAction(e-> {genreSort(data, lieder, 0);});
+        rock.setOnAction(e-> {genreSort(0);});
         pop = new MenuItem("Pop");
-        pop.setOnAction(e-> {genreSort(data, lieder, 1);});
+        pop.setOnAction(e-> {genreSort(1);});
         hipHop = new MenuItem("Hip-Hop");
-        hipHop.setOnAction(e-> {genreSort(data, lieder, 2);});
+        hipHop.setOnAction(e-> {genreSort(2);});
         electronic = new MenuItem("Electronic");
-        electronic.setOnAction(e-> {genreSort(data, lieder, 3);});
+        electronic.setOnAction(e-> {genreSort(3);});
         indie = new MenuItem("Indie");
-        indie.setOnAction(e-> {genreSort(data, lieder, 4);});
+        indie.setOnAction(e-> {genreSort(4);});
         classical = new MenuItem("Classical");
-        classical.setOnAction(e-> {genreSort(data, lieder, 5);});
+        classical.setOnAction(e-> {genreSort(5);});
         metal = new MenuItem("Metal");
-        metal.setOnAction(e-> {genreSort(data, lieder, 6);});
+        metal.setOnAction(e-> {genreSort(6);});
         datei.getItems().addAll(hinzu, entfernen);
         genre.getItems().addAll(rock, pop, hipHop, electronic, indie, classical, metal);
         darstellung.getItems().addAll(az, za, genre);
@@ -170,16 +175,22 @@ public class Archivemode {
         border.setCenter(stack);
         scene = new Scene(border, 960, 600);
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
-        
-        
-        //primaryStage.setScene(scene);
-        //primaryStage.show();
 
         return scene;
 
     }
 
-    public void einfuegen(Stage stage, TableView<Song> v, Database database) {
+    /**
+     * @brief Creates the dialog needed to add a new song to the database.
+     * @param none 
+     * @return none
+     * @implNote none
+     * @note This method uses standard JavaFX controls and implements a css stylesheet.
+     *       For more details on how the controls work check official JavaFX documentation.
+     * @see javafx.scene
+     */
+
+    public void einfuegen() {
         //Dialogfenster Hinzufuegen
         adder = new Dialog<>();
         adder.setTitle("Songeingabe");
@@ -201,7 +212,7 @@ public class Archivemode {
         fileChooser.setTitle("MP3-Datei waehlen");
         fileChooser.getExtensionFilters().add(new ExtensionFilter("MP3", "*.mp3"));
         Button create = new Button("Create!");
-        create.setOnAction(e -> {createSong(stage, titTField, albTField, genComboBox, interTField, v, database);}); //durch create ist es moeglich mehrere Songs hintereinander zu adden
+        create.setOnAction(e -> {createSong(titTField, albTField, genComboBox, interTField);}); //durch create ist es moeglich mehrere Songs hintereinander zu adden
         
         //Layout
         GridPane grid = new GridPane();
@@ -215,7 +226,7 @@ public class Archivemode {
         grid.add(genComboBox, 2, 3);
         grid.add(interTField, 2, 4);
         grid.add(create, 3, 7);
-        ButtonType okButtonType = new ButtonType("Fertig", ButtonData.OK_DONE); //dieser Button ist notwendig zum Schliessen des Dialogs
+        ButtonType okButtonType = new ButtonType("Fertig", ButtonData.OK_DONE);
         BorderPane diaBorder = new BorderPane();
         diaBorder.setTop(headerE);
         diaBorder.setCenter(grid);
@@ -224,13 +235,18 @@ public class Archivemode {
         adder.showAndWait();
     }
 
-    public void createSong(Stage stage, TextField t, TextField a, ComboBox<String> g, TextField i, TableView<Song> v, Database database) {
-        String titleNew = t.getText();
-        String albumNew = a.getText();
-        String genreNew = g.getValue();
-        String artistNew = i.getText();
+    /**
+     * @brief Opens file chooser and copies selected file to program directory.
+     * @param none
+     * @return the path to the created file copy as a String
+     * @implNote the Files class copy() function is used to copy files.
+     * @note The method opens a file chooser. While this is open the primary stage cannot be accessed. To avoid
+     *       file copies with the same name, a unique identifier (time stamp) is added to file name.
+     * @see java.nio.file
+     */
 
-        File selectedFile = fileChooser.showOpenDialog(stage); //root window stage cannot be accessed, while the dialog is open
+    public String copyFile() {
+        File selectedFile = fileChooser.showOpenDialog(this.primaryStage); //root window stage cannot be accessed, while the dialog is open
         String destination = "src/main/java/frontend/lieder/";
         String id = new SimpleDateFormat("mm:ss:SSS").format(new java.util.Date());
 
@@ -243,6 +259,31 @@ public class Archivemode {
             System.err.println(ioException.getMessage());
         }
 
+        return targetString;
+    }
+
+    /**
+     * @brief Reads user input, creates new song object and adds it to database.
+     * @param tit the TextField containing the song title
+     * @param alb the TextField containing the song album
+     * @param gen the ComboBox containing all genre options
+     * @param interp the TextField containing the song artist
+     * @return none
+     * @implNote none
+     * @note The method reads the dialog control values and calls the copyFile() function. All values are passed to
+     *       song object constructor, which is added to the database. Since the TableView always displays a List,
+     *       a new List containing the new song object(s) replaces the old TableView List.
+     * @see javafx.collections
+     */
+
+    public void createSong(TextField tit, TextField alb, ComboBox<String> gen, TextField interp) {
+        String titleNew = tit.getText();
+        String albumNew = alb.getText();
+        String genreNew = gen.getValue();
+        String artistNew = interp.getText();
+
+        String targetString = copyFile();
+        
         Song songNew = new Song(titleNew, albumNew, genreNew, artistNew, targetString);
         //Song Objekte im Anschluss in .ser file schreiben und immer beim Öffnen der Applikation die .ser files lesen
         this.data.addSong(songNew);
@@ -252,7 +293,17 @@ public class Archivemode {
         //v.setItems(tableDataNew);
     }
 
-    public void loeschen(Database database, TableView<Song> v) {
+    /**
+     * @brief Creates the dialog needed to remove a new song from the database.
+     * @param none 
+     * @return none
+     * @implNote none
+     * @note This method uses standard JavaFX controls and implements a css stylesheet.
+     *       For more details on how the controls work check official JavaFX documentation.
+     * @see javafx.scene
+     */
+
+    public void loeschen() {
         //Dialogfenster entfernen
         alert = new Dialog<>();
         DialogPane alertPane = alert.getDialogPane();
@@ -263,8 +314,8 @@ public class Archivemode {
         headerL.setId("headerLoeschen");
         Button yes = new Button("Ja");
         Button no = new Button("Nein");
-        Song picked = v.getSelectionModel().getSelectedItem();
-        yes.setOnAction(e-> {deleteSong(database, picked, alert, v);});
+        Song picked = this.lieder.getSelectionModel().getSelectedItem();
+        yes.setOnAction(e-> {deleteSong(picked);});
         no.setOnAction(e-> {dialogClosing(alert);});
 
         //Layout
@@ -277,7 +328,17 @@ public class Archivemode {
         alert.showAndWait();
     }
 
-    public void deleteSong(Database database, Song song, Dialog<Song> a, TableView<Song> v) {
+    /**
+     * @brief Removes song object from database.
+     * @param song the song to be removed 
+     * @return none
+     * @implNote none
+     * @note This method removes the song from the database and creates an updated List for the
+     *       TableView to display. A method to custom close the dialog is called at the end.
+     * @see javafx.collections
+     */
+
+    public void deleteSong(Song song) {
         //database.removeSong(song);
         this.data.removeSong(song);
         ObservableList<Song> tableDataNew = FXCollections.observableList(this.data.getSongHash().getAllSongs());
@@ -286,25 +347,67 @@ public class Archivemode {
         dialogClosing(this.alert);
     }
 
-    public void alphabeticalSortA(Database database, TableView<Song> v) {
+    /**
+     * @brief Sorts songs from a to z.
+     * @param none
+     * @return none
+     * @implNote none
+     * @note This method uses a database songHash method to get a List of all songs sorted from a to z.
+     *       The List is then given to the TableView for display.
+     * @see javafx.collections
+     */
+
+    public void alphabeticalSortA() {
         ObservableList<Song> sortedTableA = FXCollections.observableList(this.data.getSongHash().sortAToZ());
         //v.setItems(sortedTableA);
         this.lieder.setItems(sortedTableA);
     }
 
-    public void alphabeticalSortZ(Database database, TableView<Song> v) {
+    /**
+     * @brief Sorts songs from z to a.
+     * @param none
+     * @return none
+     * @implNote none
+     * @note This method uses a database songHash method to get a List of all songs sorted from z to a.
+     *       The List is then given to the TableView for display.
+     * @see javafx.collections
+     */
+
+    public void alphabeticalSortZ() {
         ObservableList<Song> sortedTableZ = FXCollections.observableList(this.data.getSongHash().sortZToA());
         //v.setItems(sortedTableZ);
         this.lieder.setItems(sortedTableZ);
     }
 
-    public void genreSort(Database database, TableView<Song> v, int genreNumber) {
+    /**
+     * @brief Sorts songs after genre.
+     * @param genreNumber the genre number representing a genre as specified in the song class
+     * @return none
+     * @implNote none
+     * @note This method uses a database songHash method to get a List of all songs sorted after genre.
+     *       The method needs the genre number to know which genre to sort after.
+     *       The List is then given to the TableView for display.
+     * @see javafx.collections
+     */
+
+    public void genreSort(int genreNumber) {
         ObservableList<Song> genreSorted = FXCollections.observableList(this.data.getSongHash().sortAToZByGenre(genreNumber));
         //v.setItems(genreSorted);
         this.lieder.setItems(genreSorted);
     }
 
-    public void writeObjectToFile(Database database) {
+    /**
+     * @brief Serializes database object and writes it to .ser file.
+     * @param none
+     * @return none
+     * @implNote the method uses try-with block which initializes outputstream objects. Using this guarantees for
+     *           the streams to be closed, when the program exits the try-with block.
+     * @note Using outputstreams writes the provided database object to a .ser file and saves it in the current
+     *       working directory. An exception is thrown, if issues with output are met.
+     * @see java.io
+     */
+
+    public void writeObjectToFile() {
         //try-with initialisiert die Streams in den runden Klammern, damit sie automatisch geschlossen werden, sobal man den try Block verlässt
         try (FileOutputStream outputFile = new FileOutputStream("songObjects.ser", true);
              ObjectOutputStream outputObject = new ObjectOutputStream(new BufferedOutputStream(outputFile))) {
@@ -315,6 +418,16 @@ public class Archivemode {
             System.err.println(ioException.getMessage());
         }
     }
+
+    /**
+     * @brief Reads serialized database object from .ser file.
+     * @param none
+     * @return the database read from .ser file
+     * @implNote the method uses try-with block which initializes inputstream objects. Using this guarantees for
+     *           the streams to be closed, when the program exits the try-with block.
+     * @note Using inputstreams, a databse object is read from .ser file. An exception is thrown, if issues with input are met.
+     * @see java.io
+     */
 
     public Database readObjectFromFile() throws ClassNotFoundException {
         try (FileInputStream inputFile = new FileInputStream("songObjects.ser");
@@ -328,13 +441,31 @@ public class Archivemode {
         }
     }
 
-    public void saveAndExit(Database database) {
+    /**
+     * @brief Closes the application and calls writeObjectToFile() method to save database.
+     * @param none
+     * @return none
+     * @implNote none
+     * @note The old .ser file is deleted before a new .ser file is created and saved.
+     * @see java.io
+     */
+
+    public void saveAndExit() {
         File oldSer = new File("songObjects.ser");
         oldSer.delete();
-        //writeObjectToFile(database);
-        writeObjectToFile(this.data);
+        writeObjectToFile();
         System.exit(0);
     }
+
+    /**
+     * @brief A method to close a dialog.
+     * @param dialog the dialog to be closed
+     * @return none
+     * @implNote none
+     * @note Instead of closing the dialog directly, the stage on which the dialog takes place is closed. This method is
+     *       needed to create custom buttons that can close a dialog for example, since a regular dialog.close() won't work.
+     * @see javafx.stage
+     */
 
     public void dialogClosing(Dialog<Song> dialog) { //workaround, da dialog.close() einfach so nicht funktioniert
         dialog.setResult(null); //Dialog gibt nichts zurück, da wir das ja nur für entfernen nutzen, was nichts zurückgeben muss
@@ -345,6 +476,17 @@ public class Archivemode {
     public Scene getScene() {
         return scene;
     }
+
+    /**
+     * @brief A method to switch to display mode.
+     * @param none
+     * @return none
+     * @implNote none
+     * @note An object for displaymode is created and parsed to a new scene, which is then given to
+     *       the new stage. The looks and methods of a displaymode object is specified in the
+     *       respective class.
+     * @see javafx.stage
+     */
 
     public void switchToDisplaymode() {
         try {

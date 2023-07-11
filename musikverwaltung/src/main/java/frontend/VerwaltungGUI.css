@@ -1,5 +1,5 @@
 .root {
-    -fx-background-image: url("file:src/main/java/frontend/icons/backgnd.png")
+    -fx-background-image: url("file:src/main/java/frontend/icons/backgnd1.PNG")
 }
 
 .table-view {
@@ -28,16 +28,22 @@
 
 .menu-bar {
     -fx-background-color: #4ea79b;
-    -fx-background-radius: 20px;
-    -fx-background-image: url("file:src/main/java/frontend/icons/backgnd.png")
+    -fx-background-radius: 5px;
+    -fx-background-image: url("file:src/main/java/frontend/icons/barback.PNG")
+}
+
+.menu {
+    -fx-background-color: #4ea79b;
+    -fx-background-radius: 15px;
 }
 
 .menu .label {
     -fx-text-fill: black;
+    -fx-background-color: transparent;
 }
 
 .menu:hover {
-    -fx-background-color:#4ea79b;
+    -fx-background-color:white;
 }
 
 .menu:hover .label {
