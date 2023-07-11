@@ -2,6 +2,10 @@ package backend;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * @brief The Song class represents a song with its attributes such as name, album, genre, artist, and file path.
+ *        It provides methods for converting genre strings to genre numbers, and overrides equals() and hashCode() methods for comparison.
+ */
 public class Song implements Serializable {
     private String name;
     private String album;
@@ -12,6 +16,15 @@ public class Song implements Serializable {
     private String mp3Path;
 
 
+    /**
+     * @brief Constructs a Song object with the specified attributes.
+     *
+     * @param name       The name of the song.
+     * @param album      The album the song belongs to.
+     * @param genreName  The genre of the song.
+     * @param artist     The artist who performed the song.
+     * @param mp3Path    The file path of the song.
+     */
     public Song(String name, String album, String genreName, String artist, String mp3Path) {
         this.name = name;
         this.album = album;
@@ -20,6 +33,13 @@ public class Song implements Serializable {
         this.artist = artist;
         this.mp3Path = mp3Path;
     }
+
+    /**
+     * @brief Converts the genre name to the corresponding genre number.
+     *
+     * @param genreName The name of the genre.
+     * @return The genre number corresponding to the given genre name.
+     */
     public int convertGenreStringToInt(String genreName) {
         int genreNumber;
 
@@ -52,6 +72,12 @@ public class Song implements Serializable {
         return genreNumber;
     }
 
+    /**
+     * @brief Compares this Song object with the specified object for equality.
+     *
+     * @param obj The object to compare with.
+     * @return true if the objects are equal, false otherwise.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -64,6 +90,11 @@ public class Song implements Serializable {
                 Objects.equals(mp3Path, song.mp3Path);
     }
 
+    /**
+     * @brief Generates a hash code for this Song object.
+     *
+     * @return The hash code value for this Song object.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(name, album, genreNumber, artist, mp3Path);

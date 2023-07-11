@@ -4,6 +4,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.*;
 
+/**
+ * @brief The Database class represents a database that stores songs, albums, genres, and artists.
+ *        It provides methods for adding, removing, and retrieving songs from the database.
+ *        The class also supports and implements serialization and deserialization of the database.
+ * @see Song
+ * @see SongHash
+ * @see AlbumHash
+ * @see GenreHash
+ * @see ArtistHash
+ */
 public class Database implements Serializable {
     private SongHash songHash;
     private AlbumHash albumHash;
@@ -15,7 +25,6 @@ public class Database implements Serializable {
      * This constructor creates a new Database object with the given number of genres. It initializes
      * the internal data structures for storing songs, albums, genres, and artists. The number of genres
      * is used to initialize the GenreHash, which internally manages songs based on their genre.
-     * @param numberOfGenres The number of genres to be supported by the Database.
      * @implNote The constructor initializes the SongHash, AlbumHash, GenreHash, and ArtistHash to
      *           store songs, albums, genres, and artists, respectively. The GenreHash is configured
      *           with the specified number of genres to support organizing songs based on their genre.

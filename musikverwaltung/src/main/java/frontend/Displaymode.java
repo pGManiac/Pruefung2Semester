@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-public class Displaymode extends Application {
+public class    Displaymode extends Application {
 
     MenuBar menuBar;
     Menu datei;

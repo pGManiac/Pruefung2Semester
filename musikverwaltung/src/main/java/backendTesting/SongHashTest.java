@@ -6,6 +6,7 @@ import backend.SongHash;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -180,6 +181,46 @@ class SongHashTest {
     }
 
     @Test
+    public void testSortListAToZ() {
+        // Creating a list of songs
+        List<Song> songList = new ArrayList<>();
+        songList.add(new Song("Song F", "5", "Pop", "1", "0"));
+        songList.add(new Song("Song I", "3", "Pop", "4", "0"));
+        songList.add(new Song("Song G", "7", "Pop", "3", "ß"));
+        songList.add(new Song("Song J", "2", "Pop", "5", "0"));
+        songList.add(new Song("Song J", "1", "Hip-Hop", "1", "0"));
+        songList.add(new Song("Song C", "7", "Electronic", "1", "ß"));
+        songList.add(new Song("Song C", "9", "Pop", "2", "0"));
+        songList.add(new Song("Song B", "2", "Pop", "1", "0"));
+        songList.add(new Song("Song A", "5", "Pop", "1", "0"));
+        songList.add(new Song("Song E", "3", "Pop", "2", "0"));
+        songList.add(new Song("Song H", "4", "Pop", "1", "0"));
+        songList.add(new Song("Song D", "6", "Pop", "1", "0"));
+
+        // Sorting the list in alphabetical order using sortListAToZ function
+        List<Song> sortedSongs = songHash.sortListAToZ(songList);
+
+        // Asserting the sorted songs
+        assertEquals(12, sortedSongs.size());
+        assertEquals("Song A", sortedSongs.get(0).getName());
+        assertEquals("Song B", sortedSongs.get(1).getName());
+        assertEquals("Song C", sortedSongs.get(2).getName());
+        assertEquals("1", sortedSongs.get(2).getArtist());
+        assertEquals("Song C", sortedSongs.get(3).getName());
+        assertEquals("2", sortedSongs.get(3).getArtist());
+        assertEquals("Song D", sortedSongs.get(4).getName());
+        assertEquals("Song E", sortedSongs.get(5).getName());
+        assertEquals("Song F", sortedSongs.get(6).getName());
+        assertEquals("Song G", sortedSongs.get(7).getName());
+        assertEquals("Song H", sortedSongs.get(8).getName());
+        assertEquals("Song I", sortedSongs.get(9).getName());
+        assertEquals("Song J", sortedSongs.get(10).getName());
+        assertEquals("1", sortedSongs.get(10).getArtist());
+        assertEquals("Song J", sortedSongs.get(11).getName());
+        assertEquals("5", sortedSongs.get(11).getArtist());
+    }
+
+    @Test
     public void testSortZToA() {
         // Adding songs to the songHash
         songHash.addSong(new Song("Song F", "5", "Pop", "1", "0"));
@@ -251,5 +292,58 @@ class SongHashTest {
         assertEquals("1", sortedSongs.get(6).getArtist());
         assertEquals("Song I", sortedSongs.get(7).getName());
         assertEquals("3", sortedSongs.get(7).getArtist());
+    }
+
+    @Test
+    public void testSearchSongs() {
+        // Adding songs to the songHash
+        songHash.addSong(new Song("Song L", "5", "Pop", "1", "0"));
+        songHash.addSong(new Song("Song I", "3", "Pop", "4", "0"));
+        songHash.addSong(new Song("Song G", "7", "Pop", "3", "ß"));
+        songHash.addSong(new Song("Song J", "2", "Pop", "5", "0"));
+        songHash.addSong(new Song("Song D", "1", "Hip-Hop", "1", "0"));
+        songHash.addSong(new Song("Song F", "7", "Electronic", "1", "ß"));
+        songHash.addSong(new Song("Song C", "9", "Pop", "2", "0"));
+        songHash.addSong(new Song("Song B", "2", "Pop", "1", "0"));
+        songHash.addSong(new Song("Song A", "5", "Pop", "1", "0"));
+        songHash.addSong(new Song("Song E", "3", "Pop", "2", "0"));
+        songHash.addSong(new Song("Song H", "4", "Pop", "1", "0"));
+        songHash.addSong(new Song("Song K", "6", "Pop", "1", "0"));
+        songHash.addSong(new Song("Another Track", "8", "Rock", "2", "0"));
+        songHash.addSong(new Song("Some Son", "3", "Pop", "1", "0"));
+
+        // Searching songs with the query "song"
+        List<Song> searchResults = songHash.searchSongs("song");
+
+        // Asserting the search results
+        assertEquals(12, searchResults.size());
+        assertEquals("Song A", searchResults.get(0).getName());
+        assertEquals("Song B", searchResults.get(1).getName());
+        assertEquals("Song C", searchResults.get(2).getName());
+        assertEquals("Song D", searchResults.get(3).getName());
+        assertEquals("Song E", searchResults.get(4).getName());
+        assertEquals("Song F", searchResults.get(5).getName());
+        assertEquals("Song G", searchResults.get(6).getName());
+        assertEquals("Song H", searchResults.get(7).getName());
+        assertEquals("Song I", searchResults.get(8).getName());
+        assertEquals("Song J", searchResults.get(9).getName());
+        assertEquals("Song K", searchResults.get(10).getName());
+        assertEquals("Song L", searchResults.get(11).getName());
+
+        assertEquals("1", searchResults.get(0).getArtist());
+        assertEquals("1", searchResults.get(1).getArtist());
+        assertEquals("2", searchResults.get(2).getArtist());
+        assertEquals("1", searchResults.get(3).getArtist());
+        assertEquals("2", searchResults.get(4).getArtist());
+        assertEquals("1", searchResults.get(5).getArtist());
+        assertEquals("3", searchResults.get(6).getArtist());
+        assertEquals("1", searchResults.get(7).getArtist());
+        assertEquals("4", searchResults.get(8).getArtist());
+        assertEquals("5", searchResults.get(9).getArtist());
+        assertEquals("1", searchResults.get(10).getArtist());
+        assertEquals("1", searchResults.get(11).getArtist());
+
+        assertFalse(searchResults.contains(new Song("Another Song", "8", "Rock", "2", "0")));
+        assertFalse(searchResults.contains(new Song("Some Song", "3", "Pop", "1", "0")));
     }
 }
