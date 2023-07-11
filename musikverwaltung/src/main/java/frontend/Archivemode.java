@@ -34,6 +34,9 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class Archivemode {
     
+    BorderPane border;
+    Image image;
+    ImageView img;
     Button button;
     MenuBar menuBar;
     Menu datei;
@@ -43,21 +46,30 @@ public class Archivemode {
     MenuItem az;
     MenuItem za;
     Menu genre;
-    MenuItem metal;
-    MenuItem pop;
     MenuItem rock;
-    MenuItem klassik;
-    MenuItem country;
+    MenuItem pop;
+    MenuItem hipHop;
+    MenuItem electronic;
+    MenuItem indie;
+    MenuItem classical;
+    MenuItem metal;
+    ObservableList<Song> tableData;
     TableView<Song> lieder;
-    ScrollPane scroller;
+    TableColumn<Song, String> spalte1;
+    TableColumn<Song, String> spalte2;
+    TableColumn<Song, String> spalte3;
+    TableColumn<Song, String> spalte4;
+    HBox hbox;
+    StackPane stack;
     Dialog<Song> adder;
     ObservableList<String> options = FXCollections.observableArrayList("Rock", "Pop", "Hip-Hop", "Electronic", "Indie", "Classical", "Metal");
     FileChooser fileChooser = new FileChooser();
     Button swap;
     private Database data;
-    Button exit;
+    Button saveExit;
     Scene scene;
     private Stage primaryStage;
+    Dialog<Song> alert;
 
     public Archivemode(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -78,8 +90,8 @@ public class Archivemode {
         BorderPane border = new BorderPane(); //algemeines Layout
 
         //Moduswechsel
-        Image image = new Image("file:src/main/java/frontend/icons/mode11.png"); //es muss vornedran file: stehen
-        ImageView img = new ImageView(image);
+        image = new Image("file:src/main/java/frontend/icons/mode11.png"); //es muss vornedran file: stehen
+        img = new ImageView(image);
         swap = new Button("Musik");
         img.setFitWidth(swap.getWidth());
         img.setFitHeight(swap.getHeight()); //Button passt sich groesse des Bildes an
@@ -92,16 +104,15 @@ public class Archivemode {
         });
 
         //Database speichern und beenden
-        exit = new Button("Save and Exit");
-        exit.setOnAction(e-> {saveAndExit(data);});
-        Platform.runLater(() -> {exit.setPrefHeight(swap.getHeight());});
+        saveExit = new Button("Save and Exit");
+        saveExit.setOnAction(e-> {saveAndExit(data);});
+        Platform.runLater(() -> {saveExit.setPrefHeight(swap.getHeight());});
 
         //Menues
         genre = new Menu("_Genre"); //ermoeglicht shortkey durch Unterstrich (Anfangsbuchstabe)
         datei = new Menu("_Datei");
         datei.setId("datei");
         darstellung = new Menu("_Ansicht");
-
         hinzu = new MenuItem("Hinzufuegen");
         hinzu.setOnAction(e-> {einfuegen(primaryStage, lieder, data);});
         entfernen = new MenuItem("Entfernen");
@@ -110,28 +121,34 @@ public class Archivemode {
         az.setOnAction(e-> {alphabeticalSortA(data, lieder);});
         za = new MenuItem("Z-A");
         za.setOnAction(e-> {alphabeticalSortZ(data, lieder);});
-        metal = new MenuItem("Metal");
-        pop = new MenuItem("Pop");
         rock = new MenuItem("Rock");
-        klassik = new MenuItem("Klassik");
-        country = new MenuItem("Country");
-
+        rock.setOnAction(e-> {genreSort(data, lieder, 0);});
+        pop = new MenuItem("Pop");
+        pop.setOnAction(e-> {genreSort(data, lieder, 1);});
+        hipHop = new MenuItem("Hip-Hop");
+        hipHop.setOnAction(e-> {genreSort(data, lieder, 2);});
+        electronic = new MenuItem("Electronic");
+        electronic.setOnAction(e-> {genreSort(data, lieder, 3);});
+        indie = new MenuItem("Indie");
+        indie.setOnAction(e-> {genreSort(data, lieder, 4);});
+        classical = new MenuItem("Classical");
+        classical.setOnAction(e-> {genreSort(data, lieder, 5);});
+        metal = new MenuItem("Metal");
+        metal.setOnAction(e-> {genreSort(data, lieder, 6);});
         datei.getItems().addAll(hinzu, entfernen);
-        genre.getItems().addAll(metal, pop, rock, klassik, country);
+        genre.getItems().addAll(rock, pop, hipHop, electronic, indie, classical, metal);
         darstellung.getItems().addAll(az, za, genre);
-
         menuBar = new MenuBar();
-        
         menuBar.getMenus().add(datei);
         menuBar.getMenus().add(darstellung);
 
         //Tabelle
         lieder = new TableView<>();
-        ObservableList<Song> tableData = FXCollections.observableList(data.getSongHash().getAllSongs());
-        TableColumn<Song, String> spalte1 = new TableColumn<Song, String>("Titel");
-        TableColumn<Song, String> spalte2 = new TableColumn<Song, String>("Album");
-        TableColumn<Song, String> spalte3 = new TableColumn<Song, String>("Genre");
-        TableColumn<Song, String> spalte4 = new TableColumn<Song, String>("Interpret");
+        tableData = FXCollections.observableList(data.getSongHash().getAllSongs());
+        spalte1 = new TableColumn<Song, String>("Titel");
+        spalte2 = new TableColumn<Song, String>("Album");
+        spalte3 = new TableColumn<Song, String>("Genre");
+        spalte4 = new TableColumn<Song, String>("Interpret");
         spalte1.setCellValueFactory(new PropertyValueFactory<>("name"));
         spalte2.setCellValueFactory(new PropertyValueFactory<>("album"));
         spalte3.setCellValueFactory(new PropertyValueFactory<>("genreName"));
@@ -142,21 +159,15 @@ public class Archivemode {
         lieder.getColumns().add(spalte4);
         lieder.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Spalten passen sich window an
         lieder.setItems(tableData);
-        //lieder.getSelectionModel().getSelectedItems();
-        //lieder.getSelectionModel().getSelectedItem();
-        /* scroller.setContent(lieder);
-        scroller.setFitToHeight(true);
-        scroller.setFitToWidth(true); */
 
-        HBox hbox = new HBox(menuBar, swap, exit); //button und menubar in hbox, wobei menubar sich resizen darf
+        //Layout
+        hbox = new HBox(menuBar, swap, saveExit); //button und menubar in hbox, wobei menubar sich resizen darf
         HBox.setHgrow(menuBar, Priority.ALWAYS);
         HBox.setHgrow(swap, Priority.NEVER);
-        HBox.setHgrow(exit, Priority.NEVER);
-
+        HBox.setHgrow(saveExit, Priority.NEVER);
         border.setTop(hbox);
-        StackPane stack = new StackPane(lieder); //stack pane should automatically create scroller
+        stack = new StackPane(lieder); //stack pane should automatically create scroller
         border.setCenter(stack);
-
         scene = new Scene(border, 960, 600);
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         
@@ -165,6 +176,7 @@ public class Archivemode {
         //primaryStage.show();
 
         return scene;
+
     }
 
     public void einfuegen(Stage stage, TableView<Song> v, Database database) {
@@ -177,7 +189,6 @@ public class Archivemode {
         DialogPane diaPane = adder.getDialogPane();
         diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         diaPane.getStyleClass().add("dialog");
-
         Label titel = new Label("Titel:");
         TextField titTField = new TextField();
         Label album = new Label("Album:");
@@ -192,6 +203,7 @@ public class Archivemode {
         Button create = new Button("Create!");
         create.setOnAction(e -> {createSong(stage, titTField, albTField, genComboBox, interTField, v, database);}); //durch create ist es moeglich mehrere Songs hintereinander zu adden
         
+        //Layout
         GridPane grid = new GridPane();
         grid.getStyleClass().add("diaGrid");
         grid.add(titel, 1, 1);
@@ -209,7 +221,6 @@ public class Archivemode {
         diaBorder.setCenter(grid);
         adder.getDialogPane().setContent(diaBorder);
         adder.getDialogPane().getButtonTypes().add(okButtonType);
-        
         adder.showAndWait();
     }
 
@@ -221,27 +232,29 @@ public class Archivemode {
 
         File selectedFile = fileChooser.showOpenDialog(stage); //root window stage cannot be accessed, while the dialog is open
         String destination = "src/main/java/frontend/lieder/";
-            String id = new SimpleDateFormat("mm:ss:SSS").format(new java.util.Date());
+        String id = new SimpleDateFormat("mm:ss:SSS").format(new java.util.Date());
 
-            Path source = selectedFile.toPath();
-            String targetString = destination + id + "_" + selectedFile.getName();
-            Path target = Path.of(targetString);
-            try {
-                Files.copy(source, target, StandardCopyOption.COPY_ATTRIBUTES); //attributes of og file copied as well
-            } catch (IOException ioException) {
-                System.err.println(ioException.getMessage());
-            }
+        Path source = selectedFile.toPath();
+        String targetString = destination + id + "_" + selectedFile.getName();
+        Path target = Path.of(targetString);
+        try {
+            Files.copy(source, target, StandardCopyOption.COPY_ATTRIBUTES); //attributes of og file copied as well
+        } catch (IOException ioException) {
+            System.err.println(ioException.getMessage());
+        }
 
         Song songNew = new Song(titleNew, albumNew, genreNew, artistNew, targetString);
         //Song Objekte im Anschluss in .ser file schreiben und immer beim Öffnen der Applikation die .ser files lesen
-        database.addSong(songNew);
-        ObservableList<Song> tableDataNew = FXCollections.observableList(database.getSongHash().getAllSongs());
-        v.setItems(tableDataNew);
+        this.data.addSong(songNew);
+        //database.addSong(songNew);
+        ObservableList<Song> tableDataNew = FXCollections.observableList(this.data.getSongHash().getAllSongs());
+        this.lieder.setItems(tableDataNew);
+        //v.setItems(tableDataNew);
     }
 
     public void loeschen(Database database, TableView<Song> v) {
         //Dialogfenster entfernen
-        Dialog<Song> alert = new Dialog<>();
+        alert = new Dialog<>();
         DialogPane alertPane = alert.getDialogPane();
         alertPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         alertPane.getStyleClass().add("alert");
@@ -253,15 +266,10 @@ public class Archivemode {
         Song picked = v.getSelectionModel().getSelectedItem();
         yes.setOnAction(e-> {deleteSong(database, picked, alert, v);});
         no.setOnAction(e-> {dialogClosing(alert);});
-        
-        /* GridPane alertGrid = new GridPane();
-        alertGrid.getStyleClass().add("alertGrid");
-        alertGrid.add(yes, 1, 1);
-        alertGrid.add(no, 3, 1); */
 
+        //Layout
         HBox alertHBox = new HBox(50, yes, no);
         alertHBox.getStyleClass().add("alertHBox");
-        
         BorderPane alertBorder = new BorderPane();
         alertBorder.setTop(headerL);
         alertBorder.setCenter(alertHBox);
@@ -270,61 +278,38 @@ public class Archivemode {
     }
 
     public void deleteSong(Database database, Song song, Dialog<Song> a, TableView<Song> v) {
-        database.removeSong(song);
-        ObservableList<Song> tableDataNew = FXCollections.observableList(database.getSongHash().getAllSongs());
-        v.setItems(tableDataNew);
-        dialogClosing(a);
+        //database.removeSong(song);
+        this.data.removeSong(song);
+        ObservableList<Song> tableDataNew = FXCollections.observableList(this.data.getSongHash().getAllSongs());
+        //v.setItems(tableDataNew);
+        this.lieder.setItems(tableDataNew);
+        dialogClosing(this.alert);
     }
 
     public void alphabeticalSortA(Database database, TableView<Song> v) {
-        ObservableList<Song> sortedTableA = FXCollections.observableList(database.getSongHash().sortAToZ());
-        v.setItems(sortedTableA);
+        ObservableList<Song> sortedTableA = FXCollections.observableList(this.data.getSongHash().sortAToZ());
+        //v.setItems(sortedTableA);
+        this.lieder.setItems(sortedTableA);
     }
 
     public void alphabeticalSortZ(Database database, TableView<Song> v) {
-        ObservableList<Song> sortedTableZ = FXCollections.observableList(database.getSongHash().sortZToA());
-        v.setItems(sortedTableZ);
+        ObservableList<Song> sortedTableZ = FXCollections.observableList(this.data.getSongHash().sortZToA());
+        //v.setItems(sortedTableZ);
+        this.lieder.setItems(sortedTableZ);
     }
 
-    /* File target = new File("/home/misha/Documents/unicode/Java/Pruefung2Semester/musikverwaltung/src/main/java/frontend/lieder/" + selectedFile.getName());
-            selectedFile.renameTo(target); */ //kann File bewegen
-            
-
-            /* String source = "/home/misha/Downloads/test.mp3";
-            String target = "/home/misha/Documents/unicode/Java/Pruefung2Semester/musikverwaltung/src/main/java/frontend/lieder/frog.mp3";
-            try (InputStream inputStream = new FileInputStream(source);
-             OutputStream outputStream = new FileOutputStream(target)) {
-
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-
-            System.out.println("File copied successfully!");
-
-            } catch (IOException ioException) {
-            System.err.println("An error occurred while copying the file: " + ioException.getMessage());
-            } */
+    public void genreSort(Database database, TableView<Song> v, int genreNumber) {
+        ObservableList<Song> genreSorted = FXCollections.observableList(this.data.getSongHash().sortAToZByGenre(genreNumber));
+        //v.setItems(genreSorted);
+        this.lieder.setItems(genreSorted);
+    }
 
     public void writeObjectToFile(Database database) {
-        /* String serFileS = "songObjects.ser";
-        File serFile = new File(serFileS);
-         try {
-            if (!serFile.exists()) {
-            serFile.createNewFile();
-        } */
-         /* } catch (IOException ioException) {
-            System.err.println(ioException.getMessage());
-         } */
-
         //try-with initialisiert die Streams in den runden Klammern, damit sie automatisch geschlossen werden, sobal man den try Block verlässt
         try (FileOutputStream outputFile = new FileOutputStream("songObjects.ser", true);
              ObjectOutputStream outputObject = new ObjectOutputStream(new BufferedOutputStream(outputFile))) {
-                
-                outputObject.writeObject(database);
-                
+                //outputObject.writeObject(database);
+                outputObject.writeObject(this.data);
              }
         catch (IOException ioException) {
             System.err.println(ioException.getMessage());
@@ -346,7 +331,8 @@ public class Archivemode {
     public void saveAndExit(Database database) {
         File oldSer = new File("songObjects.ser");
         oldSer.delete();
-        writeObjectToFile(database);
+        //writeObjectToFile(database);
+        writeObjectToFile(this.data);
         System.exit(0);
     }
 
