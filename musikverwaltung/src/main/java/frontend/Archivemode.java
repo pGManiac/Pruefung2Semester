@@ -78,7 +78,6 @@ public class Archivemode {
 
     /**
      * @brief Creates the scene in archivemode and adds all necessary controls to it.
-     * @param none
      * @return The created scene.
      * @implNote none
      * @note This method uses standard JavaFX controls and implements a css stylesheet.
@@ -90,7 +89,7 @@ public class Archivemode {
      */
     //@Override
     public Scene createScene() throws Exception {
-        data = readObjectFromFile();
+        //data = database;
 
         BorderPane border = new BorderPane(); //algemeines Layout
 
@@ -149,7 +148,7 @@ public class Archivemode {
 
         //Tabelle
         lieder = new TableView<>();
-        tableData = FXCollections.observableList(data.getSongHash().getAllSongs());
+        tableData = FXCollections.observableList(this.data.getSongHash().getAllSongs());
         spalte1 = new TableColumn<Song, String>("Titel");
         spalte2 = new TableColumn<Song, String>("Album");
         spalte3 = new TableColumn<Song, String>("Genre");
@@ -182,7 +181,6 @@ public class Archivemode {
 
     /**
      * @brief Creates the dialog needed to add a new song to the database.
-     * @param none 
      * @return none
      * @implNote none
      * @note This method uses standard JavaFX controls and implements a css stylesheet.
@@ -240,7 +238,6 @@ public class Archivemode {
 
     /**
      * @brief Opens file chooser and copies selected file to program directory.
-     * @param none
      * @return the path to the created file copy as a String
      * @implNote the Files class copy() function is used to copy files.
      * @note The method opens a file chooser. While this is open the primary stage cannot be accessed. To avoid
@@ -298,7 +295,6 @@ public class Archivemode {
 
     /**
      * @brief Creates the dialog needed to remove a new song from the database.
-     * @param none 
      * @return none
      * @implNote none
      * @note This method uses standard JavaFX controls and implements a css stylesheet.
@@ -352,7 +348,6 @@ public class Archivemode {
 
     /**
      * @brief Sorts songs from a to z.
-     * @param none
      * @return none
      * @implNote none
      * @note This method uses a database songHash method to get a List of all songs sorted from a to z.
@@ -368,7 +363,6 @@ public class Archivemode {
 
     /**
      * @brief Sorts songs from z to a.
-     * @param none
      * @return none
      * @implNote none
      * @note This method uses a database songHash method to get a List of all songs sorted from z to a.
@@ -401,7 +395,6 @@ public class Archivemode {
 
     /**
      * @brief Serializes database object and writes it to .ser file.
-     * @param none
      * @return none
      * @implNote the method uses try-with block which initializes outputstream objects. Using this guarantees for
      *           the streams to be closed, when the program exits the try-with block.
@@ -424,7 +417,6 @@ public class Archivemode {
 
     /**
      * @brief Reads serialized database object from .ser file.
-     * @param none
      * @return the database read from .ser file
      * @implNote the method uses try-with block which initializes inputstream objects. Using this guarantees for
      *           the streams to be closed, when the program exits the try-with block.
@@ -446,7 +438,6 @@ public class Archivemode {
 
     /**
      * @brief Closes the application and calls writeObjectToFile() method to save database.
-     * @param none
      * @return none
      * @implNote none
      * @note The old .ser file is deleted before a new .ser file is created and saved.
@@ -458,12 +449,6 @@ public class Archivemode {
         oldSer.delete();
         writeObjectToFile();
         System.exit(0);
-    }
-
-    public void save(Database database) {
-        File oldSer = new File("songObjects.ser");
-        oldSer.delete();
-        writeObjectToFile();
     }
 
     /**
@@ -485,9 +470,12 @@ public class Archivemode {
         return scene;
     }
 
+    public void setDatabase(Database database) {
+        this.data = database;
+    }
+
     /**
      * @brief A method to switch to display mode.
-     * @param none
      * @return none
      * @implNote none
      * @note An object for displaymode is created and parsed to a new scene, which is then given to
@@ -498,9 +486,10 @@ public class Archivemode {
 
     public void switchToDisplaymode() {
         try {
-            save(data);
             Displaymode displaymode = new Displaymode();
+            displaymode.setDatabase(this.data); //set database before creating a scene!
             Scene displayScene = displaymode.createDisplayScene();
+            
 
             Stage currentStage = (Stage) swap.getScene().getWindow();
             currentStage.setScene(displayScene);

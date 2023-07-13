@@ -18,10 +18,13 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.media.MediaPlayer;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +60,7 @@ public class    Displaymode extends Application {
 
         // Macht Scene und Stage sichtbar
         Scene DisplayScene = createDisplayScene();
+        data = readObjectFromFile();
 
         primaryStage.setScene(DisplayScene);
         //primaryStage.setMaximized(true);
@@ -65,7 +69,7 @@ public class    Displaymode extends Application {
 
     public Scene createDisplayScene() throws Exception {
 
-        data = readObjectFromFile();
+        
         mediaPlaylist = new MediaPlaylist();
         border = new BorderPane(); // allgemeines Layout
 
@@ -105,7 +109,7 @@ public class    Displaymode extends Application {
 
         // Beenden button
         exit = new Button("Save and Exit");
-        exit.setOnAction(e-> System.exit(0));
+        exit.setOnAction(e-> {saveAndExit();});
 
         // exit button wird erst angepasst, wenn JavaFX vollst. initialisiert
         Platform.runLater(() -> exit.setPrefHeight(swap.getHeight()));
@@ -172,6 +176,25 @@ public class    Displaymode extends Application {
         }
     }
 
+    public void writeObjectToFile() {
+        //try-with initialisiert die Streams in den runden Klammern, damit sie automatisch geschlossen werden, sobal man den try Block verlässt
+        try (FileOutputStream outputFile = new FileOutputStream("songObjects.ser", true);
+             ObjectOutputStream outputObject = new ObjectOutputStream(new BufferedOutputStream(outputFile))) {
+                //outputObject.writeObject(database);
+                outputObject.writeObject(this.data);
+             }
+        catch (IOException ioException) {
+            System.err.println(ioException.getMessage());
+        }
+    }
+
+    public void saveAndExit() {
+        File oldSer = new File("songObjects.ser");
+        oldSer.delete();
+        writeObjectToFile();
+        System.exit(0);
+    }
+
     private Button createButton(String name, String iconPath) {
         Button button = new Button(name);
 
@@ -192,7 +215,9 @@ public class    Displaymode extends Application {
             Stage currentStage = (Stage) swap.getScene().getWindow();
 
             Archivemode musikverwaltung = new Archivemode(currentStage);
+            musikverwaltung.setDatabase(this.data); //set database before creating a scene!
             Scene newScene = musikverwaltung.createScene();
+            
 
             currentStage.setScene(newScene);
             currentStage.setTitle("Verwaltungsmodus");
@@ -260,6 +285,10 @@ public class    Displaymode extends Application {
 
     public static void initiate() {
         launch();
+    }
+
+    public void setDatabase(Database database) {
+        this.data = database;
     }
 }
 
