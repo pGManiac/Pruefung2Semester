@@ -108,7 +108,7 @@ public class Archivemode {
         });
 
         //Database speichern und beenden
-        saveExit = new Button("Save and Exit");
+        saveExit = new Button("Speichern und Beenden");
         saveExit.setOnAction(e-> {saveAndExit();});
         Platform.runLater(() -> {saveExit.setPrefHeight(swap.getHeight());});
 
@@ -209,7 +209,7 @@ public class Archivemode {
         TextField interTField = new TextField();
         fileChooser.setTitle("MP3-Datei waehlen");
         fileChooser.getExtensionFilters().add(new ExtensionFilter("MP3", "*.mp3"));
-        Button create = new Button("Create!");
+        Button create = new Button("Datei auswählen");
         create.setOnAction(e -> {createSong(titTField, albTField, genComboBox, interTField);}); //durch create ist es moeglich mehrere Songs hintereinander zu adden
         
         //Layout
