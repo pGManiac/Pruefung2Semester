@@ -1,11 +1,12 @@
 package backend;
 
+import javax.xml.crypto.Data;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.*;
 
 /**
- * @brief The Database class represents a database that stores songs, albums, genres, and artists.
+ * @brief The Database class represents a singleton database that stores songs, albums, genres, and artists.
  *        It provides methods for adding, removing, and retrieving songs from the database.
  *        The class also supports and implements serialization and deserialization of the database.
  * @see Song
@@ -15,6 +16,7 @@ import java.io.*;
  * @see ArtistHash
  */
 public class Database implements Serializable {
+    private static Database instance;
     private SongHash songHash;
     private AlbumHash albumHash;
     private GenreHash genreHash;
@@ -39,6 +41,21 @@ public class Database implements Serializable {
         albumHash = new AlbumHash();
         genreHash = new GenreHash();
         artistHash = new ArtistHash();
+    }
+
+    /**
+     * @brief Retrieves the singleton instance of the Database.
+     * @return The singleton instance of the Database.
+     */
+    public static Database getInstance() {
+        if(instance == null) {
+            synchronized (Database.class) {
+                if(instance == null) {
+                    instance = new Database();
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -83,6 +100,14 @@ public class Database implements Serializable {
         }
     }
 
+    /**
+     * @brief Checks if the database contains a song with the specified attributes.
+     * @param songName   The name of the song to check.
+     * @param albumName  The name of the album to check.
+     * @param genre      The genre of the song to check.
+     * @param artistName The name of the artist to check.
+     * @return `true` if a song with the specified attributes is found in the database, `false` otherwise.
+     */
     public boolean containsSong(String songName, String albumName, int genre, String artistName) {
         return (songHash.containsSong(songName, albumName, genre, artistName) &&
                 albumHash.containsSong(songName, albumName, genre, artistName) &&
