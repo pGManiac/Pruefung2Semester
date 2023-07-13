@@ -228,7 +228,7 @@ public class    Displaymode extends Application {
         albums.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Spalten passen sich window an
         albums.setItems(tableData);
 
-        // add to have stylecheats
+        // add to have stylesheets
         DialogPane diaPane = adder.getDialogPane();
         diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         diaPane.getStyleClass().add("dialog");

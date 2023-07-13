@@ -463,7 +463,7 @@ public class Archivemode {
     public void save(Database database) {
         File oldSer = new File("songObjects.ser");
         oldSer.delete();
-        writeObjectToFile(this.data);
+        writeObjectToFile();
     }
 
     /**
