@@ -232,6 +232,9 @@ public class Archivemode {
         diaBorder.setCenter(grid);
         adder.getDialogPane().setContent(diaBorder);
         adder.getDialogPane().getButtonTypes().add(okButtonType);
+        // Größe des Dialogfensters setzen
+        adder.setWidth(800); // Breite festlegen
+        adder.setHeight(600); // Höhe festlegen
         adder.showAndWait();
     }
 
@@ -457,6 +460,12 @@ public class Archivemode {
         System.exit(0);
     }
 
+    public void save(Database database) {
+        File oldSer = new File("songObjects.ser");
+        oldSer.delete();
+        writeObjectToFile(this.data);
+    }
+
     /**
      * @brief A method to close a dialog.
      * @param dialog the dialog to be closed
@@ -466,7 +475,6 @@ public class Archivemode {
      *       needed to create custom buttons that can close a dialog for example, since a regular dialog.close() won't work.
      * @see javafx.stage
      */
-
     public void dialogClosing(Dialog<Song> dialog) { //workaround, da dialog.close() einfach so nicht funktioniert
         dialog.setResult(null); //Dialog gibt nichts zurück, da wir das ja nur für entfernen nutzen, was nichts zurückgeben muss
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
@@ -490,6 +498,7 @@ public class Archivemode {
 
     public void switchToDisplaymode() {
         try {
+            save(data);
             Displaymode displaymode = new Displaymode();
             Scene displayScene = displaymode.createDisplayScene();
 
