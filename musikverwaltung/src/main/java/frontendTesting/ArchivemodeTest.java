@@ -60,16 +60,4 @@ public class ArchivemodeTest {
         assertTrue(file.exists(), "The file should exist");
         // Add assertions to check if the file was written successfully
     }
-
-    @Test
-    public void readObjectFromFile_shouldReturnDatabaseFromFile() throws ClassNotFoundException {
-
-        // Act
-        Database database = archivemode.readObjectFromFile();
-
-        // Assert
-        assertNotNull(database);
-        // Add additional assertions to validate the returned database or its content
-    }
-
 }

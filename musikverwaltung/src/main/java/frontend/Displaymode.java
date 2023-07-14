@@ -19,6 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class Displaymode extends Application {
 
         // Make scene and stage visible
         Scene displayScene = createDisplayScene();
-        data = readObjectFromFile();
+        data = Database.getInstance();
 
         primaryStage.setScene(displayScene);
         // primaryStage.setMaximized(true);
@@ -78,7 +79,7 @@ public class Displaymode extends Application {
         menuBar.getMenus().add(playlists);
 
         genre = new MenuItem("Genres");
-        albumsMenuItem = new MenuItem("Albums");
+        albumsMenuItem = new MenuItem("Alben");
         albumsMenuItem.setOnAction(e -> chooseAlbum());
 
         playlists.getItems().addAll(genre, albumsMenuItem);
@@ -155,15 +156,7 @@ public class Displaymode extends Application {
         return scene;
     }
 
-    public Database readObjectFromFile() throws ClassNotFoundException {
-        try (FileInputStream inputFile = new FileInputStream("songObjects.ser");
-             ObjectInputStream inputObject = new ObjectInputStream(inputFile)) {
-            return (Database) inputObject.readObject();
-        } catch (IOException ioException) {
-            System.err.println(ioException.getMessage());
-            return new Database();
-        }
-    }
+
 
     public void writeObjectToFile() {
         try (FileOutputStream outputFile = new FileOutputStream("songObjects.ser", true);
@@ -201,7 +194,7 @@ public class Displaymode extends Application {
             Stage currentStage = (Stage) swap.getScene().getWindow();
 
             Archivemode musicManagement = new Archivemode(currentStage);
-            musicManagement.setDatabase(this.data);
+            musicManagement.setDatabase(Database.getInstance());
             Scene newScene = musicManagement.createScene();
 
             currentStage.setScene(newScene);

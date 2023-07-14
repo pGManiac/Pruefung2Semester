@@ -32,6 +32,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 
+import javax.xml.crypto.Data;
+
 public class Archivemode {
     
     BorderPane border;
@@ -117,7 +119,7 @@ public class Archivemode {
         datei = new Menu("_Datei");
         datei.setId("datei");
         darstellung = new Menu("_Ansicht");
-        hinzu = new MenuItem("Hinzufuegen");
+        hinzu = new MenuItem("Hinzufügen");
         hinzu.setOnAction(e-> {einfuegen();});
         entfernen = new MenuItem("Entfernen");
         entfernen.setOnAction(e-> {loeschen();});
@@ -415,26 +417,6 @@ public class Archivemode {
         }
     }
 
-    /**
-     * @brief Reads serialized database object from .ser file.
-     * @return the database read from .ser file
-     * @implNote the method uses try-with block which initializes inputstream objects. Using this guarantees for
-     *           the streams to be closed, when the program exits the try-with block.
-     * @note Using inputstreams, a databse object is read from .ser file. An exception is thrown, if issues with input are met.
-     * @see java.io
-     */
-
-    public Database readObjectFromFile() throws ClassNotFoundException {
-        try (FileInputStream inputFile = new FileInputStream("songObjects.ser");
-             ObjectInputStream inputObject = new ObjectInputStream(inputFile)) {
-                Database dataRead = (Database) inputObject.readObject();
-                return dataRead;
-            }
-        catch (IOException ioException) {
-            System.err.println(ioException.getMessage());
-            return new Database();
-        }
-    }
 
     /**
      * @brief Closes the application and calls writeObjectToFile() method to save database.
@@ -487,7 +469,7 @@ public class Archivemode {
     public void switchToDisplaymode() {
         try {
             Displaymode displaymode = new Displaymode();
-            displaymode.setDatabase(this.data); //set database before creating a scene!
+            displaymode.setDatabase(Database.getInstance()); //set database before creating a scene!
             Scene displayScene = displaymode.createDisplayScene();
             
 

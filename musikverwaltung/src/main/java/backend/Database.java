@@ -47,15 +47,30 @@ public class Database implements Serializable {
      * @brief Retrieves the singleton instance of the Database.
      * @return The singleton instance of the Database.
      */
-    public static Database getInstance() {
-        if(instance == null) {
+    public static Database getInstance() throws ClassNotFoundException{
+        if (instance == null) {
             synchronized (Database.class) {
-                if(instance == null) {
-                    instance = new Database();
+                if (instance == null) {
+                    File serFile = new File("songObjects.ser");
+                    if (serFile.exists()) {
+                        instance = readObjectFromFile();
+                    } else {
+                        instance = new Database();
+                    }
                 }
             }
         }
         return instance;
+    }
+
+    public static Database readObjectFromFile() throws ClassNotFoundException {
+        try (FileInputStream inputFile = new FileInputStream("songObjects.ser");
+             ObjectInputStream inputObject = new ObjectInputStream(inputFile)) {
+            return (Database) inputObject.readObject();
+        } catch (IOException ioException) {
+            System.err.println(ioException.getMessage());
+            return new Database();
+        }
     }
 
     /**
