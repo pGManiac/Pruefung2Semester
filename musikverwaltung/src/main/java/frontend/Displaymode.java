@@ -19,7 +19,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.List;
 
@@ -42,7 +41,6 @@ public class Displaymode extends Application {
     private Button playButton;
     private Button nextButton;
     private Button previousButton;
-    private MediaPlayer mediaPlayer;
     private MediaPlaylist mediaPlaylist;
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;
@@ -100,9 +98,7 @@ public class Displaymode extends Application {
 
         // Exit button
         exit = new Button("Speichern und Beenden");
-        exit.setOnAction(e -> {
-            saveAndExit();
-        });
+        exit.setOnAction(e -> saveAndExit());
 
         // Adjust exit button once JavaFX is fully initialized
         Platform.runLater(() -> exit.setPrefHeight(swap.getHeight()));
@@ -134,9 +130,10 @@ public class Displaymode extends Application {
             if (mediaPlaylist.getMediaPlayer() != null && mediaPlaylist.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
                 // If the media is playing, pause it
                 mediaPlaylist.pause();
+                mediaPlaylist.setStoredPlaybackPosition(mediaPlaylist.getCurrentTime());
             } else {
-                // Otherwise, play the media
-                mediaPlaylist.play();
+                // otherwise resume playing
+                    mediaPlaylist.resumePlaying();
             }
         });
 
@@ -221,16 +218,6 @@ public class Displaymode extends Application {
 
     }
 
-    public Database readObjectFromFile() throws ClassNotFoundException {
-        try (FileInputStream inputFile = new FileInputStream("songObjects.ser");
-             ObjectInputStream inputObject = new ObjectInputStream(inputFile)) {
-            return (Database) inputObject.readObject();
-        } catch (IOException ioException) {
-            System.err.println(ioException.getMessage());
-            return new Database();
-        }
-    }
-
     public void writeObjectToFile() {
         try (FileOutputStream outputFile = new FileOutputStream("songObjects.ser", true);
              ObjectOutputStream outputObject = new ObjectOutputStream(new BufferedOutputStream(outputFile))) {
@@ -240,6 +227,7 @@ public class Displaymode extends Application {
         }
     }
 
+    // TODO IntelliJ says result of 'File.delete()' is ignored?
     public void saveAndExit() {
         File oldSer = new File("songObjects.ser");
         oldSer.delete();

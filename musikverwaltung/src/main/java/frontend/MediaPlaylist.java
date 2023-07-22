@@ -58,6 +58,17 @@ public class MediaPlaylist {
         }
     }
 
+    public void resumePlaying() {
+        if (storedPlaybackPosition != null) {
+            mediaPlayer.seek(storedPlaybackPosition);
+            mediaPlayer.play();
+        }
+        else {
+            this.play();
+        }
+
+    }
+
     public void pause() {
         mediaPlayer.pause();
     }
@@ -72,5 +83,9 @@ public class MediaPlaylist {
 
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
+    }
+
+    public Duration getCurrentTime() {
+        return mediaPlayer.getCurrentTime();
     }
 }
