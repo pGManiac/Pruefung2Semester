@@ -117,7 +117,7 @@ public class Archivemode {
         datei = new Menu("_Datei");
         datei.setId("datei");
         darstellung = new Menu("_Ansicht");
-        hinzu = new MenuItem("Hinzufuegen");
+        hinzu = new MenuItem("Hinzufügen");
         hinzu.setOnAction(e-> {einfuegen();});
         entfernen = new MenuItem("Entfernen");
         entfernen.setOnAction(e-> {loeschen();});

@@ -115,10 +115,10 @@ public class Displaymode extends Application {
         border.setTop(hbox);
 
         // *** CENTER ***
-        Image image2 = new Image("file:src/main/java/frontend/icons/Platzhalter_CoverArt.jpg");
-        ImageView imageView = new ImageView(image2);
-        imageView.setFitHeight(400);
-        imageView.setFitWidth(400);
+        Image image1 = new Image("file:src/main/java/frontend/icons/Platzhalter_CoverArt.jpg");
+        ImageView imageView = new ImageView(image1);
+        imageView.setFitHeight(399);
+        imageView.setFitWidth(399);
 
         border.setCenter(imageView);
 
@@ -129,15 +129,26 @@ public class Displaymode extends Application {
         previousButton = createButton("Previous", "file:src/main/java/frontend/icons/previousglow.PNG");
 
         // Functionality for buttons
-        //playButton.setOnAction(e -> playSongsFromPlaylist());
+        playButton.setOnAction(e -> {
+            if (mediaPlaylist.getMediaPlayer() != null && mediaPlaylist.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
+                // If the media is playing, pause it
+                mediaPlaylist.pause();
+            } else {
+                // Otherwise, play the media
+                mediaPlaylist.play();
+            }
+        });
+
+        nextButton.setOnAction(e -> mediaPlaylist.playNextSong());
+        previousButton.setOnAction(e -> mediaPlaylist.playPreviousSong());
 
         // Button sizes
-        playButton.setPrefSize(80, 80);
-        nextButton.setPrefSize(80, 80);
-        previousButton.setPrefSize(80, 80);
+        playButton.setPrefSize(79, 80);
+        nextButton.setPrefSize(79, 80);
+        previousButton.setPrefSize(79, 80);
 
         // Create HBox layout for buttons
-        buttonsBox = new HBox(70);
+        buttonsBox = new HBox(69);
         buttonsBox.getChildren().addAll(previousButton, playButton, nextButton);
 
         // Create main layout
@@ -148,11 +159,65 @@ public class Displaymode extends Application {
 
         border.setBottom(root);
 
-        Scene scene = new Scene(border, 960, 600);
+        Scene scene = new Scene(border, 959, 600);
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         scene.getStylesheets().add((new File("src/main/java/frontend/DarstellungGUI.css")).toURI().toString());
 
         return scene;
+    }
+
+    public void chooseAlbum() {
+        // *** GUI ***
+        albums = new TableView<>();
+        tableData = FXCollections.observableList(data.getAlbumHash().getOneSongPerAlbum());
+
+        adder = new Dialog<>();
+        adder.setTitle("Albumwahl");
+        Label header = new Label("Wähle ein Album!");
+        header.setId("albumSelectionHeader");
+        adder.setResizable(true);
+
+        albumColumn = new TableColumn<>("Album");
+        artistColumn = new TableColumn<>("Artist");
+        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
+        artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        albums.getColumns().add(albumColumn);
+        albums.getColumns().add(artistColumn);
+        albums.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        albums.setItems(tableData);
+
+        DialogPane diaPane = adder.getDialogPane();
+        diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
+        diaPane.getStyleClass().add("dialog");
+
+        Button chooseAlbumButton = new Button("Zur Playlist hinzufügen");
+        ButtonType okButtonType = new ButtonType("Fertig", ButtonBar.ButtonData.OK_DONE);
+        BorderPane diaBorder = new BorderPane();
+
+        StackPane stack = new StackPane(albums);
+        diaBorder.setCenter(stack);
+        diaBorder.setTop(header);
+        diaBorder.setBottom(chooseAlbumButton);
+
+        chooseAlbumButton.setOnAction(e -> {
+            Song selectedAlbum = albums.getSelectionModel().getSelectedItem();
+            if (selectedAlbum != null) {
+                List<Song> selectedSongs = data.getAlbumHash().getAllSongsFromAlbum(selectedAlbum);
+                mediaPlaylist.setSongs(selectedSongs);
+                // Create and show an information alert to display the notification
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Album hinzugefügt");
+                alert.setHeaderText(null);
+                alert.setContentText("Das Album '" + selectedAlbum.getAlbum() + "' wurde der Playlist hinzugefügt!");
+                alert.showAndWait();
+            }
+        });
+
+        adder.getDialogPane().setContent(diaBorder);
+        adder.getDialogPane().getButtonTypes().add(okButtonType);
+        adder.getDialogPane().setPrefSize(899, 800);
+        adder.showAndWait();
+
     }
 
     public Database readObjectFromFile() throws ClassNotFoundException {
@@ -178,7 +243,7 @@ public class Displaymode extends Application {
         File oldSer = new File("songObjects.ser");
         oldSer.delete();
         writeObjectToFile();
-        System.exit(0);
+        System.exit(-1);
     }
 
     private Button createButton(String name, String iconPath) {
@@ -188,8 +253,8 @@ public class Displaymode extends Application {
         if (iconPath != null && !iconPath.isEmpty()) {
             Image image = new Image(iconPath);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(80);
-            imageView.setFitHeight(80);
+            imageView.setFitWidth(79);
+            imageView.setFitHeight(79);
             button.setGraphic(imageView);
             button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
@@ -212,59 +277,6 @@ public class Displaymode extends Application {
         }
     }
 
-    private void playSongsFromList(List<Song> songs) {
-        MediaPlaylist mediaPlaylist = new MediaPlaylist();
-        mediaPlaylist.setSongs(songs);
-        mediaPlaylist.play();
-    }
-
-    public void chooseAlbum() {
-        albums = new TableView<>();
-        tableData = FXCollections.observableList(data.getAlbumHash().getOneSongPerAlbum());
-
-        adder = new Dialog<>();
-        adder.setTitle("Albumwahl");
-        Label header = new Label("Wähle ein Album!");
-        header.setId("albumSelectionHeader");
-        adder.setResizable(true);
-
-        albumColumn = new TableColumn<>("Album");
-        artistColumn = new TableColumn<>("Artist");
-        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
-        artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        albums.getColumns().add(albumColumn);
-        albums.getColumns().add(artistColumn);
-        albums.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        albums.setItems(tableData);
-
-        DialogPane diaPane = adder.getDialogPane();
-        diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
-        diaPane.getStyleClass().add("dialog");
-
-        ButtonType okButtonType = new ButtonType("Fertig", ButtonBar.ButtonData.OK_DONE);
-        BorderPane diaBorder = new BorderPane();
-
-        StackPane stack = new StackPane(albums);
-        diaBorder.setCenter(stack);
-        diaBorder.setTop(header);
-        adder.getDialogPane().setContent(diaBorder);
-        adder.getDialogPane().getButtonTypes().add(okButtonType);
-        adder.getDialogPane().setPrefSize(900, 800);
-        adder.showAndWait();
-
-        adder.setResultConverter(dialogButton -> {
-            if (dialogButton == okButtonType) {
-                Song selectedSong = albums.getSelectionModel().getSelectedItem();
-                if (selectedSong != null) {
-                    List<Song> selectedSongs = data.getAlbumHash().getAllSongsFromAlbum(selectedSong);
-                    mediaPlaylist.setSongs(selectedSongs);
-                    mediaPlaylist.play();
-                }
-            }
-            return null;
-        });
-
-    }
 
     public static void initiate() {
         launch();
