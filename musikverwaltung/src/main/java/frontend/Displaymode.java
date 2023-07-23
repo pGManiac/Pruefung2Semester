@@ -114,8 +114,8 @@ public class Displaymode extends Application {
         // *** CENTER ***
         Image image1 = new Image("file:src/main/java/frontend/icons/Platzhalter_CoverArt.jpg");
         ImageView imageView = new ImageView(image1);
-        imageView.setFitHeight(399);
-        imageView.setFitWidth(399);
+        imageView.setFitHeight(400);
+        imageView.setFitWidth(400);
 
         border.setCenter(imageView);
 
@@ -141,12 +141,12 @@ public class Displaymode extends Application {
         previousButton.setOnAction(e -> mediaPlaylist.playPreviousSong());
 
         // Button sizes
-        playButton.setPrefSize(79, 80);
-        nextButton.setPrefSize(79, 80);
-        previousButton.setPrefSize(79, 80);
+        playButton.setPrefSize(80, 80);
+        nextButton.setPrefSize(80, 80);
+        previousButton.setPrefSize(80, 80);
 
         // Create HBox layout for buttons
-        buttonsBox = new HBox(69);
+        buttonsBox = new HBox(70);
         buttonsBox.getChildren().addAll(previousButton, playButton, nextButton);
 
         // Create main layout
@@ -157,7 +157,7 @@ public class Displaymode extends Application {
 
         border.setBottom(root);
 
-        Scene scene = new Scene(border, 959, 600);
+        Scene scene = new Scene(border, 1100, 900);
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         scene.getStylesheets().add((new File("src/main/java/frontend/DarstellungGUI.css")).toURI().toString());
 
@@ -213,7 +213,7 @@ public class Displaymode extends Application {
 
         adder.getDialogPane().setContent(diaBorder);
         adder.getDialogPane().getButtonTypes().add(okButtonType);
-        adder.getDialogPane().setPrefSize(899, 800);
+        adder.getDialogPane().setPrefSize(900, 800);
         adder.showAndWait();
 
     }
@@ -232,7 +232,7 @@ public class Displaymode extends Application {
         File oldSer = new File("songObjects.ser");
         oldSer.delete();
         writeObjectToFile();
-        System.exit(-1);
+        System.exit(0);
     }
 
     private Button createButton(String name, String iconPath) {
@@ -242,8 +242,8 @@ public class Displaymode extends Application {
         if (iconPath != null && !iconPath.isEmpty()) {
             Image image = new Image(iconPath);
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(79);
-            imageView.setFitHeight(79);
+            imageView.setFitWidth(80);
+            imageView.setFitHeight(80);
             button.setGraphic(imageView);
             button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }

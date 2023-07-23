@@ -174,7 +174,7 @@ public class Archivemode {
         border.setTop(hbox);
         stack = new StackPane(lieder); //stack pane should automatically create scroller
         border.setCenter(stack);
-        scene = new Scene(border, 960, 600);
+        scene = new Scene(border, 1100, 900);
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
 
         return scene;
