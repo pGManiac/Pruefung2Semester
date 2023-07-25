@@ -30,6 +30,7 @@ public class MediaPlaylist {
 
     public void playSongAtIndex(int index) {
         if (index >= 0 && index < songs.size()) {
+            this.setCurrentIndex(index);
             Song song = songs.get(index);
             String filePath = song.getMp3Path();
             System.out.println(song.getMp3Path());
@@ -51,7 +52,6 @@ public class MediaPlaylist {
         } else {
             mediaPlayer.stop();
             currentIndex++;
-            System.out.println(currentIndex);
             playSongAtIndex(currentIndex);
         }
     }
@@ -60,7 +60,6 @@ public class MediaPlaylist {
         if (currentIndex > 0) {
             mediaPlayer.stop();
             currentIndex--;
-            System.out.println(currentIndex);
             playSongAtIndex(currentIndex);
         }
         else if (currentIndex == 0 && mediaPlayer != null) {

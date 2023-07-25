@@ -75,8 +75,8 @@ public class SelectQueueGUI {
                     mediaPlaylist.stop();
                     mediaPlaylist.setStoredPlaybackPosition(null);
                     int index = mediaPlaylist.getIndex(selectedSong);
+
                     mediaPlaylist.playSongAtIndex(index);
-                    System.out.println(index);
                 }
             });
 

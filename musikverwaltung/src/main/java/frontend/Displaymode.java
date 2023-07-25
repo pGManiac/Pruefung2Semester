@@ -273,6 +273,7 @@ public class Displaymode extends Application {
 
     public void switchToArchiveMode() {
         try {
+            mediaPlaylist.stop();
             Stage currentStage = (Stage) swap.getScene().getWindow();
 
             Archivemode musicManagement = new Archivemode(currentStage);
