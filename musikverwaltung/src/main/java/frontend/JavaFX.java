@@ -24,4 +24,6 @@ public class JavaFX extends Application {
         launch();
     }
 
+    public static class SelectQueueGUI {
+    }
 }

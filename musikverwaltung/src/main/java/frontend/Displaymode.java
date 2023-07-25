@@ -30,10 +30,13 @@ public class Displaymode extends Application {
     private MenuBar menuBar;
     private StackPane root;
     private BorderPane border;
-    private Menu file;
+    private Menu queue;
     private Menu playlists;
-    private MenuItem genre;
+    private MenuItem addAllSongsMenuItem;
+    private MenuItem genreMenuItem;
     private MenuItem albumsMenuItem;
+    private MenuItem selectQueueMenuItem;
+    private MenuItem deleteQueueMenuItem;
     private HBox hbox;
     private HBox buttonsBox;
     private Button swap;
@@ -44,6 +47,10 @@ public class Displaymode extends Application {
     private MediaPlaylist mediaPlaylist;
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;
+    private AddAllSongsGUI addAllSongsGUI;
+    private GenreGUI genreGUI;
+    private SelectQueueGUI selectQueueGUI;
+    private DeleteQueueGUI deleteQueueGUI;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -53,6 +60,12 @@ public class Displaymode extends Application {
         // Make scene and stage visible
         Scene displayScene = createDisplayScene();
         data = Database.getInstance();
+
+        //create instances of Scene GUIS
+        addAllSongsGUI = new AddAllSongsGUI(data, mediaPlaylist);
+        genreGUI = new GenreGUI(data, mediaPlaylist);
+        selectQueueGUI = new SelectQueueGUI(data, mediaPlaylist);
+        deleteQueueGUI = new DeleteQueueGUI(data, mediaPlaylist);
 
         primaryStage.setScene(displayScene);
         // primaryStage.setMaximized(true);
@@ -65,22 +78,31 @@ public class Displaymode extends Application {
         border = new BorderPane(); // General layout
 
         // *** TOP ***
-        file = new Menu("_File");
-        file.setId("file");
+        queue = new Menu("_Wiedergabeliste");
         playlists = new Menu("_Playlists");
+        queue.setId("queue");
         playlists.setId("playlists");
 
         // Create menus
         menuBar = new MenuBar();
         menuBar.getStyleClass().add("menuBar");
+        menuBar.getMenus().addAll(playlists, queue);
 
-        menuBar.getMenus().add(playlists);
-
-        genre = new MenuItem("Genres");
+        // Playlist
+        addAllSongsMenuItem = new MenuItem("Alle Songs");
+        genreMenuItem = new MenuItem("Genres");
         albumsMenuItem = new MenuItem("Alben");
+        addAllSongsMenuItem.setOnAction(e -> addAllSongsGUI.addAllSongs());
+        genreMenuItem.setOnAction(e -> genreGUI.selectGenre());
         albumsMenuItem.setOnAction(e -> chooseAlbum());
+        playlists.getItems().addAll(addAllSongsMenuItem, genreMenuItem, albumsMenuItem);
 
-        playlists.getItems().addAll(genre, albumsMenuItem);
+        // Queue
+        selectQueueMenuItem = new MenuItem("Song wählen");
+        deleteQueueMenuItem = new MenuItem("Alle Songs entfernen");
+        selectQueueMenuItem.setOnAction(e -> selectQueueGUI.selectQueue());
+        deleteQueueMenuItem.setOnAction(e -> deleteQueueGUI.deleteQueue());
+        queue.getItems().addAll(selectQueueMenuItem, deleteQueueMenuItem);
 
         // Mode switch
         Image image = new Image("file:src/main/java/frontend/icons/mode2.PNG");
@@ -108,7 +130,6 @@ public class Displaymode extends Application {
         HBox.setHgrow(swap, Priority.NEVER);
         hbox.setStyle("-fx-background-color: transparent;");
         HBox.setHgrow(menuBar, Priority.ALWAYS);
-
         border.setTop(hbox);
 
         // *** CENTER ***
@@ -116,7 +137,6 @@ public class Displaymode extends Application {
         ImageView imageView = new ImageView(image1);
         imageView.setFitHeight(400);
         imageView.setFitWidth(400);
-
         border.setCenter(imageView);
 
         // *** BOTTOM ***
@@ -215,7 +235,6 @@ public class Displaymode extends Application {
         adder.getDialogPane().getButtonTypes().add(okButtonType);
         adder.getDialogPane().setPrefSize(900, 800);
         adder.showAndWait();
-
     }
 
     public void writeObjectToFile() {
