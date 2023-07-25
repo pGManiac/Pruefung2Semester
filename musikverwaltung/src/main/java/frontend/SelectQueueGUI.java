@@ -78,6 +78,7 @@ public class SelectQueueGUI {
 
             diaBorder.setBottom(buttonsContainer);
 
+            // plays chosen song according to the index in the queue
             chooseSongButton.setOnAction(e -> {
                 Song selectedSong = tableView.getSelectionModel().getSelectedItem();
                 if (selectedSong != null) {
@@ -89,6 +90,7 @@ public class SelectQueueGUI {
                 }
             });
 
+            // removes song from the queue
             removeSongButton.setOnAction(e -> {
                Song selectedSong = tableView.getSelectionModel().getSelectedItem();
                if (mediaPlaylist.getIndex(selectedSong) == mediaPlaylist.getCurrentIndex()) {

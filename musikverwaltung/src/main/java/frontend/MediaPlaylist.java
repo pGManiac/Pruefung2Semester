@@ -1,6 +1,8 @@
 package frontend;
 
 import backend.Song;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -15,6 +17,7 @@ public class MediaPlaylist {
     private Duration storedPlaybackPosition;
     private MediaPlayer mediaPlayer;
 
+    private ObjectProperty<Song> currentSongProperty = new SimpleObjectProperty<>();
 
 
     public void playFromStart() {
@@ -37,11 +40,15 @@ public class MediaPlaylist {
 
             // starts the playback
             mediaPlayer.play();
+            currentSongProperty.set(song);
         }
     }
 
     public void playNextSong() {
-        if (currentIndex == (songs.size() - 1)) {
+        if (songs == null) {
+
+        }
+        else if (currentIndex == (songs.size() - 1)) {
             this.showEndOfQueue();
         } else {
             mediaPlayer.stop();
@@ -51,7 +58,10 @@ public class MediaPlaylist {
     }
 
     public void playPreviousSong() {
-        if (currentIndex > 0) {
+        if (songs == null) {
+
+        }
+        else if (currentIndex > 0) {
             mediaPlayer.stop();
             currentIndex--;
             playSongAtIndex(currentIndex);
@@ -85,6 +95,9 @@ public class MediaPlaylist {
     }
 
     public void removeSongFromList(Song song) {
+        if (getIndex(song) < currentIndex) {
+            currentIndex--;
+        }
         songs.remove(song);
     }
 
@@ -118,6 +131,14 @@ public class MediaPlaylist {
             i++;
         }
         return i;
+    }
+    public Song getCurrentSong() {
+        return songs.get(currentIndex);
+    }
+
+    // Getter for the currentSongProperty
+    public ObjectProperty<Song> getCurrentSongProperty() {
+        return currentSongProperty;
     }
 
     public int getCurrentIndex() {

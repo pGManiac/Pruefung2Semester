@@ -12,10 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
@@ -106,7 +103,9 @@ public class Displaymode extends Application {
         selectQueueMenuItem = new MenuItem("Song wählen/entfernen");
         deleteQueueMenuItem = new MenuItem("Alle Songs entfernen");
         selectQueueMenuItem.setOnAction(e -> selectQueueGUI.selectQueue());
-        deleteQueueMenuItem.setOnAction(e -> deleteQueueGUI.deleteQueue());
+        deleteQueueMenuItem.setOnAction(e -> {
+            deleteQueueGUI.deleteQueue();
+        });
         queue.getItems().addAll(selectQueueMenuItem, deleteQueueMenuItem);
 
         // Mode switch
@@ -138,11 +137,30 @@ public class Displaymode extends Application {
         border.setTop(hbox);
 
         // *** CENTER ***
+        Label songTitle = new Label("");
+        songTitle.getStyleClass().add("songtitle");
+
         Image image1 = new Image("file:src/main/java/frontend/icons/Platzhalter_CoverArt.jpg");
         ImageView imageView = new ImageView(image1);
         imageView.setFitHeight(400);
         imageView.setFitWidth(400);
-        border.setCenter(imageView);
+        //border.setCenter(imageView);
+
+        VBox imageBox = new VBox(30);
+        imageBox.getChildren().addAll(imageView, songTitle);
+        imageBox.setAlignment(Pos.CENTER);
+        border.setCenter(imageBox);
+
+        // Add a listener to the mediaPlaylist to update the label with the currently playing song title
+        mediaPlaylist.getCurrentSongProperty().addListener((observable, oldValue, newValue) -> {
+            // Update the label with the currently playing song title
+            if (newValue != null) {
+                songTitle.setText(newValue.getName() + " - " + newValue.getArtist()); // Assuming the Song class has a getName() method to get the song title
+            } else {
+                // If there is no currently playing song, clear the label
+                songTitle.setText("");
+            }
+        });
 
         // *** BOTTOM ***
         // Create buttons with icons

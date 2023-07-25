@@ -42,6 +42,7 @@ public class DeleteQueueGUI {
             mediaPlaylist.stop();
             mediaPlaylist.setStoredPlaybackPosition(null);
             mediaPlaylist.setSongs(null);
+            mediaPlaylist.getCurrentSongProperty().set(null);
         }
     }
 }
