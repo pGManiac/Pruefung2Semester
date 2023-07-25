@@ -35,6 +35,7 @@ public class Displaymode extends Application {
     private MenuItem addAllSongsMenuItem;
     private MenuItem genreMenuItem;
     private MenuItem albumsMenuItem;
+    private MenuItem artistMenuItem;
     private MenuItem selectQueueMenuItem;
     private MenuItem deleteQueueMenuItem;
     private HBox hbox;
@@ -49,6 +50,7 @@ public class Displaymode extends Application {
     private ObservableList<Song> tableData;
     private AddAllSongsGUI addAllSongsGUI;
     private GenreGUI genreGUI;
+    private ArtistGUI artistGUI;
     private SelectQueueGUI selectQueueGUI;
     private DeleteQueueGUI deleteQueueGUI;
 
@@ -64,6 +66,7 @@ public class Displaymode extends Application {
         //create instances of Scene GUIS
         addAllSongsGUI = new AddAllSongsGUI(data, mediaPlaylist);
         genreGUI = new GenreGUI(data, mediaPlaylist);
+        artistGUI = new ArtistGUI(data, mediaPlaylist);
         selectQueueGUI = new SelectQueueGUI(data, mediaPlaylist);
         deleteQueueGUI = new DeleteQueueGUI(data, mediaPlaylist);
 
@@ -92,10 +95,12 @@ public class Displaymode extends Application {
         addAllSongsMenuItem = new MenuItem("Alle Songs");
         genreMenuItem = new MenuItem("Genres");
         albumsMenuItem = new MenuItem("Alben");
+        artistMenuItem = new MenuItem("Interpreten");
         addAllSongsMenuItem.setOnAction(e -> addAllSongsGUI.addAllSongs());
         genreMenuItem.setOnAction(e -> genreGUI.selectGenre());
         albumsMenuItem.setOnAction(e -> chooseAlbum());
-        playlists.getItems().addAll(addAllSongsMenuItem, genreMenuItem, albumsMenuItem);
+        artistMenuItem.setOnAction(e -> artistGUI.selectArtist());
+        playlists.getItems().addAll(addAllSongsMenuItem, genreMenuItem, albumsMenuItem, artistMenuItem);
 
         // Queue
         selectQueueMenuItem = new MenuItem("Song wählen");
