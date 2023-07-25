@@ -295,6 +295,4 @@ public class Displaymode extends Application {
     public void setDatabase(Database database) {
         this.data = database;
     }
-
 }
-

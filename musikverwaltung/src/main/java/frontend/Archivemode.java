@@ -469,14 +469,8 @@ public class Archivemode {
     public void switchToDisplaymode() {
         try {
             Displaymode displaymode = new Displaymode();
+            displaymode.start(primaryStage);
             displaymode.setDatabase(Database.getInstance()); //set database before creating a scene!
-            Scene displayScene = displaymode.createDisplayScene();
-            
-
-            Stage currentStage = (Stage) swap.getScene().getWindow();
-            currentStage.setScene(displayScene);
-            currentStage.setTitle("Darstellungsmodus");
-            currentStage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }

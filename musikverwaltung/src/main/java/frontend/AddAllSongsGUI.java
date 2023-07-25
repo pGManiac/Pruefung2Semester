@@ -39,9 +39,7 @@ public class AddAllSongsGUI {
 
         // Check if the user clicked the "Yes" button and perform the custom action
         if (result.isPresent() && result.get() == yesButton) {
-            // Code to add all songs to the playlist goes here
-            // For example, you could call a method to add all songs
-            // mediaPlaylist.addAllSongs();
+            // adding all songs to playlist
             List<Song> allSongs = data.getSongHash().getAllSongs();
             mediaPlaylist.setSongs(allSongs);
         }

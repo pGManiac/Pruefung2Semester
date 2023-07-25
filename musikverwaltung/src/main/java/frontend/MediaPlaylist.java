@@ -29,13 +29,13 @@ public class MediaPlaylist {
             String filePath = song.getMp3Path();
             System.out.println(song.getMp3Path());
 
-            // Erstellen Sie einen neuen MediaPlayer mit der Datei des aktuellen Songs
+            // creates new mediaPlayer with the file from the current Song
             mediaPlayer = new MediaPlayer(new Media(new File(filePath).toURI().toString()));
 
-            // Fügen Sie einen EventListener hinzu, um den nächsten Song abzuspielen, wenn der aktuelle Song beendet ist
+            // adds an event listener to play the next song once the current one is finished
             mediaPlayer.setOnEndOfMedia(this::playNextSong);
 
-            // Starten Sie die Wiedergabe
+            // starts the playback
             mediaPlayer.play();
         }
     }
