@@ -73,6 +73,12 @@ public class MediaPlaylist {
         mediaPlayer.pause();
     }
 
+    public void stop() {
+        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            mediaPlayer.stop();
+        }
+    }
+
     public void setStoredPlaybackPosition(Duration duration) {
         this.storedPlaybackPosition = duration;
     }

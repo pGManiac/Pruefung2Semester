@@ -221,7 +221,9 @@ public class Displaymode extends Application {
             Song selectedAlbum = albums.getSelectionModel().getSelectedItem();
             if (selectedAlbum != null) {
                 List<Song> selectedSongs = data.getAlbumHash().getAllSongsFromAlbum(selectedAlbum);
+                mediaPlaylist.stop();
                 mediaPlaylist.setSongs(selectedSongs);
+                mediaPlaylist.setStoredPlaybackPosition(null);
                 // Create and show an information alert to display the notification
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Album hinzugefügt");
