@@ -15,13 +15,7 @@ public class MediaPlaylist {
     private Duration storedPlaybackPosition;
     private MediaPlayer mediaPlayer;
 
-    public void setSongs(List<Song> songs) {
-        this.songs = songs;
-    }
 
-    public List<Song> getSongs() {
-        return songs;
-    }
 
     public void playFromStart() {
         currentIndex = 0;
@@ -90,6 +84,18 @@ public class MediaPlaylist {
         }
     }
 
+    public void removeSongFromList(Song song) {
+        songs.remove(song);
+    }
+
+    public void setSongs(List<Song> songs) {
+        this.songs = songs;
+    }
+
+    public List<Song> getSongs() {
+        return songs;
+    }
+
     public void setStoredPlaybackPosition(Duration duration) {
         this.storedPlaybackPosition = duration;
     }
@@ -114,6 +120,9 @@ public class MediaPlaylist {
         return i;
     }
 
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
     public void setCurrentIndex(int index) {
         this.currentIndex = index;
     }

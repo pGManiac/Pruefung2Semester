@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 import java.io.*;
@@ -23,6 +24,7 @@ public class SelectQueueGUI {
     private MediaPlaylist mediaPlaylist;
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;
+    HBox buttonsContainer;
 
     public SelectQueueGUI(Database data, MediaPlaylist mediaPlaylist) {
         this.data = data;
@@ -37,7 +39,7 @@ public class SelectQueueGUI {
 
             adder = new Dialog<>();
             adder.setTitle("Aktuelle Wiedergabeliste");
-            Label header = new Label("Wähle einen Song, zu dem du springen möchtest.");
+            Label header = new Label("Wähle einen Song, den du abspielen oder entfernen möchtest!");
             header.setId("selectCueHeader");
             adder.setResizable(true);
 
@@ -61,13 +63,20 @@ public class SelectQueueGUI {
             diaPane.getStyleClass().add("dialog");
 
             Button chooseSongButton = new Button("Song auswählen");
+            Button removeSongButton = new Button("Song entfernen");
             ButtonType okButtonType = new ButtonType("Fertig", ButtonBar.ButtonData.OK_DONE);
             BorderPane diaBorder = new BorderPane();
 
             StackPane stack = new StackPane(tableView);
             diaBorder.setCenter(stack);
             diaBorder.setTop(header);
-            diaBorder.setBottom(chooseSongButton);
+            // Create an HBox to hold the two buttons
+            buttonsContainer = new HBox(10); // Set the spacing between buttons to 10 (you can adjust this as needed)
+
+            // Add the buttons to the HBox
+            buttonsContainer.getChildren().addAll(chooseSongButton, removeSongButton);
+
+            diaBorder.setBottom(buttonsContainer);
 
             chooseSongButton.setOnAction(e -> {
                 Song selectedSong = tableView.getSelectionModel().getSelectedItem();
@@ -78,6 +87,20 @@ public class SelectQueueGUI {
 
                     mediaPlaylist.playSongAtIndex(index);
                 }
+            });
+
+            removeSongButton.setOnAction(e -> {
+               Song selectedSong = tableView.getSelectionModel().getSelectedItem();
+               if (mediaPlaylist.getIndex(selectedSong) == mediaPlaylist.getCurrentIndex()) {
+                   Alert alert = new Alert(Alert.AlertType.WARNING);
+                   alert.setTitle("Warnung");
+                   alert.setHeaderText("Du kannst nicht den Song entfernen, der grade abgespielt wird!");
+                   alert.showAndWait();
+               } else {
+                   mediaPlaylist.removeSongFromList(selectedSong);
+                   // refresh tableview
+                   tableView.refresh();
+               }
             });
 
             adder.getDialogPane().setContent(diaBorder);

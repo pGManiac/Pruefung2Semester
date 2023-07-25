@@ -103,7 +103,7 @@ public class Displaymode extends Application {
         playlists.getItems().addAll(addAllSongsMenuItem, genreMenuItem, albumsMenuItem, artistMenuItem);
 
         // Queue
-        selectQueueMenuItem = new MenuItem("Song wählen");
+        selectQueueMenuItem = new MenuItem("Song wählen/entfernen");
         deleteQueueMenuItem = new MenuItem("Alle Songs entfernen");
         selectQueueMenuItem.setOnAction(e -> selectQueueGUI.selectQueue());
         deleteQueueMenuItem.setOnAction(e -> deleteQueueGUI.deleteQueue());
