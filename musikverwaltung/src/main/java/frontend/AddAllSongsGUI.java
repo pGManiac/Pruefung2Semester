@@ -25,8 +25,8 @@ public class AddAllSongsGUI {
 
     public void addAllSongs() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Alle Songs zur Playlist hinzufügen?");
-        alert.setHeaderText("Möchten Sie alle vorhandenen Songs zur Playlist hinzufügen?");
+        alert.setTitle("Alle Songs zur Wiedergabeliste hinzufügen?");
+        alert.setHeaderText("Möchten Sie alle vorhandenen Songs zur Wiedergabeliste hinzufügen?");
         alert.setContentText(null);
 
         // Set the "Yes" button and "No" button
@@ -40,8 +40,10 @@ public class AddAllSongsGUI {
         // Check if the user clicked the "Yes" button and perform the custom action
         if (result.isPresent() && result.get() == yesButton) {
             // adding all songs to playlist
+            mediaPlaylist.stop();
             List<Song> allSongs = data.getSongHash().getAllSongs();
             mediaPlaylist.setSongs(allSongs);
+            mediaPlaylist.playFromStart();
         }
     }
 }

@@ -208,7 +208,7 @@ public class Displaymode extends Application {
         diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         diaPane.getStyleClass().add("dialog");
 
-        Button chooseAlbumButton = new Button("Zur Playlist hinzufügen");
+        Button chooseAlbumButton = new Button("Zur Wiedergabeliste hinzufügen");
         ButtonType okButtonType = new ButtonType("Fertig", ButtonBar.ButtonData.OK_DONE);
         BorderPane diaBorder = new BorderPane();
 

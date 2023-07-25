@@ -1,22 +1,12 @@
 package frontend;
 import backend.Database;
 import backend.Song;
-import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.MediaPlayer;
-import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.List;
@@ -24,8 +14,10 @@ import java.util.List;
 public class SelectQueueGUI {
 
     private Database data;
-    private TableView<Song> albums;
+    private TableView<Song> tableView;
+    private TableColumn<Song, String> titleColumn;
     private TableColumn<Song, String> albumColumn;
+    private TableColumn<Song, String> genreColumn;
     private TableColumn<Song, String> artistColumn;
 
     private MediaPlaylist mediaPlaylist;
@@ -39,54 +31,64 @@ public class SelectQueueGUI {
 
     public void selectQueue() {
         // *** GUI ***
-        albums = new TableView<>();
-        tableData = FXCollections.observableList(data.getAlbumHash().getOneSongPerAlbum());
+        tableView = new TableView<>();
+        if (mediaPlaylist.getSongs() != null) {
+            tableData = FXCollections.observableList(mediaPlaylist.getSongs());
 
-        adder = new Dialog<>();
-        adder.setTitle("Albumwahl");
-        Label header = new Label("Wähle ein Album!");
-        header.setId("albumSelectionHeader");
-        adder.setResizable(true);
+            adder = new Dialog<>();
+            adder.setTitle("Aktuelle Wiedergabeliste");
+            Label header = new Label("Wähle einen Song, zu dem du springen möchtest.");
+            header.setId("selectCueHeader");
+            adder.setResizable(true);
 
-        albumColumn = new TableColumn<>("Album");
-        artistColumn = new TableColumn<>("Artist");
-        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
-        artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        albums.getColumns().add(albumColumn);
-        albums.getColumns().add(artistColumn);
-        albums.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        albums.setItems(tableData);
+            titleColumn = new TableColumn<>("Titel");
+            albumColumn = new TableColumn<>("Album");
+            genreColumn = new TableColumn<>("Genre");
+            artistColumn = new TableColumn<>("Interpret");
+            titleColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+            albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
+            genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
+            artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
+            tableView.getColumns().add(titleColumn);
+            tableView.getColumns().add(albumColumn);
+            tableView.getColumns().add(genreColumn);
+            tableView.getColumns().add(artistColumn);
+            tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            tableView.setItems(tableData);
 
-        DialogPane diaPane = adder.getDialogPane();
-        diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
-        diaPane.getStyleClass().add("dialog");
+            DialogPane diaPane = adder.getDialogPane();
+            diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
+            diaPane.getStyleClass().add("dialog");
 
-        Button chooseAlbumButton = new Button("Zur Playlist hinzufügen");
-        ButtonType okButtonType = new ButtonType("Fertig", ButtonBar.ButtonData.OK_DONE);
-        BorderPane diaBorder = new BorderPane();
+            Button chooseSongButton = new Button("Song auswählen");
+            ButtonType okButtonType = new ButtonType("Fertig", ButtonBar.ButtonData.OK_DONE);
+            BorderPane diaBorder = new BorderPane();
 
-        StackPane stack = new StackPane(albums);
-        diaBorder.setCenter(stack);
-        diaBorder.setTop(header);
-        diaBorder.setBottom(chooseAlbumButton);
+            StackPane stack = new StackPane(tableView);
+            diaBorder.setCenter(stack);
+            diaBorder.setTop(header);
+            diaBorder.setBottom(chooseSongButton);
 
-        chooseAlbumButton.setOnAction(e -> {
-            Song selectedAlbum = albums.getSelectionModel().getSelectedItem();
-            if (selectedAlbum != null) {
-                List<Song> selectedSongs = data.getAlbumHash().getAllSongsFromAlbum(selectedAlbum);
-                mediaPlaylist.setSongs(selectedSongs);
-                // Create and show an information alert to display the notification
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Album hinzugefügt");
-                alert.setHeaderText(null);
-                alert.setContentText("Das Album '" + selectedAlbum.getAlbum() + "' wurde der Playlist hinzugefügt!");
-                alert.showAndWait();
-            }
-        });
+            chooseSongButton.setOnAction(e -> {
+                Song selectedSong = tableView.getSelectionModel().getSelectedItem();
+                if (selectedSong != null) {
+                    mediaPlaylist.stop();
+                    mediaPlaylist.setStoredPlaybackPosition(null);
+                    int index = mediaPlaylist.getIndex(selectedSong);
+                    mediaPlaylist.playSongAtIndex(index);
+                    System.out.println(index);
+                }
+            });
 
-        adder.getDialogPane().setContent(diaBorder);
-        adder.getDialogPane().getButtonTypes().add(okButtonType);
-        adder.getDialogPane().setPrefSize(900, 800);
-        adder.showAndWait();
+            adder.getDialogPane().setContent(diaBorder);
+            adder.getDialogPane().getButtonTypes().add(okButtonType);
+            adder.getDialogPane().setPrefSize(1100, 800);
+            adder.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warnung");
+            alert.setHeaderText("Die Wiedergabeliste ist leer!\nFüge Songs über 'Playlists' hinzu.");
+            alert.showAndWait();
+        }
     }
 }

@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.List;
+import java.util.Optional;
 
 public class DeleteQueueGUI {
 
@@ -38,55 +39,25 @@ public class DeleteQueueGUI {
     }
 
     public void deleteQueue() {
-        // *** GUI ***
-        albums = new TableView<>();
-        tableData = FXCollections.observableList(data.getAlbumHash().getOneSongPerAlbum());
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Songs aus der Wiedergabeliste entfernen");
+        alert.setHeaderText("Alle Songs aus der aktuellen Wiedergabeliste entfernen?");
+        alert.setContentText(null);
 
-        adder = new Dialog<>();
-        adder.setTitle("Albumwahl");
-        Label header = new Label("Wähle ein Album!");
-        header.setId("albumSelectionHeader");
-        adder.setResizable(true);
+        // Set the "OK" button and "Cancel" button
+        ButtonType yesButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        ButtonType noButton = new ButtonType("Abbrechen", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yesButton, noButton);
 
-        albumColumn = new TableColumn<>("Album");
-        artistColumn = new TableColumn<>("Artist");
-        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
-        artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        albums.getColumns().add(albumColumn);
-        albums.getColumns().add(artistColumn);
-        albums.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        albums.setItems(tableData);
+        // Show the alert and wait for user input
+        Optional<ButtonType> result = alert.showAndWait();
 
-        DialogPane diaPane = adder.getDialogPane();
-        diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
-        diaPane.getStyleClass().add("dialog");
-
-        Button chooseAlbumButton = new Button("Zur Playlist hinzufügen");
-        ButtonType okButtonType = new ButtonType("Fertig", ButtonBar.ButtonData.OK_DONE);
-        BorderPane diaBorder = new BorderPane();
-
-        StackPane stack = new StackPane(albums);
-        diaBorder.setCenter(stack);
-        diaBorder.setTop(header);
-        diaBorder.setBottom(chooseAlbumButton);
-
-        chooseAlbumButton.setOnAction(e -> {
-            Song selectedAlbum = albums.getSelectionModel().getSelectedItem();
-            if (selectedAlbum != null) {
-                List<Song> selectedSongs = data.getAlbumHash().getAllSongsFromAlbum(selectedAlbum);
-                mediaPlaylist.setSongs(selectedSongs);
-                // Create and show an information alert to display the notification
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Album hinzugefügt");
-                alert.setHeaderText(null);
-                alert.setContentText("Das Album '" + selectedAlbum.getAlbum() + "' wurde der Playlist hinzugefügt!");
-                alert.showAndWait();
-            }
-        });
-
-        adder.getDialogPane().setContent(diaBorder);
-        adder.getDialogPane().getButtonTypes().add(okButtonType);
-        adder.getDialogPane().setPrefSize(900, 800);
-        adder.showAndWait();
+        // Check if the user clicked the "Yes" button and perform the custom action
+        if (result.isPresent() && result.get() == yesButton) {
+            // removing alls songs from the queue
+            mediaPlaylist.stop();
+            mediaPlaylist.setStoredPlaybackPosition(null);
+            mediaPlaylist.setSongs(null);
+        }
     }
 }

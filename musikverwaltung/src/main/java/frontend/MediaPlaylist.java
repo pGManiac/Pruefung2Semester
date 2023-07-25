@@ -1,6 +1,7 @@
 package frontend;
 
 import backend.Song;
+import javafx.scene.control.Alert;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class MediaPlaylist {
     public List <Song> songs;
-    public int currentIndex;
+    private int currentIndex;
     private Duration storedPlaybackPosition;
     private MediaPlayer mediaPlayer;
 
@@ -18,12 +19,16 @@ public class MediaPlaylist {
         this.songs = songs;
     }
 
-    public void play() {
+    public List<Song> getSongs() {
+        return songs;
+    }
+
+    public void playFromStart() {
         currentIndex = 0;
         playSongAtIndex(currentIndex);
     }
 
-    private void playSongAtIndex(int index) {
+    public void playSongAtIndex(int index) {
         if (index >= 0 && index < songs.size()) {
             Song song = songs.get(index);
             String filePath = song.getMp3Path();
@@ -41,15 +46,21 @@ public class MediaPlaylist {
     }
 
     public void playNextSong() {
-        mediaPlayer.stop();
-        currentIndex++;
-        playSongAtIndex(currentIndex);
+        if (currentIndex == (songs.size() - 1)) {
+            this.showEndOfQueue();
+        } else {
+            mediaPlayer.stop();
+            currentIndex++;
+            System.out.println(currentIndex);
+            playSongAtIndex(currentIndex);
+        }
     }
 
     public void playPreviousSong() {
         if (currentIndex > 0) {
             mediaPlayer.stop();
             currentIndex--;
+            System.out.println(currentIndex);
             playSongAtIndex(currentIndex);
         }
         else if (currentIndex == 0 && mediaPlayer != null) {
@@ -62,9 +73,10 @@ public class MediaPlaylist {
         if (storedPlaybackPosition != null) {
             mediaPlayer.seek(storedPlaybackPosition);
             mediaPlayer.play();
-        }
-        else {
-            this.play();
+        } else if (songs == null) {
+           this.showNoSongs();
+        } else {
+            this.playSongAtIndex(currentIndex);
         }
 
     }
@@ -93,5 +105,31 @@ public class MediaPlaylist {
 
     public Duration getCurrentTime() {
         return mediaPlayer.getCurrentTime();
+    }
+
+    public int getIndex(Song song) {
+        int i = 0;
+        while (!songs.get(i).equals(song)) {
+            i++;
+        }
+        return i;
+    }
+
+    public void setCurrentIndex(int index) {
+        this.currentIndex = index;
+    }
+
+    public void showNoSongs() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warnung");
+        alert.setHeaderText("Die Wiedergabeliste ist leer!\nFüge Songs über 'Playlists' hinzu.");
+        alert.showAndWait();
+    }
+    
+    public void showEndOfQueue() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warnung");
+        alert.setHeaderText("Du bist beim letzten letzten Song der Wiedergabeliste");
+        alert.showAndWait();
     }
 }
