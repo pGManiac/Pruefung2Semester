@@ -250,7 +250,7 @@ public class Archivemode {
     public String copyFile() {
         File selectedFile = fileChooser.showOpenDialog(this.primaryStage); //root window stage cannot be accessed, while the dialog is open
         String destination = "src/main/java/frontend/lieder/";
-        String id = new SimpleDateFormat("mm:ss:SSS").format(new java.util.Date());
+        String id = new SimpleDateFormat("MM_ss_SSS").format(new java.util.Date());
 
         Path source = selectedFile.toPath();
         String targetString = destination + id + "_" + selectedFile.getName();
