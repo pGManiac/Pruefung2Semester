@@ -112,6 +112,19 @@ public class GenreHash implements Serializable {
     }
 
     /**
+     * @brief Returns an array filled with boolean values indicating whether each genre is empty or not.
+     *
+     * @return An array of boolean values, where each value represents whether the corresponding genre is empty (false) or not (true).
+     */
+    public boolean[] genresRepresented() {
+        boolean[] genresRepresented = new boolean[numberOfGenres()];
+        for (int i = 0; i < numberOfGenres(); i++) {
+            genresRepresented[i] = containsGenre(i);
+        }
+        return genresRepresented;
+    }
+
+    /**
      * @brief Returns the total number of genres in the hash table.
      * @see SongHash
      * @return The number of SongHash objects stored in the array.

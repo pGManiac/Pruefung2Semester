@@ -212,4 +212,35 @@ public class GenreHashTest {
         assertTrue(genreHash.containsGenre(1));
         assertTrue(genreHash.containsGenre(2));
     }
+
+    @Test
+    public void testGenresRepresented_AllGenresEmpty() {
+        boolean[] genresRepresented = genreHash.genresRepresented();
+        for (boolean genreRepresented : genresRepresented) {
+            assertFalse(genreRepresented, "All genres should be represented as empty.");
+        }
+    }
+
+    @Test
+    public void testGenresRepresented_SomeGenresEmpty() {
+        // Let's add some songs to specific genres to make them non-empty
+        // For this test, we'll add songs to genres 0 and 3
+
+        // Add a song to genre 0
+        genreHash.addSong(new Song("Song 1", "Album 1", "Rock", "Artist 1", "0"));
+
+        // Add a song to genre 3
+        genreHash.addSong(new Song("Song 2", "Album 2", "Electronic", "Artist 2","0"));
+
+        boolean[] genresRepresented = genreHash.genresRepresented();
+
+        // Genres 0 and 3 should be represented as non-empty, while the others should be empty
+        assertTrue(genresRepresented[0], "Genre 0 should be represented as non-empty.");
+        assertFalse(genresRepresented[1], "Genre 1 should be represented as empty.");
+        assertFalse(genresRepresented[2], "Genre 2 should be represented as empty.");
+        assertTrue(genresRepresented[3], "Genre 3 should be represented as non-empty.");
+        assertFalse(genresRepresented[4], "Genre 4 should be represented as empty.");
+        assertFalse(genresRepresented[5], "Genre 5 should be represented as empty.");
+        assertFalse(genresRepresented[6], "Genre 6 should be represented as empty.");
+    }
 }
