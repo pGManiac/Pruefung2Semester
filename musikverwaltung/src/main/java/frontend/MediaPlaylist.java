@@ -32,11 +32,22 @@ public class MediaPlaylist {
             String filePath = song.getMp3Path();
             System.out.println(song.getMp3Path());
 
+            //Reset slider
+            Displaymode.progressSlider.setValue(0);
+            Displaymode.currentTimeLabel.setText("00:00");
+
             // creates new mediaPlayer with the file from the current Song
             mediaPlayer = new MediaPlayer(new Media(new File(filePath).toURI().toString()));
-
             // adds an event listener to play the next song once the current one is finished
             mediaPlayer.setOnEndOfMedia(this::playNextSong);
+
+            mediaPlayer.setOnReady(() -> {
+                // Get the total duration of the song in seconds
+                double totalDurationInSeconds = mediaPlayer.getTotalDuration().toSeconds();
+                // Update the maximum value of the slider
+                Displaymode.progressSlider.setMax(totalDurationInSeconds);
+            });
+
 
             // starts the playback
             mediaPlayer.play();
@@ -81,7 +92,13 @@ public class MediaPlaylist {
         } else {
             this.playSongAtIndex(currentIndex);
         }
+    }
 
+    // seeks time for slider
+    public void seekTo(double seconds) {
+        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            mediaPlayer.seek(Duration.seconds(seconds));
+        }
     }
 
     public void pause() {

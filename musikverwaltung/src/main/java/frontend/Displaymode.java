@@ -50,6 +50,8 @@ public class Displaymode extends Application {
     private ArtistGUI artistGUI;
     private SelectQueueGUI selectQueueGUI;
     private DeleteQueueGUI deleteQueueGUI;
+    protected static Slider progressSlider;
+    protected static Label currentTimeLabel;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -146,8 +148,20 @@ public class Displaymode extends Application {
         imageView.setFitWidth(400);
         //border.setCenter(imageView);
 
+        // Slider
+        progressSlider = new Slider();
+        progressSlider.setMaxWidth(750);
+        currentTimeLabel = new Label("00:00");
+
+        // Add listener to the Slider to update the current time label and adjust song playback
+        progressSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Assuming mediaPlaylist is your MediaPlaylist instance
+            mediaPlaylist.seekTo(newValue.doubleValue()); // Update the song playback to the new value
+            currentTimeLabel.setText(formatTime(newValue.doubleValue())); // Update the label with the current time
+        });
+
         VBox imageBox = new VBox(30);
-        imageBox.getChildren().addAll(imageView, songTitle);
+        imageBox.getChildren().addAll(imageView, progressSlider, currentTimeLabel, songTitle);
         imageBox.setAlignment(Pos.CENTER);
         border.setCenter(imageBox);
 
@@ -292,6 +306,13 @@ public class Displaymode extends Application {
             button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
         return button;
+    }
+
+    // Utility method to format time in seconds to "mm:ss" format
+    static String formatTime(double seconds) {
+        int minutes = (int) seconds / 60;
+        int remainingSeconds = (int) seconds % 60;
+        return String.format("%02d:%02d", minutes, remainingSeconds);
     }
 
     public void switchToArchiveMode() {
