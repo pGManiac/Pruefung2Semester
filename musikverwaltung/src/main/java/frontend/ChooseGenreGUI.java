@@ -11,7 +11,7 @@ import javafx.scene.layout.StackPane;
 import java.io.*;
 import java.util.List;
 
-public class GenreGUI {
+public class ChooseGenreGUI {
     private Database data;
     private TableView<Song> albums;
     private TableColumn<Song, String> albumColumn;
@@ -21,7 +21,7 @@ public class GenreGUI {
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;
 
-    public GenreGUI(Database data, MediaPlaylist mediaPlaylist) {
+    public ChooseGenreGUI(Database data, MediaPlaylist mediaPlaylist) {
         this.data = data;
         this.mediaPlaylist = mediaPlaylist;
     }

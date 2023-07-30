@@ -10,11 +10,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 import java.io.*;
-import java.util.List;
 
 public class SelectQueueGUI {
 
-    private Database data;
     private TableView<Song> tableView;
     private TableColumn<Song, String> titleColumn;
     private TableColumn<Song, String> albumColumn;
@@ -24,10 +22,9 @@ public class SelectQueueGUI {
     private MediaPlaylist mediaPlaylist;
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;
-    HBox buttonsContainer;
+    private HBox buttonsContainer;
 
-    public SelectQueueGUI(Database data, MediaPlaylist mediaPlaylist) {
-        this.data = data;
+    public SelectQueueGUI(MediaPlaylist mediaPlaylist) {
         this.mediaPlaylist = mediaPlaylist;
     }
 

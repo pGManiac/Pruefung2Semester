@@ -11,17 +11,16 @@ import javafx.scene.layout.StackPane;
 import java.io.*;
 import java.util.List;
 
-public class ArtistGUI {
+public class ChooseArtistGUI {
     private Database data;
     private TableView<Song> tableView;
-    private TableColumn<Song, String> albumColumn;
     private TableColumn<Song, String> artistColumn;
 
     private MediaPlaylist mediaPlaylist;
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;
 
-    public ArtistGUI(Database data, MediaPlaylist mediaPlaylist) {
+    public ChooseArtistGUI(Database data, MediaPlaylist mediaPlaylist) {
         this.data = data;
         this.mediaPlaylist = mediaPlaylist;
     }

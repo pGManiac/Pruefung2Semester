@@ -1,24 +1,15 @@
 package frontend;
 import backend.Database;
-import backend.Song;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 
 import java.util.Optional;
 
 public class DeleteQueueGUI {
 
-    private Database data;
-    private TableView<Song> albums;
-    private TableColumn<Song, String> albumColumn;
-    private TableColumn<Song, String> artistColumn;
 
     private MediaPlaylist mediaPlaylist;
-    private Dialog<Song> adder;
-    private ObservableList<Song> tableData;
 
-    public DeleteQueueGUI(Database data, MediaPlaylist mediaPlaylist) {
-        this.data = data;
+    public DeleteQueueGUI(MediaPlaylist mediaPlaylist) {
         this.mediaPlaylist = mediaPlaylist;
     }
 
