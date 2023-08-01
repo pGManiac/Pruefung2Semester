@@ -14,11 +14,7 @@ import java.io.*;
 public class SelectQueueGUI {
 
     private TableView<Song> tableView;
-    private TableColumn<Song, String> titleColumn;
-    private TableColumn<Song, String> albumColumn;
-    private TableColumn<Song, String> genreColumn;
-    private TableColumn<Song, String> artistColumn;
-
+    private TableColumn<Song, String> titleColumn, albumColumn, genreColumn, artistColumn;
     private MediaPlaylist mediaPlaylist;
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;

@@ -15,9 +15,7 @@ import java.util.List;
 public class ChooseAlbumGUI {
     private Database data;
     private TableView<Song> albums;
-    private TableColumn<Song, String> albumColumn;
-    private TableColumn<Song, String> artistColumn;
-
+    private TableColumn<Song, String> albumColumn, artistColumn;
     private MediaPlaylist mediaPlaylist;
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;

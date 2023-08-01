@@ -22,13 +22,8 @@ public class Displaymode extends Application {
     private BorderPane border;
     private Menu queue, playlists;
     private MenuItem addAllSongsMenuItem, genreMenuItem, albumsMenuItem, artistMenuItem, selectQueueMenuItem, deleteQueueMenuItem;
-    private HBox hbox;
-    private HBox buttonsBox;
-    private Button swap;
-    private Button exit;
-    private Button playButton;
-    private Button nextButton;
-    private Button previousButton;
+    private HBox hbox, buttonsBox;
+    private Button swap, exit, playButton, nextButton, previousButton;
     private MediaPlaylist mediaPlaylist;
     private AddAllSongsGUI addAllSongsGUI;
     private ChooseAlbumGUI albumGUI;
