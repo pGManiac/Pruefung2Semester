@@ -2,11 +2,10 @@ package frontend;
 import backend.Database;
 import javafx.scene.control.*;
 
+import javax.swing.plaf.IconUIResource;
 import java.util.Optional;
 
 public class DeleteQueueGUI {
-
-
     private MediaPlaylist mediaPlaylist;
 
     public DeleteQueueGUI(MediaPlaylist mediaPlaylist) {

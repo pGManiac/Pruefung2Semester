@@ -61,7 +61,9 @@ public class ChooseArtistGUI {
             String artist = selectedArtist.getArtist();
             if (selectedArtist != null) {
                 List<Song> selectedSongs = data.getArtistHash().getSongsFromArtist(artist);
+                mediaPlaylist.stop();
                 mediaPlaylist.setSongs(selectedSongs);
+                mediaPlaylist.setStoredPlaybackPosition(null);
                 // Create and show an information alert to display the notification
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Interpret hinzugefügt");

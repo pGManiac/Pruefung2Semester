@@ -1,6 +1,7 @@
 package frontend;
 
 import backend.Database;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -19,14 +20,8 @@ public class Displaymode extends Application {
     private MenuBar menuBar;
     private StackPane root;
     private BorderPane border;
-    private Menu queue;
-    private Menu playlists;
-    private MenuItem addAllSongsMenuItem;
-    private MenuItem genreMenuItem;
-    private MenuItem albumsMenuItem;
-    private MenuItem artistMenuItem;
-    private MenuItem selectQueueMenuItem;
-    private MenuItem deleteQueueMenuItem;
+    private Menu queue, playlists;
+    private MenuItem addAllSongsMenuItem, genreMenuItem, albumsMenuItem, artistMenuItem, selectQueueMenuItem, deleteQueueMenuItem;
     private HBox hbox;
     private HBox buttonsBox;
     private Button swap;
@@ -66,7 +61,7 @@ public class Displaymode extends Application {
         primaryStage.show();
     }
 
-    public Scene createDisplayScene() throws Exception {
+    public Scene createDisplayScene() {
 
         mediaPlaylist = new MediaPlaylist();
         border = new BorderPane(); // General layout
@@ -143,12 +138,12 @@ public class Displaymode extends Application {
         // Slider
         progressSlider = new Slider();
         progressSlider.setMaxWidth(750);
-        currentTimeLabel = new Label("00:00");
+        currentTimeLabel = new Label("0:00");
 
         // Add listener to the Slider to update the current time label and adjust song playback
         progressSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            // Assuming mediaPlaylist is your MediaPlaylist instance
             mediaPlaylist.seekTo(newValue.doubleValue()); // Update the song playback to the new value
+            MediaPlaylist.counter = newValue.doubleValue();
             currentTimeLabel.setText(formatTime(newValue.doubleValue())); // Update the label with the current time
         });
 
@@ -177,7 +172,7 @@ public class Displaymode extends Application {
         // Functionality for buttons
         playButton.setOnAction(e -> {
             if (mediaPlaylist.getMediaPlayer() != null && mediaPlaylist.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
-                // If the media is playing, pause it
+                // If the media is playing, pause it and save the time
                 mediaPlaylist.pause();
                 mediaPlaylist.setStoredPlaybackPosition(mediaPlaylist.getCurrentTime());
             } else {
@@ -246,10 +241,10 @@ public class Displaymode extends Application {
     }
 
     // Utility method to format time in seconds to "mm:ss" format
-    static String formatTime(double seconds) {
+    private String formatTime(double seconds) {
         int minutes = (int) seconds / 60;
         int remainingSeconds = (int) seconds % 60;
-        return String.format("%02d:%02d", minutes, remainingSeconds);
+        return String.format("%2d:%02d", minutes, remainingSeconds);
     }
 
     public void switchToArchiveMode() {
