@@ -76,9 +76,12 @@ public class MediaPlaylist {
             // catches null-exception in case the next button is pressed although there is no song playing
         }
         else if (currentIndex == (songs.size() - 1)) {
-            timeline.stop();
-            Displaymode.currentTimeLabel.setText("0:00");
             this.showEndOfQueue();
+            mediaPlayer.setOnEndOfMedia(() -> {
+                timeline.stop();
+                Displaymode.currentTimeLabel.setText("0:00");
+                this.showEndOfQueue();
+            });
         } else {
             mediaPlayer.stop();
             timeline.stop();
