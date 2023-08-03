@@ -15,6 +15,10 @@ import javafx.util.Duration;
 import java.io.File;
 import java.util.List;
 
+/**
+ * @brief The MediaPlaylist class represents a playlist of songs that can be played and managed by the music player application.
+ *        It contains methods to play, pause, and switch between songs, as well as manage the playlist queue.
+ */
 public class MediaPlaylist {
     public List <Song> songs;
     private int currentIndex;
@@ -24,11 +28,20 @@ public class MediaPlaylist {
     protected static double counter;
     private Timeline timeline;
 
+    /**
+     * @brief Plays the first song in the playlist from the beginning.
+     */
     public void playFromStart() {
         currentIndex = 0;
         playSongAtIndex(currentIndex);
     }
 
+    /**
+     * @brief Plays the song at the specified index in the playlist.
+     *        Updates progressSlider and currentTimeLabel.
+     *
+     * @param index The index of the song to be played.
+     */
     public void playSongAtIndex(int index) {
         if (index >= 0 && index < songs.size()) {
             this.setCurrentIndex(index);
@@ -36,13 +49,13 @@ public class MediaPlaylist {
             String filePath = song.getMp3Path();
             System.out.println(song.getMp3Path());
 
-            //Reset slider
+            //Resets slider
             Displaymode.progressSlider.setValue(0);
             Displaymode.currentTimeLabel.setText("0:00");
 
-            // creates new mediaPlayer with the file from the current Song
+            // Creates new mediaPlayer with the file from the current Song
             mediaPlayer = new MediaPlayer(new Media(new File(filePath).toURI().toString()));
-            // adds an event listener to play the next song once the current one is finished
+            // Adds an event listener to play the next song once the current one is finished
             mediaPlayer.setOnEndOfMedia(this::playNextSong);
 
             mediaPlayer.setOnReady(() -> {
@@ -52,18 +65,7 @@ public class MediaPlaylist {
                 Displaymode.progressSlider.setMax(totalDurationInSeconds);
             });
 
-            counter = 0;
-            // Create a Timeline with a KeyFrame that triggers every second
-            Duration duration = Duration.seconds(1);
-            KeyFrame keyFrame = new KeyFrame(duration, event -> {
-                // Increment the counter and update the label text
-                counter++;
-                Displaymode.currentTimeLabel.setText(String.valueOf(formatTime(counter)));
-            });
-
-            timeline = new Timeline(keyFrame);
-            timeline.setCycleCount(Animation.INDEFINITE); // Repeat indefinitely
-            timeline.play();
+           this.resetCounter();
 
             // starts the playback
             mediaPlayer.play();
@@ -119,18 +121,25 @@ public class MediaPlaylist {
         }
     }
 
-    // seeks time for slider
+    public void pause() {
+        mediaPlayer.pause();
+        timeline.pause();
+    }
+
+    /**
+     * @brief Seeks to the specified time in seconds for the media playback.
+     *
+     * @param seconds The time in seconds to seek to.
+     */
     public void seekTo(double seconds) {
         if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             mediaPlayer.seek(Duration.seconds(seconds));
         }
     }
 
-    public void pause() {
-        mediaPlayer.pause();
-        timeline.pause();
-    }
-
+    /**
+     * @brief Stops the media playback and resets the counter and current time label.
+     */
     public void stop() {
         if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             mediaPlayer.stop();
@@ -140,11 +149,69 @@ public class MediaPlaylist {
         }
     }
 
+    /**
+     * @brief Removes a song from the playlist and adjusts the currentIndex if necessary.
+     *
+     * @param song The song to be removed from the playlist.
+     */
     public void removeSongFromList(Song song) {
         if (getIndex(song) < currentIndex) {
             currentIndex--;
         }
         songs.remove(song);
+    }
+
+    /**
+     * @brief Retrieves the ObjectProperty that holds the current playing song in the playlist.
+     *
+     * @return The ObjectProperty holding the current playing song.
+     */
+    public ObjectProperty<Song> getCurrentSongProperty() {
+        return currentSongProperty;
+    }
+
+    public void showNoSongs() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warnung");
+        alert.setHeaderText("Die Wiedergabeliste ist leer!\nFüge Songs über 'Playlists' hinzu.");
+        alert.showAndWait();
+    }
+
+    public void showEndOfQueue() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warnung");
+        alert.setHeaderText("Du bist beim letzten letzten Song der Wiedergabeliste");
+        alert.showAndWait();
+    }
+
+    /**
+     * @brief Resets the counter and starts a new timeline to update the current time label.
+     */
+    private void resetCounter() {
+        counter = 0;
+        // Create a Timeline with a KeyFrame that triggers every second
+        Duration duration = Duration.seconds(1);
+        KeyFrame keyFrame = new KeyFrame(duration, event -> {
+            // Increment the counter and update the label text
+            counter++;
+            Displaymode.currentTimeLabel.setText(String.valueOf(formatTime(counter)));
+        });
+
+        timeline = new Timeline(keyFrame);
+        timeline.setCycleCount(Animation.INDEFINITE); // Repeat indefinitely
+        timeline.play();
+    }
+
+    /**
+     * @brief Utility method to format time in seconds to "mm:ss" format.
+     *
+     * @param seconds The time duration in seconds.
+     * @return The formatted time string in the "mm:ss" format.
+     */
+    private String formatTime(double seconds) {
+        int minutes = (int) seconds / 60;
+        int remainingSeconds = (int) seconds % 60;
+        return String.format("%2d:%02d", minutes, remainingSeconds);
     }
 
     public void setSongs(List<Song> songs) {
@@ -178,40 +245,16 @@ public class MediaPlaylist {
         }
         return i;
     }
+
     public Song getCurrentSong() {
         return songs.get(currentIndex);
-    }
-
-    // Getter for the currentSongProperty
-    public ObjectProperty<Song> getCurrentSongProperty() {
-        return currentSongProperty;
     }
 
     public int getCurrentIndex() {
         return currentIndex;
     }
+
     public void setCurrentIndex(int index) {
         this.currentIndex = index;
-    }
-
-    public void showNoSongs() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Warnung");
-        alert.setHeaderText("Die Wiedergabeliste ist leer!\nFüge Songs über 'Playlists' hinzu.");
-        alert.showAndWait();
-    }
-    
-    public void showEndOfQueue() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Warnung");
-        alert.setHeaderText("Du bist beim letzten letzten Song der Wiedergabeliste");
-        alert.showAndWait();
-    }
-
-    // Utility method to format time in seconds to "mm:ss" format
-    private String formatTime(double seconds) {
-        int minutes = (int) seconds / 60;
-        int remainingSeconds = (int) seconds % 60;
-        return String.format("%2d:%02d", minutes, remainingSeconds);
     }
 }

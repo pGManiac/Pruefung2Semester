@@ -12,6 +12,10 @@ import javafx.scene.layout.StackPane;
 import java.io.*;
 import java.util.List;
 
+/**
+ * @brief The ChooseAlbumGUI class represents a graphical user interface (GUI) for choosing albums and adding them to the media playlist.
+ *         It displays a dialog with a TableView containing a list of albums and artists, allowing the user to select an album to add to the playlist.
+ */
 public class ChooseAlbumGUI {
     private Database data;
     private TableView<Song> albums;
@@ -20,11 +24,20 @@ public class ChooseAlbumGUI {
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;
 
+    /**
+     * @brief Constructor for the ChooseAlbumGUI class.
+     *
+     * @param data          The Database instance that provides album and song data.
+     * @param mediaPlaylist The MediaPlaylist instance for managing the playlist.
+     */
     public ChooseAlbumGUI(Database data, MediaPlaylist mediaPlaylist) {
         this.data = data;
         this.mediaPlaylist = mediaPlaylist;
     }
 
+    /**
+     * @brief Displays the GUI for choosing albums and adds the selected album to the media playlist.
+     */
     public void chooseAlbum() {
         // *** GUI ***
         albums = new TableView<>();

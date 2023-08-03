@@ -13,6 +13,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @brief The ChooseGenreGUI class represents a graphical user interface (GUI) for selecting genres and adding songs from each selected genre to the media playlist.
+ *        It displays a dialog with a TableView containing a list of genres, allowing the user to select genres and add their songs to the playlist.
+ */
 public class ChooseGenreGUI {
     private Database data;
     private TableView<Song> tableview;
@@ -21,11 +25,20 @@ public class ChooseGenreGUI {
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;
 
+    /**
+     * @brief Constructor for the ChooseGenreGUI class.
+     *
+     * @param data          The Database instance that provides genre and song data.
+     * @param mediaPlaylist The MediaPlaylist instance for managing the playlist.
+     */
     public ChooseGenreGUI(Database data, MediaPlaylist mediaPlaylist) {
         this.data = data;
         this.mediaPlaylist = mediaPlaylist;
     }
 
+    /**
+     * @brief Displays the GUI for selecting genres and adds songs from each selected genre to the media playlist.
+     */
     public void selectGenre() {
         // *** GUI ***
         tableview = new TableView<>();
@@ -76,6 +89,11 @@ public class ChooseGenreGUI {
         adder.showAndWait();
     }
 
+    /**
+     * @brief Retrieves a list of one song from each represented genre.
+     *
+     * @return A list of songs, each representing one genre.
+     */
     private List<Song> getOneSongFromEachRepresentedGenre() {
         boolean[] usedGenreList = data.getGenreHash().genresRepresented();
         List<Song> oneSongFromEachGenre = new ArrayList<>();

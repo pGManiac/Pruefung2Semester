@@ -11,8 +11,12 @@ import javafx.scene.layout.StackPane;
 
 import java.io.*;
 
+/**
+ * @brief The SelectQueueGUI class represents a GUI for selecting and managing songs in the queue (Wiedergabeliste).
+ *        It provides a dialog with a TableView displaying the current playlist, allowing the user to choose a song to play or remove from the playlist.
+ */
 public class SelectQueueGUI {
-
+    // Properties
     private TableView<Song> tableView;
     private TableColumn<Song, String> titleColumn, albumColumn, genreColumn, artistColumn;
     private MediaPlaylist mediaPlaylist;
@@ -20,10 +24,21 @@ public class SelectQueueGUI {
     private ObservableList<Song> tableData;
     private HBox buttonsContainer;
 
+
+    /**
+     * @brief Constructor for the SelectQueueGUI class.
+     *
+     * @param mediaPlaylist The MediaPlaylist instance for managing the playlist.
+     */
     public SelectQueueGUI(MediaPlaylist mediaPlaylist) {
         this.mediaPlaylist = mediaPlaylist;
     }
 
+    /**
+     * @brief Opens a dialog to select and manage songs in the media playlist.
+     *        It displays a TableView with the current playlist and allows the user to choose a song to play or remove from the playlist.
+     *        If the playlist is empty, a warning alert is shown to inform the user.
+     */
     public void selectQueue() {
         // *** GUI ***
         tableView = new TableView<>();

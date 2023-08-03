@@ -15,7 +15,12 @@ import javafx.stage.Stage;
 
 import java.io.*;
 
+/**
+ * @brief The Displaymode class represents the graphical user interface for the Darstellungsmodus (Display mode) of the music player application.
+ *        It extends the JavaFX Application class and provides methods for creating the display scene, handling user interactions, and switching to the Archivemode.
+ */
 public class Displaymode extends Application {
+    // Properties
     private Database data;
     private MenuBar menuBar;
     private StackPane root;
@@ -34,6 +39,12 @@ public class Displaymode extends Application {
     protected static Slider progressSlider;
     protected static Label currentTimeLabel;
 
+    /**
+     * @brief Overrides the start() method of the JavaFX Application class to initialize and display the primary stage with the Darstellungsmodus (Display mode) scene.
+     *
+     * @param primaryStage The primary stage of the JavaFX application.
+     * @throws Exception if an error occurs while starting the application.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -56,23 +67,29 @@ public class Displaymode extends Application {
         primaryStage.show();
     }
 
+    /**
+     * @brief Creates the main display scene of the Darstellungsmodus (Display mode) with various UI components such as menus, buttons, and media controls.
+     *
+     * @return The Scene object representing the Darstellungsmodus (Display mode) scene.
+     */
     public Scene createDisplayScene() {
-
+        // Initialize the media playlist and the main layout (BorderPane)
         mediaPlaylist = new MediaPlaylist();
         border = new BorderPane(); // General layout
 
         // *** TOP ***
+        // Create menus for Wiedergabeliste (Queue) and Playlists
         queue = new Menu("_Wiedergabeliste");
         playlists = new Menu("_Playlists");
         queue.setId("queue");
         playlists.setId("playlists");
 
-        // Create menus
+        // Create a MenuBar and add menus to it
         menuBar = new MenuBar();
         menuBar.getStyleClass().add("menuBar");
         menuBar.getMenus().addAll(playlists, queue);
 
-        // Playlist
+        // Add menu items for Playlist and Queue options
         addAllSongsMenuItem = new MenuItem("Alle Songs");
         genreMenuItem = new MenuItem("Genres");
         albumsMenuItem = new MenuItem("Alben");
@@ -83,7 +100,6 @@ public class Displaymode extends Application {
         artistMenuItem.setOnAction(e -> artistGUI.selectArtist());
         playlists.getItems().addAll(addAllSongsMenuItem, genreMenuItem, albumsMenuItem, artistMenuItem);
 
-        // Queue
         selectQueueMenuItem = new MenuItem("Song wählen/entfernen");
         deleteQueueMenuItem = new MenuItem("Alle Songs entfernen");
         selectQueueMenuItem.setOnAction(e -> selectQueueGUI.selectQueue());
@@ -92,7 +108,7 @@ public class Displaymode extends Application {
         });
         queue.getItems().addAll(selectQueueMenuItem, deleteQueueMenuItem);
 
-        // Mode switch
+        // Create mode switch button with an icon
         Image image = new Image("file:src/main/java/frontend/icons/mode2.PNG");
         ImageView img = new ImageView(image);
         swap = new Button("Music");
@@ -102,7 +118,7 @@ public class Displaymode extends Application {
         swap.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         swap.getStyleClass().add("swap");
         swap.setOnAction(e -> {
-            // Call method to switch the scene
+            // Call method to switch to Archivemode
             switchToArchiveMode();
         });
 
@@ -121,6 +137,7 @@ public class Displaymode extends Application {
         border.setTop(hbox);
 
         // *** CENTER ***
+        // Create UI components for displaying song title and cover art image
         Label songTitle = new Label("");
         songTitle.getStyleClass().add("songtitle");
 
@@ -130,7 +147,7 @@ public class Displaymode extends Application {
         imageView.setFitWidth(400);
         //border.setCenter(imageView);
 
-        // Slider
+        // Create a Slider for media playback progress
         progressSlider = new Slider();
         progressSlider.setMaxWidth(750);
         currentTimeLabel = new Label("0:00");
@@ -159,7 +176,7 @@ public class Displaymode extends Application {
         });
 
         // *** BOTTOM ***
-        // Create buttons with icons
+        // Create buttons with icons for Play, Next, and Previous actions
         playButton = createButton("Play", "file:src/main/java/frontend/icons/playglow.PNG");
         nextButton = createButton("Next", "file:src/main/java/frontend/icons/nextglow.PNG");
         previousButton = createButton("Previous", "file:src/main/java/frontend/icons/previousglow.PNG");
@@ -179,7 +196,7 @@ public class Displaymode extends Application {
         nextButton.setOnAction(e -> mediaPlaylist.playNextSong());
         previousButton.setOnAction(e -> mediaPlaylist.playPreviousSong());
 
-        // Button sizes
+        // Set button sizes
         playButton.setPrefSize(80, 80);
         nextButton.setPrefSize(80, 80);
         previousButton.setPrefSize(80, 80);
@@ -188,7 +205,7 @@ public class Displaymode extends Application {
         buttonsBox = new HBox(70);
         buttonsBox.getChildren().addAll(previousButton, playButton, nextButton);
 
-        // Create main layout
+        // Create main layout and add buttons to the bottom of the border pane
         root = new StackPane();
         HBox centerBox = new HBox(buttonsBox);
         centerBox.setAlignment(Pos.CENTER);
@@ -196,6 +213,7 @@ public class Displaymode extends Application {
 
         border.setBottom(root);
 
+        // Create and configure the scene with the border pane layout
         Scene scene = new Scene(border, 1100, 900);
         scene.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         scene.getStylesheets().add((new File("src/main/java/frontend/DarstellungGUI.css")).toURI().toString());
@@ -203,6 +221,9 @@ public class Displaymode extends Application {
         return scene;
     }
 
+    /**
+     * @brief Writes the current instance of Database to the file "songObjects.ser".
+     */
     public void writeObjectToFile() {
         try (FileOutputStream outputFile = new FileOutputStream("songObjects.ser", true);
              ObjectOutputStream outputObject = new ObjectOutputStream(new BufferedOutputStream(outputFile))) {
@@ -212,7 +233,9 @@ public class Displaymode extends Application {
         }
     }
 
-    // TODO IntelliJ says result of 'File.delete()' is ignored?
+    /**
+     * @brief Removes the old "songObjects.ser" file, writes the current instance of Database to a new file, and exits the application.
+     */
     public void saveAndExit() {
         File oldSer = new File("songObjects.ser");
         oldSer.delete();
@@ -220,6 +243,13 @@ public class Displaymode extends Application {
         System.exit(0);
     }
 
+    /**
+     * @brief Utility method to create a Button with an optional icon.
+     *
+     * @param name The name or text of the button.
+     * @param iconPath The file path to the icon image.
+     * @return The created Button object with an optional icon.
+     */
     private Button createButton(String name, String iconPath) {
         Button button = new Button(name);
 
@@ -235,13 +265,23 @@ public class Displaymode extends Application {
         return button;
     }
 
-    // Utility method to format time in seconds to "mm:ss" format
+    /**
+     * @brief Utility method to format time in seconds to "mm:ss" format.
+     *
+     * @param seconds The time duration in seconds.
+     * @return The formatted time string in the "mm:ss" format.
+     */
     private String formatTime(double seconds) {
         int minutes = (int) seconds / 60;
         int remainingSeconds = (int) seconds % 60;
         return String.format("%2d:%02d", minutes, remainingSeconds);
     }
 
+    /**
+     * @brief Switches the display mode to Verwaltungsmodus (Management mode).
+     *        Stops the media playback, creates a new Archivemode instance, sets the Database, creates the Archivemode scene,
+     *        sets the scene to the primary stage, and shows the primary stage with the new scene.
+     */
     public void switchToArchiveMode() {
         try {
             mediaPlaylist.stop();
@@ -259,10 +299,20 @@ public class Displaymode extends Application {
         }
     }
 
+
+    /**
+     * @brief Initiates the JavaFX application by launching the application.
+     */
     public static void initiate() {
         launch();
     }
 
+
+    /**
+     * @brief Sets the Database instance for this Displaymode class.
+     *
+     * @param database The Database instance to be set.
+     */
     public void setDatabase(Database database) {
         this.data = database;
     }

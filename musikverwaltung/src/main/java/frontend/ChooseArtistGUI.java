@@ -11,6 +11,10 @@ import javafx.scene.layout.StackPane;
 import java.io.*;
 import java.util.List;
 
+/**
+ * @brief The ChooseArtistGUI class represents a graphical user interface for selecting an artist and adding their songs to the media playlist.
+ *        It provides a dialog with a TableView displaying a list of artists, allowing the user to select an artist and add their songs to the playlist.
+ */
 public class ChooseArtistGUI {
     private Database data;
     private TableView<Song> tableView;
@@ -20,12 +24,22 @@ public class ChooseArtistGUI {
     private Dialog<Song> adder;
     private ObservableList<Song> tableData;
 
+    /**
+     * @brief Constructor for the ChooseArtistGUI class.
+     *
+     * @param data          The Database instance that provides artist and song data.
+     * @param mediaPlaylist The MediaPlaylist instance for managing the playlist.
+     */
     public ChooseArtistGUI(Database data, MediaPlaylist mediaPlaylist) {
         this.data = data;
         this.mediaPlaylist = mediaPlaylist;
     }
 
-    // TODO: Works for now but will need getArtistHash():getEachArtist() or similar
+    /**
+     * @brief Opens a dialog to select an artist and add their songs to the media playlist.
+     *        It displays a TableView with a list of artists and allows the user to add all songs of the selected artist to the playlist.
+     *        An information alert is shown once the songs are added to the playlist.
+     */
     public void selectArtist() {
         // *** GUI ***
         tableView = new TableView<>();
