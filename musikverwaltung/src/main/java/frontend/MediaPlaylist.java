@@ -70,6 +70,14 @@ public class MediaPlaylist {
             // starts the playback
             mediaPlayer.play();
             currentSongProperty.set(song);
+
+            if (currentIndex == songs.size() - 1) {
+                // Register the onEndOfMedia event handler for the current song
+                mediaPlayer.setOnEndOfMedia(() -> {
+                    timeline.stop();
+                    showEndOfQueue();
+                });
+            }
         }
     }
 
@@ -79,11 +87,6 @@ public class MediaPlaylist {
         }
         else if (currentIndex == (songs.size() - 1)) {
             this.showEndOfQueue();
-            mediaPlayer.setOnEndOfMedia(() -> {
-                timeline.stop();
-                Displaymode.currentTimeLabel.setText("0:00");
-                this.showEndOfQueue();
-            });
         } else {
             mediaPlayer.stop();
             timeline.stop();
@@ -146,6 +149,7 @@ public class MediaPlaylist {
             timeline.stop();
             counter = 0;
             Displaymode.currentTimeLabel.setText("0:00");
+            mediaPlayer.setOnEndOfMedia(null);
         }
     }
 
