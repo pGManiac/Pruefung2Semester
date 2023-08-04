@@ -28,7 +28,8 @@ public class Displaymode extends Application {
     private Menu queue, playlists;
     private MenuItem addAllSongsMenuItem, genreMenuItem, albumsMenuItem, artistMenuItem, selectQueueMenuItem, deleteQueueMenuItem;
     private HBox hbox, buttonsBox;
-    private Button swap, exit, playButton, nextButton, previousButton;
+    private Button swap, exit, nextButton, previousButton;
+    private static Button playButton;
     private MediaPlaylist mediaPlaylist;
     private AddAllSongsGUI addAllSongsGUI;
     private ChooseAlbumGUI albumGUI;
@@ -103,9 +104,7 @@ public class Displaymode extends Application {
         selectQueueMenuItem = new MenuItem("Song wählen/entfernen");
         deleteQueueMenuItem = new MenuItem("Alle Songs entfernen");
         selectQueueMenuItem.setOnAction(e -> selectQueueGUI.selectQueue());
-        deleteQueueMenuItem.setOnAction(e -> {
-            deleteQueueGUI.deleteQueue();
-        });
+        deleteQueueMenuItem.setOnAction(e -> deleteQueueGUI.deleteQueue());
         queue.getItems().addAll(selectQueueMenuItem, deleteQueueMenuItem);
 
         // Create mode switch button with an icon
@@ -299,6 +298,23 @@ public class Displaymode extends Application {
         }
     }
 
+    public static void setPlayButton() {
+        Image playIconImage = new Image("file:src/main/java/frontend/icons/playglow.PNG");
+        ImageView playIconView = new ImageView(playIconImage);
+        playIconView.setFitWidth(80);
+        playIconView.setFitHeight(80);
+
+        playButton.setGraphic(playIconView);
+    }
+
+    public static void setPauseButton() {
+        Image pauseIconImage = new Image("file:src/main/java/frontend/icons/pause.png");
+        ImageView pauseIconView = new ImageView(pauseIconImage);
+        pauseIconView.setFitWidth(80);
+        pauseIconView.setFitHeight(80);
+
+        playButton.setGraphic(pauseIconView);
+    }
 
     /**
      * @brief Initiates the JavaFX application by launching the application.
@@ -306,7 +322,6 @@ public class Displaymode extends Application {
     public static void initiate() {
         launch();
     }
-
 
     /**
      * @brief Sets the Database instance for this Displaymode class.
