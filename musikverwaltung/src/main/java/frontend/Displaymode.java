@@ -155,7 +155,7 @@ public class Displaymode extends Application {
         progressSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             mediaPlaylist.seekTo(newValue.doubleValue()); // Update the song playback to the new value
             MediaPlaylist.counter = newValue.doubleValue();
-            currentTimeLabel.setText(formatTime(newValue.doubleValue())); // Update the label with the current time
+            currentTimeLabel.setText(formatTime(newValue.doubleValue()) + " /" + mediaPlaylist.getTotalDuration()); // Update the label with the current time
         });
 
         VBox imageBox = new VBox(30);

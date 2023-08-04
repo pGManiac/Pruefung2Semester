@@ -203,7 +203,7 @@ public class MediaPlaylist {
         KeyFrame keyFrame = new KeyFrame(duration, event -> {
             // Increment the counter and update the label text
             counter++;
-            Displaymode.currentTimeLabel.setText(String.valueOf(formatTime(counter)));
+            Displaymode.currentTimeLabel.setText((formatTime(counter) + " /" + getTotalDuration()));
         });
 
         timeline = new Timeline(keyFrame);
@@ -265,5 +265,9 @@ public class MediaPlaylist {
 
     public void setCurrentIndex(int index) {
         this.currentIndex = index;
+    }
+
+    public String getTotalDuration() {
+        return formatTime(mediaPlayer.getTotalDuration().toSeconds());
     }
 }
