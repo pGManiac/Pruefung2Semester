@@ -50,6 +50,7 @@ public class Displaymode extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         primaryStage.setTitle("Darstellungsmodus");
+        primaryStage.getIcons().add(new Image("file:src/main/java/frontend/icons/stageicon1.png"));
 
         // Make scene and stage visible
         Scene displayScene = createDisplayScene();
@@ -308,7 +309,7 @@ public class Displaymode extends Application {
     }
 
     public static void setPauseButton() {
-        Image pauseIconImage = new Image("file:src/main/java/frontend/icons/pause.png");
+        Image pauseIconImage = new Image("file:src/main/java/frontend/icons/pauseglow.png");
         ImageView pauseIconView = new ImageView(pauseIconImage);
         pauseIconView.setFitWidth(80);
         pauseIconView.setFitHeight(80);
