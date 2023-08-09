@@ -42,7 +42,7 @@ public class ChooseGenreGUI {
     public void selectGenre() {
         // *** GUI ***
         tableview = new TableView<>();
-        tableData = FXCollections.observableList(this.getOneSongFromEachRepresentedGenre());
+        tableData = FXCollections.observableList(data.getGenreHash().getOneSongFromEachRepresentedGenre());
 
         adder = new Dialog<>();
         adder.setTitle("Genrewahl");
@@ -87,23 +87,5 @@ public class ChooseGenreGUI {
         adder.getDialogPane().getButtonTypes().add(okButtonType);
         adder.getDialogPane().setPrefSize(900, 800);
         adder.showAndWait();
-    }
-
-    /**
-     * @brief Retrieves a list of one song from each represented genre.
-     *
-     * @return A list of songs, each representing one genre.
-     */
-    private List<Song> getOneSongFromEachRepresentedGenre() {
-        boolean[] usedGenreList = data.getGenreHash().genresRepresented();
-        List<Song> oneSongFromEachGenre = new ArrayList<>();
-
-        for (int i = 0; i <= 6; i++) {
-            if (usedGenreList[i]) {
-                // adds the first Song in the List of Songs from Genre to the list
-                oneSongFromEachGenre.add(data.getGenreHash().getSongsFromGenre(i).get(0));
-            }
-        }
-        return oneSongFromEachGenre;
     }
 }

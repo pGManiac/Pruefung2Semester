@@ -243,4 +243,27 @@ public class GenreHashTest {
         assertFalse(genresRepresented[5], "Genre 5 should be represented as empty.");
         assertFalse(genresRepresented[6], "Genre 6 should be represented as empty.");
     }
+
+    @Test
+    public void testGetOneSongFromEachRepresentedGenre_AllGenresEmpty() {
+        List<Song> oneSongFromEachGenre = genreHash.getOneSongFromEachRepresentedGenre();
+        assertTrue(oneSongFromEachGenre.isEmpty(), "No songs should be returned when all genres are empty.");
+    }
+
+    @Test
+    public void testGetOneSongFromEachRepresentedGenre_SomeGenresEmpty() {
+
+        genreHash.addSong(new Song("Song 1", "Album 1", "Rock", "Artist 1", "0"));
+
+        genreHash.addSong(new Song("Song 2", "Album 2", "Electronic", "Artist 2", "3"));
+
+        List<Song> oneSongFromEachGenre = genreHash.getOneSongFromEachRepresentedGenre();
+
+        assertEquals(2, oneSongFromEachGenre.size(), "Two genres are represented, so two songs should be returned.");
+
+        assertTrue(oneSongFromEachGenre.contains(new Song("Song 1", "Album 1", "Rock", "Artist 1", "0")),
+                "Song from Genre 0 should be included.");
+        assertTrue(oneSongFromEachGenre.contains(new Song("Song 2", "Album 2", "Electronic", "Artist 2", "3")),
+                "Song from Genre 3 should be included.");
+    }
 }

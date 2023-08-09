@@ -26,7 +26,7 @@ public class GenreHash implements Serializable {
     }
 
     /**
-     * @brief Adds a song to the SongHash object stored for its genre.
+     * @brief Adds a song to the SongHash object associated with its genre.
      * @see Song
      * @see SongHash
      * @param song to be added.
@@ -36,7 +36,7 @@ public class GenreHash implements Serializable {
     }
 
     /**
-     * @brief Removes a song from the SongHash object stored for its genre.
+     * @brief Removes a song from the SongHash object associated with its genre.
      * @param song The song to be removed.
      */
     public void removeSong(Song song) {
@@ -122,6 +122,23 @@ public class GenreHash implements Serializable {
             genresRepresented[i] = containsGenre(i);
         }
         return genresRepresented;
+    }
+
+    /**
+     * @brief Retrieves a list of one song from each represented genre.
+     *
+     * @return A list of songs, with one song out of each represented genre.
+     */
+    public List<Song> getOneSongFromEachRepresentedGenre() {
+        boolean[] usedGenreList = genresRepresented();
+        List<Song> oneSongFromEachGenre = new ArrayList<>();
+
+        for (int i = 0; i <= 6; i++) {
+            if (usedGenreList[i]) {
+                oneSongFromEachGenre.add(getSongsFromGenre(i).get(0));
+            }
+        }
+        return oneSongFromEachGenre;
     }
 
     /**
