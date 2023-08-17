@@ -14,25 +14,24 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-public class LoeschenGUI {
+public class DeleteSongGUI {
     private Archivemode master;
     private Dialog<Song> alert;
 
-    public LoeschenGUI(Archivemode masterArchivemode) {
+    public DeleteSongGUI(Archivemode masterArchivemode) {
         this.master = masterArchivemode;
     }
 
     /**
      * @brief Creates the dialog needed to remove a new song from the database.
-     * @return none
-     * @implNote none
+     *
      * @note This method uses standard JavaFX controls and implements a css stylesheet.
      *       For more details on how the controls work check official JavaFX documentation.
      *       If no song is picked, a warning will show instead.
      * @see javafx.scene
      */
 
-    public void loeschen() {
+    public void deleteSong() {
         alert = new Dialog<>();
         DialogPane alertPane = alert.getDialogPane();
         alertPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
@@ -42,7 +41,7 @@ public class LoeschenGUI {
         BorderPane alertBorder = new BorderPane();
 
         if (picked == null) {
-            //Dialogfenster Warnung
+            //dialog window warning
 
             alert.setTitle("Warnung!");
             headerL = new Label("Sie haben keinen Song ausgewaehlt!");
@@ -50,7 +49,7 @@ public class LoeschenGUI {
             alertPane.getButtonTypes().add(okButtonType);
 
         } else {
-            //Dialogfenster entfernen
+            //dialog window delete
         
             alert.setTitle("Loeschen bestaetigen");
             headerL = new Label("Ausgewaehlten Song loeschen?");
@@ -64,7 +63,7 @@ public class LoeschenGUI {
             alertBorder.setCenter(alertHBox);
         }
         
-        //Layout
+        //layout
         alertBorder.setTop(headerL);
         alertPane.setContent(alertBorder);
         alert.showAndWait();
@@ -72,19 +71,16 @@ public class LoeschenGUI {
 
     /**
      * @brief Removes song object from database.
+     * 
      * @param song the song to be removed 
-     * @return none
-     * @implNote none
      * @note This method removes the song from the database and creates an updated List for the
      *       TableView to display. A method to custom close the dialog is called at the end.
      * @see javafx.collections
      */
 
     public void deleteSong(Song song) {
-        //database.removeSong(song);
         master.getDatabase().removeSong(song);
         ObservableList<Song> tableDataNew = FXCollections.observableList(master.getDatabase().getSongHash().getAllSongs());
-        //v.setItems(tableDataNew);
         master.getTable().setItems(tableDataNew);
         master.dialogClosing(this.alert);
     }

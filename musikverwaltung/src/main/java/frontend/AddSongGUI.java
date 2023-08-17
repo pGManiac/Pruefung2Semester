@@ -21,31 +21,28 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class EinfuegenGUI {
+public class AddSongGUI {
     private Dialog<Song> adder;
     private ObservableList<String> options = FXCollections.observableArrayList("Rock", "Pop", "Hip-Hop", "Electronic", "Indie", "Classical", "Metal");
     private FileChooser fileChooser = new FileChooser();
-    private TextField titTField;
-    private TextField albTField;
+    private TextField titTField, albTField, interTField;
     private ComboBox<String> genComboBox;
-    private TextField interTField;
     private Archivemode master;
 
-    public EinfuegenGUI(Archivemode masterArchivemode) {
+    public AddSongGUI(Archivemode masterArchivemode) {
         this.master = masterArchivemode;
     }
 
     /**
      * @brief Creates the dialog needed to add a new song to the database.
-     * @return none
-     * @implNote none
+     * 
      * @note This method uses standard JavaFX controls and implements a css stylesheet.
      *       For more details on how the controls work check official JavaFX documentation.
      * @see javafx.scene
      */
 
-    public void einfuegen() {
-        //Dialogfenster Hinzufuegen
+    public void addSong() {
+        //dialog window
         adder = new Dialog<>();
         adder.setTitle("Songeingabe");
         Label headerE = new Label("Geben Sie Details zu Ihrem Song ein:");
@@ -54,7 +51,7 @@ public class EinfuegenGUI {
         DialogPane diaPane = adder.getDialogPane();
         diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         diaPane.getStyleClass().add("dialog");
-        Label titel = new Label("Titel:");
+        Label title = new Label("Titel:");
         titTField = new TextField();
         Label album = new Label("Album:");
         albTField = new TextField();
@@ -70,10 +67,10 @@ public class EinfuegenGUI {
         Button cancel = new Button("Abbrechen");
         cancel.setOnAction(e -> {master.dialogClosing(this.adder);});
         
-        //Layout
+        //layout
         GridPane grid = new GridPane();
         grid.getStyleClass().add("diaGrid");
-        grid.add(titel, 1, 1);
+        grid.add(title, 1, 1);
         grid.add(album, 1, 2);
         grid.add(genre, 1, 3);
         grid.add(interpret, 1, 4);
@@ -87,14 +84,16 @@ public class EinfuegenGUI {
         diaBorder.setTop(headerE);
         diaBorder.setCenter(grid);
         adder.getDialogPane().setContent(diaBorder);
-        // Größe des Dialogfensters setzen
-        adder.setWidth(800); // Breite festlegen
-        adder.setHeight(600); // Höhe festlegen
+        
+        // set window size
+        adder.setWidth(800);
+        adder.setHeight(600);
         adder.showAndWait();
     }
 
     /**
      * @brief Opens file chooser and copies selected file to program directory.
+     * 
      * @return the path to the created file copy as a String
      * @implNote the Files class copy() function is used to copy files.
      * @note The method opens a file chooser. While this is open the primary stage cannot be accessed. To avoid
@@ -103,7 +102,8 @@ public class EinfuegenGUI {
      */
 
     public String copyFile() {
-        File selectedFile = fileChooser.showOpenDialog(master.getStage()); //root window stage cannot be accessed, while the dialog is open
+    	//root window stage cannot be accessed, while the file chooser is open
+        File selectedFile = fileChooser.showOpenDialog(master.getStage());
         String destination = "src/main/java/frontend/lieder/";
         String id = new SimpleDateFormat("MM_ss_SSS").format(new java.util.Date());
 
@@ -111,7 +111,7 @@ public class EinfuegenGUI {
         String targetString = destination + id + "_" + selectedFile.getName();
         Path target = Path.of(targetString);
         try {
-            Files.copy(source, target, StandardCopyOption.COPY_ATTRIBUTES); //attributes of og file copied as well
+            Files.copy(source, target, StandardCopyOption.COPY_ATTRIBUTES);
         } catch (IOException ioException) {
             System.err.println(ioException.getMessage());
         }
@@ -121,8 +121,7 @@ public class EinfuegenGUI {
 
     /**
      * @brief Reads user input, creates new song object and adds it to database.
-     * @return none
-     * @implNote none
+     * 
      * @note The method reads the dialog control values and calls the copyFile() function. All values are passed to
      *       song object constructor, which is added to the database. Since the TableView always displays a List,
      *       a new List containing the new song object(s) replaces the old TableView List.
@@ -138,12 +137,9 @@ public class EinfuegenGUI {
         String targetString = copyFile();
         
         Song songNew = new Song(titleNew, albumNew, genreNew, artistNew, targetString);
-        //Song Objekte im Anschluss in .ser file schreiben und immer beim Öffnen der Applikation die .ser files lesen
         master.getDatabase().addSong(songNew);
-        //database.addSong(songNew);
         ObservableList<Song> tableDataNew = FXCollections.observableList(master.getDatabase().getSongHash().getAllSongs());
         master.getTable().setItems(tableDataNew);
-        //v.setItems(tableDataNew);
 
         master.dialogClosing(this.adder);
     }

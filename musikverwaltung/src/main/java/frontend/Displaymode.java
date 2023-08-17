@@ -141,7 +141,7 @@ public class Displaymode extends Application {
         Label songTitle = new Label("");
         songTitle.getStyleClass().add("songtitle");
 
-        Image image1 = new Image("file:src/main/java/frontend/icons/Platzhalter_CoverArt.jpg");
+        Image image1 = new Image("file:src/main/java/frontend/icons/planetS.gif");
         ImageView imageView = new ImageView(image1);
         imageView.setFitHeight(400);
         imageView.setFitWidth(400);
