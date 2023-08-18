@@ -1,5 +1,5 @@
 package frontend;
-import backend.Database;
+
 import backend.Song;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -108,7 +108,6 @@ public class SelectQueueGUI {
                    alert.showAndWait();
                } else {
                    mediaPlaylist.removeSongFromList(selectedSong);
-                   // refresh tableview
                    tableView.refresh();
                }
             });

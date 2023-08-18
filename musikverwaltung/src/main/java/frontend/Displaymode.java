@@ -4,6 +4,8 @@ import backend.Database;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -38,6 +40,7 @@ public class Displaymode extends Application {
     private SelectQueueGUI selectQueueGUI;
     private DeleteQueueGUI deleteQueueGUI;
     protected static Slider progressSlider;
+    protected static Slider volSlider;
     protected static Label currentTimeLabel;
 
     /**
@@ -65,14 +68,13 @@ public class Displaymode extends Application {
         deleteQueueGUI = new DeleteQueueGUI(mediaPlaylist);
 
         primaryStage.setScene(displayScene);
-        // primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
     /**
-     * @brief Creates the main display scene of the Darstellungsmodus (Display mode) with various UI components such as menus, buttons, and media controls.
+     * @brief Creates the main display scene of the display mode with various UI components such as menus, buttons, and media controls.
      *
-     * @return The Scene object representing the Darstellungsmodus (Display mode) scene.
+     * @return The Scene object representing the display mode scene.
      */
     public Scene createDisplayScene() {
         // Initialize the media playlist and the main layout (BorderPane)
@@ -118,7 +120,6 @@ public class Displaymode extends Application {
         swap.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         swap.getStyleClass().add("swap");
         swap.setOnAction(e -> {
-            // Call method to switch to Archivemode
             switchToArchiveMode();
         });
 
@@ -145,7 +146,6 @@ public class Displaymode extends Application {
         ImageView imageView = new ImageView(image1);
         imageView.setFitHeight(400);
         imageView.setFitWidth(400);
-        //border.setCenter(imageView);
 
         // Create a Slider for media playback progress
         progressSlider = new Slider();
@@ -158,9 +158,23 @@ public class Displaymode extends Application {
             MediaPlaylist.counter = newValue.doubleValue();
             currentTimeLabel.setText(formatTime(newValue.doubleValue()) + " /" + mediaPlaylist.getTotalDuration()); // Update the label with the current time
         });
+        
+        // Create a slider for volume control
+        volSlider = new Slider();
+        volSlider.setMaxWidth(100);
+        volSlider.setValue(100);
+        volSlider.setId("volume");
+        
+        // Add listener for volume control
+        volSlider.valueProperty().addListener(new InvalidationListener() {
+        	@Override
+        	public void invalidated(Observable observ) {
+        		mediaPlaylist.getMediaPlayer().setVolume(volSlider.getValue() / 100);
+        	}
+        });
 
         VBox imageBox = new VBox(30);
-        imageBox.getChildren().addAll(imageView, progressSlider, currentTimeLabel, songTitle);
+        imageBox.getChildren().addAll(imageView, progressSlider, currentTimeLabel, songTitle, volSlider);
         imageBox.setAlignment(Pos.CENTER);
         border.setCenter(imageBox);
 
@@ -170,7 +184,7 @@ public class Displaymode extends Application {
             if (newValue != null) {
                 songTitle.setText(newValue.getName() + " - " + newValue.getArtist()); // Assuming the Song class has a getName() method to get the song title
             } else {
-                // If there is no currently playing song, clear the label
+                // If there is no song currently playing, clear the label
                 songTitle.setText("");
             }
         });
@@ -278,7 +292,7 @@ public class Displaymode extends Application {
     }
 
     /**
-     * @brief Switches the display mode to Verwaltungsmodus (Management mode).
+     * @brief Switches the display mode to archive mode.
      *        Stops the media playback, creates a new Archivemode instance, sets the Database, creates the Archivemode scene,
      *        sets the scene to the primary stage, and shows the primary stage with the new scene.
      */

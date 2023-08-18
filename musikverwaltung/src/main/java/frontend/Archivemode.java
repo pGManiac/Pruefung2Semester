@@ -46,7 +46,26 @@ public class Archivemode {
     public Archivemode(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
+    
+    public Scene getScene() {
+        return scene;
+    }
 
+    public void setDatabase(Database database) {
+        this.data = database;
+    }
+
+    public Database getDatabase() {
+        return this.data;
+    }
+
+    public TableView<Song> getTable() {
+        return this.songs;
+    }
+
+    public Stage getStage() {
+        return this.primaryStage;
+    }
 
     /**
      * @brief Creates the scene in archive mode and adds all necessary controls to it.
@@ -59,6 +78,7 @@ public class Archivemode {
      * @see javafx.application.Platform
      * @see javafx.collections
      */
+    
     //@Override
     public Scene createScene() throws Exception {
 
@@ -86,9 +106,15 @@ public class Archivemode {
         file.setId("datei");
         view = new Menu("_Ansicht");
         add = new MenuItem("Hinzufügen");
-        add.setOnAction(e-> {addSongGUI = new AddSongGUI(this); addSongGUI.addSong();}); //kann man Konstruktor woanders aufrufen?
+        add.setOnAction(e-> {
+        	addSongGUI = new AddSongGUI(this); 
+        	addSongGUI.addSong();
+        	});
         delete = new MenuItem("Entfernen");
-        delete.setOnAction(e-> {deleteSongGUI = new DeleteSongGUI(this); deleteSongGUI.deleteSong();});
+        delete.setOnAction(e-> {
+        	deleteSongGUI = new DeleteSongGUI(this);
+        	deleteSongGUI.deleteSong();
+        	});
         az = new MenuItem("A-Z");
         az.setOnAction(e-> {alphabeticalSortA();});
         za = new MenuItem("Z-A");
@@ -239,26 +265,6 @@ public class Archivemode {
         dialog.setResult(null);
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
         stage.close();
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setDatabase(Database database) {
-        this.data = database;
-    }
-
-    public Database getDatabase() {
-        return this.data;
-    }
-
-    public TableView<Song> getTable() {
-        return this.songs;
-    }
-
-    public Stage getStage() {
-        return this.primaryStage;
     }
 
     /**

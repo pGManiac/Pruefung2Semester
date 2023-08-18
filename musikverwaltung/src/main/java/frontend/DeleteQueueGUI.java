@@ -1,8 +1,6 @@
 package frontend;
-import backend.Database;
-import javafx.scene.control.*;
 
-import javax.swing.plaf.IconUIResource;
+import javafx.scene.control.*;
 import java.util.Optional;
 
 /**

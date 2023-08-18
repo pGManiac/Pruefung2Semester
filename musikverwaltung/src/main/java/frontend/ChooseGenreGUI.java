@@ -1,6 +1,6 @@
 package frontend;
+
 import backend.Database;
-import backend.GenreHash;
 import backend.Song;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 import java.io.*;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,7 +60,7 @@ public class ChooseGenreGUI {
         diaPane.getStylesheets().add((new File("src/main/java/frontend/VerwaltungGUI.css")).toURI().toString());
         diaPane.getStyleClass().add("dialog");
 
-        Button chooseAlbumButton = new Button("Zur Playlist hinzufügen");
+        Button chooseAlbumButton = new Button("Zur Wiedergabeliste hinzufügen");
         ButtonType okButtonType = new ButtonType("Fertig", ButtonBar.ButtonData.OK_DONE);
         BorderPane diaBorder = new BorderPane();
 

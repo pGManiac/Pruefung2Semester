@@ -6,3 +6,9 @@
     -fx-font-size: 40px;
     -fx-font-weight: bold;
 }
+
+#volume .thumb {
+    -fx-background-image: url("file:src/main/java/frontend/icons/volume.png");
+    -fx-background-color: transparent;
+    -fx-padding: 32;
+}
